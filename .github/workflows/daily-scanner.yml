@@ -1,0 +1,46 @@
+name: Daily Market Screener
+
+on:
+  schedule:
+    - cron: '30 21 * * 1-5'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  run-screener:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests yfinance pandas numpy lxml html5lib beautifulsoup4
+
+      - name: Run Master Screener
+        run: |
+          python scanner.py
+
+      - name: Commit and push updated cache and CSV watchlists
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git add sector_cache.json zacks_rank_tracker.json watchlist_*.csv || true
+          
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Auto-update scanner cache & watchlists [skip ci]"
+            git push
+          fi

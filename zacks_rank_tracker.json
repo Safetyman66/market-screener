@@ -1,0 +1,230 @@
+{
+  "CNH": {
+    "rank": "3",
+    "date_set": "2026-09-28"
+  },
+  "IDCC": {
+    "rank": "1",
+    "date_set": "2026-09-28"
+  },
+  "HAE": {
+    "rank": "3",
+    "date_set": "2026-09-28"
+  },
+  "ITGR": {
+    "rank": "3",
+    "date_set": "2026-09-28"
+  },
+  "PAYC": {
+    "rank": "1",
+    "date_set": "2026-09-28"
+  },
+  "EFOR": {
+    "rank": "2",
+    "date_set": "2026-09-28"
+  },
+  "SPSC": {
+    "rank": "3",
+    "date_set": "2026-09-28"
+  },
+  "CACI": {
+    "rank": "3",
+    "date_set": "2026-09-28"
+  },
+  "WMT": {
+    "rank": "3",
+    "date_set": "2026-09-29"
+  },
+  "GNTX": {
+    "rank": "3",
+    "date_set": "2026-09-29"
+  },
+  "CACC": {
+    "rank": "2",
+    "date_set": "2026-09-29"
+  },
+  "STX": {
+    "rank": "1",
+    "date_set": "2026-09-29"
+  },
+  "DORM": {
+    "rank": "3",
+    "date_set": "2026-09-29"
+  },
+  "BTSG": {
+    "rank": "1",
+    "date_set": "2026-09-29"
+  },
+  "UCTT": {
+    "rank": "1",
+    "date_set": "2026-09-29"
+  },
+  "PENG": {
+    "rank": "3",
+    "date_set": "2026-09-29"
+  },
+  "MTSI": {
+    "rank": "1",
+    "date_set": "2026-09-29"
+  },
+  "HASI": {
+    "rank": "3",
+    "date_set": "2026-09-29"
+  },
+  "ROG": {
+    "rank": "3",
+    "date_set": "2026-09-29"
+  },
+  "FHB": {
+    "rank": "3",
+    "date_set": "2026-09-29"
+  },
+  "PGR": {
+    "rank": "3",
+    "date_set": "2026-09-29"
+  },
+  "RTX": {
+    "rank": "3",
+    "date_set": "2026-09-29"
+  },
+  "BWA": {
+    "rank": "3",
+    "date_set": "2026-09-29"
+  },
+  "KLAC": {
+    "rank": "2",
+    "date_set": "2026-09-29"
+  },
+  "ENTG": {
+    "rank": "2",
+    "date_set": "2026-09-29"
+  },
+  "GS": {
+    "rank": "3",
+    "date_set": "2026-09-29"
+  },
+  "WAL": {
+    "rank": "3",
+    "date_set": "2026-09-29"
+  },
+  "RMBS": {
+    "rank": "2",
+    "date_set": "2026-09-29"
+  },
+  "DOCN": {
+    "rank": "3",
+    "date_set": "2026-09-29"
+  },
+  "MPWR": {
+    "rank": "2",
+    "date_set": "2026-09-29"
+  },
+  "TSLA": {
+    "rank": "3",
+    "date_set": "2026-09-29"
+  },
+  "MCHP": {
+    "rank": "3",
+    "date_set": "2026-09-29"
+  },
+  "DIOD": {
+    "rank": "2",
+    "date_set": "2026-09-29"
+  },
+  "VICR": {
+    "rank": "2",
+    "date_set": "2026-09-29"
+  },
+  "SANM": {
+    "rank": "1",
+    "date_set": "2026-09-29"
+  },
+  "CAT": {
+    "rank": "2",
+    "date_set": "2026-09-29"
+  },
+  "MRVL": {
+    "rank": "3",
+    "date_set": "2026-09-29"
+  },
+  "VIRT": {
+    "rank": "2",
+    "date_set": "2026-09-29"
+  },
+  "LUV": {
+    "rank": "3",
+    "date_set": "2026-09-29"
+  },
+  "RKLB": {
+    "rank": "2",
+    "date_set": "2026-09-29"
+  },
+  "CVLT": {
+    "rank": "3",
+    "date_set": "2026-09-29"
+  },
+  "KMT": {
+    "rank": "1",
+    "date_set": "2026-09-29"
+  },
+  "MAS": {
+    "rank": "3",
+    "date_set": "2026-09-29"
+  },
+  "NXPI": {
+    "rank": "3",
+    "date_set": "2026-09-29"
+  },
+  "KLIC": {
+    "rank": "1",
+    "date_set": "2026-09-29"
+  },
+  "GEV": {
+    "rank": "3",
+    "date_set": "2026-09-29"
+  },
+  "CVS": {
+    "rank": "3",
+    "date_set": "2026-09-29"
+  },
+  "TER": {
+    "rank": "1",
+    "date_set": "2026-09-29"
+  },
+  "ALAB": {
+    "rank": "1",
+    "date_set": "2026-09-29"
+  },
+  "VSTS": {
+    "rank": "2",
+    "date_set": "2026-09-29"
+  },
+  "WDAY": {
+    "rank": "3",
+    "date_set": "2026-09-29"
+  },
+  "UNH": {
+    "rank": "2",
+    "date_set": "2026-09-29"
+  },
+  "COST": {
+    "rank": "3",
+    "date_set": "2026-09-29"
+  },
+  "FORM": {
+    "rank": "1",
+    "date_set": "2026-09-29"
+  },
+  "LEA": {
+    "rank": "3",
+    "date_set": "2026-09-29"
+  },
+  "TTMI": {
+    "rank": "1",
+    "date_set": "2026-09-29"
+  },
+  "OMC": {
+    "rank": "5",
+    "date_set": "2026-09-29"
+  }
+}
