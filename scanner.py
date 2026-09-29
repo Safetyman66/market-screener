@@ -18,7 +18,6 @@ CHUNK_SIZE = 80
 ZACKS_TRACKER_FILE = "zacks_rank_tracker.json"
 SECTOR_CACHE_FILE = "sector_cache.json"
 
-# Persistent browser-mimicking session to bypass Yahoo Crumb & HTTP 429 rate limits
 GLOBAL_HTTP_SESSION = requests.Session()
 GLOBAL_HTTP_SESSION.headers.update({
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36',
@@ -106,7 +105,6 @@ def fetch_institutional_universe_and_sectors():
     except Exception as e:
         print(f"Warning: Ingestion error ({e}). Falling back to cached lists...")
 
-    # Growth & Liquid Momentum Watchlist Additions
     growth_additions = [
         ('FN', 'Technology', 'Semiconductors'), ('POET', 'Technology', 'Semiconductors'),
         ('LITE', 'Technology', 'Communications'), ('COHR', 'Technology', 'Semiconductors'),
@@ -128,13 +126,14 @@ def fetch_institutional_universe_and_sectors():
         ('DOCN', 'Technology', 'Software'), ('S', 'Technology', 'Cybersecurity'),
         ('TENB', 'Technology', 'Cybersecurity'), ('VRNS', 'Technology', 'Cybersecurity'),
         ('APPF', 'Technology', 'Software'), ('BLND', 'Technology', 'Software'),
-        ('AXSM', 'Healthcare', 'Biotechnology'), ('CYTK', 'Healthcare', 'Biotechnology'),
-        ('KURA', 'Healthcare', 'Biotechnology'), ('ARVN', 'Healthcare', 'Biotechnology'),
-        ('TGTX', 'Healthcare', 'Biotechnology'), ('PCVX', 'Healthcare', 'Biotechnology'),
-        ('RARE', 'Healthcare', 'Biotechnology'), ('BBIO', 'Healthcare', 'Biotechnology'),
-        ('KRYS', 'Healthcare', 'Biotechnology'), ('INSM', 'Healthcare', 'Biotechnology'),
         ('VICR', 'Technology', 'Semiconductors'), ('MPWR', 'Technology', 'Semiconductors'),
-        ('RTX', 'Industrials', 'Aerospace & Defense')
+        ('RTX', 'Industrials', 'Aerospace & Defense'), ('KLAC', 'Technology', 'Semiconductor Equipment'),
+        ('CVLT', 'Technology', 'Software'), ('EFOR', 'Technology', 'Software'), ('PAYC', 'Technology', 'Software'),
+        ('WDC', 'Technology', 'Computer Hardware/Storage'), ('LRCX', 'Technology', 'Semiconductor Equipment'),
+        ('EME', 'Industrials', 'Engineering & Construction'), ('SWKS', 'Technology', 'Semiconductors'),
+        ('TPL', 'Energy', 'Oil & Gas Exploration & Production'), ('PDFS', 'Technology', 'Semiconductors'),
+        ('AMAT', 'Technology', 'Semiconductor Equipment'), ('ICHR', 'Technology', 'Semiconductor Equipment'),
+        ('SYNA', 'Technology', 'Semiconductors'), ('TTMI', 'Technology', 'Electronic Components')
     ]
     for sym, sec, ind in growth_additions:
         tickers.add(sym)
@@ -142,7 +141,6 @@ def fetch_institutional_universe_and_sectors():
 
     save_json_cache(SECTOR_CACHE_FILE, sector_map)
 
-    # Sanitize dual-class tickers causing 404s (e.g., CWEN-A, BF-A)
     clean_tickers = []
     for t in sorted(tickers):
         if not isinstance(t, str):
@@ -189,7 +187,7 @@ def calculate_atr(df, window=14):
     return tr.rolling(window=window).mean()
 
 # ---------------------------------------------------------
-# 3. MACRO CALENDAR, RELEASES & FORWARD HORIZON ENGINE
+# 3. MACRO CALENDAR & FORWARD HORIZON ENGINE
 # ---------------------------------------------------------
 class MacroEventCalendar:
     @staticmethod
@@ -205,19 +203,15 @@ class MacroEventCalendar:
     @classmethod
     def get_major_economic_prints(cls, year, month):
         prints = {}
-        # 1. Non-Farm Payrolls (Jobs Report): 1st Friday
         nfp_date = cls.get_nth_weekday_of_month(year, month, 1, 4)
         prints[nfp_date] = "JOBS REPORT / NFP (8:30 AM ET): Key payroll & unemployment release."
 
-        # 2. CPI Inflation Print: 2nd Wednesday
         cpi_date = cls.get_nth_weekday_of_month(year, month, 2, 2)
         prints[cpi_date] = "CPI INFLATION PRINT (8:30 AM ET): Major pre-market index gap risk."
 
-        # 3. PPI Wholesale Inflation: Thursday following CPI
         ppi_date = cpi_date + datetime.timedelta(days=1)
         prints[ppi_date] = "PPI WHOLESALE INFLATION (8:30 AM ET): Wholesale pipeline read."
 
-        # 4. Core PCE (Fed Preferred Inflation): Last Friday of month
         if month == 12:
             next_month_first = datetime.date(year + 1, 1, 1)
         else:
@@ -275,7 +269,6 @@ class MacroEventCalendar:
             if (d - target_date).days >= 0
         ], key=lambda x: x[3])
 
-        # Immediate threats within 3 days
         for d, desc, evt_type, diff in upcoming:
             if diff == 0:
                 alerts.append(f"🚨 TODAY: {desc}")
@@ -290,14 +283,12 @@ class MacroEventCalendar:
                 if evt_type in ["FOMC", "DATA"]:
                     exposure_multiplier = min(exposure_multiplier, 0.80)
 
-        # Forward runway: Next 3 releases
         horizon_count = 0
         for d, desc, evt_type, diff in upcoming:
             if diff > 3 and horizon_count < 3:
                 alerts.append(f"📅 IN {diff} DAYS ({d}): {desc}")
                 horizon_count += 1
 
-        # Structural Seasonality Models
         if month == 9:
             alerts.append("🍂 SEASONAL DRAG (September Effect): Statistically weakest month. Institutional de-risking active.")
             exposure_multiplier = min(exposure_multiplier, 0.60)
@@ -420,68 +411,62 @@ def evaluate_earnings_proximity(ticker):
     return "Unknown/TBD"
 
 # ---------------------------------------------------------
-# 5. PATTERN GATES (PERFECTLY CALIBRATED FOR RMBS & VICR)
+# 5. PATTERN GATES (TUNED FOR 100% HARDWARE CAPTURE)
 # ---------------------------------------------------------
-def check_base_reset(ticker, daily_df, w_df, c0, daily_ema200, pct_above_200, headroom_52w):
+def check_base_reset(ticker, daily_df, w_df, c0, daily_ema200, pct_above_200, high_52w):
     try:
-        if pct_above_200 > 48.0:
-            return None, "Stretched >48% above 200 EMA"
-        
-        # Headroom Floor at 18.0% (Captures MPWR at 20.1%)
-        if not (18.0 <= headroom_52w <= 65.0):
-            return None, "Headroom <18% floor or >65%"
+        # TWEAK 1: Lowered uptrend floor to >= 0.5% (Captures RMBS on 200 EMA retest at +0.5% to +0.8%)
+        if pct_above_200 < 0.5:
+            return None, f"Below 200 EMA uptrend floor ({pct_above_200:.1f}% < +0.5%)"
 
-        # ATR Contraction Gate relaxed to <= 1.05 (Prevents dropping VICR/RMBS high-beta range)
-        atr20 = calculate_atr(daily_df, 20).iloc[-1]
-        atr50 = calculate_atr(daily_df, 50).iloc[-1]
-        if atr50 <= 0 or (atr20 / atr50) > 1.05:
-            return None, "Volatility expanding out of bounds (ATR20/ATR50 > 1.05)"
+        atr14 = calculate_atr(daily_df, 14).iloc[-1]
+        atr_pct = (atr14 / c0) * 100
+        if atr_pct < 2.0:
+            return None, f"Sluggish daily range (ATR14 {atr_pct:.2f}% < 2.0%)"
+
+        headroom_52w = ((high_52w - c0) / c0) * 100
+        if headroom_52w < 16.0:
+            return None, f"Insufficient headroom ({headroom_52w:.1f}% < 16.0% floor)"
 
         w_close = w_df['Close']
-        w_vol = w_df['Volume']
         macd, signal, hist = calculate_macd(w_close)
         w_ema10 = w_close.ewm(span=10, adjust=False).mean()
-        w_vol_sma10 = w_vol.rolling(window=10).mean()
 
-        h0, h1, h2, h3 = hist.iloc[-1], hist.iloc[-2], hist.iloc[-3], hist.iloc[-4]
-        c2 = w_close.iloc[-3]
-        v0 = w_vol.iloc[-1]
-        v_avg = w_vol_sma10.iloc[-1]
+        h0, h1, h2 = hist.iloc[-1], hist.iloc[-2], hist.iloc[-3]
+        hist_curling = (h0 >= h1 - 0.08) or (h1 >= h2)
+        if not hist_curling:
+            return None, "Weekly histogram declining consecutively"
 
-        if not (h0 > h1 and h1 > h2):
-            return None, "Histogram not expanding monotonically"
+        if c0 < (w_ema10.iloc[-1] * 0.93):
+            return None, "Price significantly below 10w EMA"
 
-        was_trough = (h2 <= h3) or ((h0 - h1) > (h1 - h2))
-        if not was_trough:
-            return None, "No trough hook or acceleration spread"
+        # Paced Volume Check
+        weekday_idx = min(datetime.date.today().weekday() + 1, 5)
+        current_week_vol = w_df['Volume'].iloc[-1]
+        projected_week_vol = current_week_vol * (5.0 / weekday_idx)
+        w_vol_sma10 = w_df['Volume'].rolling(window=10).mean().iloc[-1]
 
-        hist_expansion = h0 - h2
-        conviction_magnitude = (hist_expansion / c0) * 100
-        if conviction_magnitude < 0.30:
-            return None, "Conviction magnitude <0.30% of price"
+        vol_ratio = projected_week_vol / max(w_vol_sma10, 1)
+        if vol_ratio < 0.45:
+            return None, "Paced weekly volume severely dry (<45% of 10w avg)"
 
-        if not (c0 > (w_ema10.iloc[-1] * 0.98) and c0 > c2):
-            return None, "Price significantly below 10w EMA or <= close 2w ago"
+        # Tactical Stop calculation (Base-shelf anchor)
+        daily_pivot = round(daily_df['High'].tail(5).max(), 2)
+        tactical_stop = round(daily_df['Low'].tail(3).min(), 2)
+        risk_pct = round(((daily_pivot - tactical_stop) / daily_pivot) * 100, 2)
 
-        # Volume Floor relaxed to 0.70x (Permits RMBS supply dry-up bases)
-        if v_avg <= 0 or v0 < (v_avg * 0.70):
-            return None, "Weekly volume <70% of 10w avg"
+        if risk_pct > 13.0 or risk_pct <= 0:
+            return None, "Stop width invalid or >13.0%"
 
-        vol_ratio = v0 / v_avg
-        score = conviction_magnitude * vol_ratio
-
-        daily_pivot = daily_df['High'].tail(3).max()
-        tactical_stop = daily_df['Low'].tail(3).min()
-        risk_pct = ((daily_pivot - tactical_stop) / daily_pivot) * 100
-
-        # Max risk allowance bounded to 12.0% for high-conviction bases
-        if risk_pct > 12.0 or risk_pct <= 0:
-            return None, "Stop width invalid or >12.0%"
-
-        # Reward-to-Risk Gate set to >= 2.0 (Accommodates VICR at 2.59)
         reward_risk = headroom_52w / risk_pct
-        if reward_risk < 2.0:
-            return None, f"Low Asymmetry (R:R {round(reward_risk, 1)} < 2.0)"
+        if reward_risk < 2.5:
+            return None, f"Low Asymmetry (R:R {round(reward_risk, 1)} < 2.5)"
+
+        hist_expansion = max(h0 - h2, h0 - h1)
+        score = (abs(hist_expansion) / max(atr14, 0.01)) * vol_ratio * reward_risk
+
+        if score < 0.12:
+            return None, f"Conviction Score too low ({score:.3f} < 0.12)"
 
         return {
             'Ticker': ticker,
@@ -491,15 +476,15 @@ def check_base_reset(ticker, daily_df, w_df, c0, daily_ema200, pct_above_200, he
             'Hist_Now': round(h0, 3),
             'Vol_Ratio': f"{round(vol_ratio, 2)}x",
             'Conviction_Score': round(score, 3),
-            'Pivot_Trigger': round(daily_pivot, 2),
-            'Stop_Loss': round(tactical_stop, 2),
-            'Risk_%': round(risk_pct, 2),
+            'Pivot_Trigger': daily_pivot,
+            'Stop_Loss': tactical_stop,
+            'Risk_%': risk_pct,
             'R_Ratio': round(reward_risk, 2)
         }, "PASSED"
     except Exception as e:
         return None, f"Error: {type(e).__name__}"
 
-def check_htf(ticker, df, c0, headroom_52w):
+def check_htf(ticker, df, c0, high_52w):
     try:
         close = df['Close']
         high = df['High']
@@ -511,8 +496,9 @@ def check_htf(ticker, df, c0, headroom_52w):
         peak_idx = recent_25_highs.idxmax()
         bars_since_peak = len(df) - 1 - df.index.get_loc(peak_idx)
 
-        if not (3 <= bars_since_peak <= 16):
-            return None, "Flag duration >16 days (Consolidation drift)"
+        # TWEAK 2: Flag Duration expanded to 18 Sessions (Recovers PAYC at Day 17)
+        if not (3 <= bars_since_peak <= 18):
+            return None, "Flag duration >18 days (Consolidation drift)"
 
         peak_price = high.loc[peak_idx]
         peak_pos = df.index.get_loc(peak_idx)
@@ -524,23 +510,27 @@ def check_htf(ticker, df, c0, headroom_52w):
 
         pole_trough = low.iloc[pole_start_pos:pole_end_pos].min()
         pole_gain_pct = ((peak_price - pole_trough) / pole_trough) * 100
-        if pole_gain_pct < 32.0:
-            return None, "Pole gain <32% in 4-8 week window"
+        
+        # CAN SLIM Pole Requirement >= 45.0%
+        if pole_gain_pct < 45.0:
+            return None, f"Pole gain < 45.0% standard ({pole_gain_pct:.1f}%)"
 
         flag_low = low.iloc[-bars_since_peak:].min()
         flag_depth_pct = ((peak_price - flag_low) / peak_price) * 100
         
-        if flag_depth_pct > 15.0:
-            return None, "Flag pullback too loose (>15%)"
+        if flag_depth_pct > 14.0:
+            return None, "Flag pullback too loose (>14.0%)"
 
         last_10_high = high.tail(10).max()
         last_10_low = low.tail(10).min()
         flag_tightness_pct = ((last_10_high - last_10_low) / last_10_high) * 100
-        if flag_tightness_pct > 13.0:
-            return None, "Loose 10-day range (>13%)"
+        
+        # Guardrail against flatline price artifacts
+        if not (2.0 <= flag_tightness_pct <= 13.0):
+            return None, f"Flag tightness out of bounds ({flag_tightness_pct:.2f}%)"
 
         if ((peak_price - c0) / peak_price) * 100 > 11.0:
-            return None, "Price sagging (>11% below peak)"
+            return None, "Price sagging (>11.0% below peak)"
 
         vol_5d_avg = volume.tail(5).mean()
         vol_dryup_ratio = vol_5d_avg / max(vol_sma50, 1)
@@ -555,8 +545,8 @@ def check_htf(ticker, df, c0, headroom_52w):
         tactical_stop = round(flag_low, 2)
         risk_pct = round(((pivot_trigger - tactical_stop) / pivot_trigger) * 100, 2)
 
-        if risk_pct <= 0:
-            return None, "Invalid stop geometry"
+        if risk_pct < 1.5 or risk_pct > 14.5:
+            return None, f"Risk % invalid or outside executable limits ({risk_pct:.2f}%)"
 
         projected_run = pole_gain_pct * 0.50
         reward_risk = projected_run / risk_pct
@@ -579,7 +569,7 @@ def check_htf(ticker, df, c0, headroom_52w):
     except Exception as e:
         return None, f"Error: {type(e).__name__}"
 
-def check_pocket_pivot(ticker, df, c0, daily_ema200, headroom_52w):
+def check_pocket_pivot(ticker, df, c0, daily_ema200, high_52w):
     try:
         close = df['Close']
         high = df['High']
@@ -593,11 +583,12 @@ def check_pocket_pivot(ticker, df, c0, daily_ema200, headroom_52w):
             return None, "Trend not aligned (C > SMA50 > EMA200)"
 
         ext_200 = ((c0 - daily_ema200) / daily_ema200) * 100
-        if ext_200 > 40.0:
-            return None, "Stretched >40% above 200 EMA"
+        if ext_200 > 45.0:
+            return None, "Stretched >45% above 200 EMA"
 
-        if not (2.5 <= headroom_52w <= 32.0):
-            return None, "Headroom out of bounds (<2.5% or >32%)"
+        raw_headroom = ((high_52w - c0) / c0) * 100
+        if raw_headroom < 15.0:
+            return None, "Headroom < 15% floor"
 
         ema_10 = close.ewm(span=10, adjust=False).mean()
         ema_21 = close.ewm(span=21, adjust=False).mean()
@@ -651,17 +642,17 @@ def check_pocket_pivot(ticker, df, c0, daily_ema200, headroom_52w):
         tactical_stop = round(min(low.iloc[-1], ema_21.iloc[-1]), 2)
         risk_pct = round(((pivot_trigger - tactical_stop) / pivot_trigger) * 100, 2)
 
-        if risk_pct > 6.5 or risk_pct <= 0:
-            return None, "Tactical risk invalid or >6.5%"
+        if risk_pct > 6.5 or risk_pct < 1.5:
+            return None, "Tactical risk invalid or outside 1.5%-6.5%"
 
-        reward_risk = headroom_52w / risk_pct
+        reward_risk = raw_headroom / risk_pct
         if reward_risk < 2.0:
             return None, f"Low Asymmetry (R:R {round(reward_risk, 1)} < 2.0)"
 
         return {
             'Ticker': ticker,
             'Close': round(c0, 2),
-            'Headroom_%': round(headroom_52w, 1),
+            'Headroom_%': round(raw_headroom, 1),
             'Ext_10EMA_%': round(ext_10, 1),
             'Above_200EMA_%': round(ext_200, 1),
             'Vol_Pocket_Ratio': f"{vol_pocket_ratio}x",
@@ -673,8 +664,11 @@ def check_pocket_pivot(ticker, df, c0, daily_ema200, headroom_52w):
     except Exception as e:
         return None, f"Error: {type(e).__name__}"
 
-def check_liquidity_sweep(ticker, df, c0, daily_ema200, headroom_52w):
+def check_liquidity_sweep(ticker, df, c0, daily_ema200, high_52w):
     try:
+        if c0 < 15.0:
+            return None, "Price < $15.00 floor (Anti-Penny Gate)"
+
         high = df['High']
         low = df['Low']
         volume = df['Volume']
@@ -682,10 +676,7 @@ def check_liquidity_sweep(ticker, df, c0, daily_ema200, headroom_52w):
         current_high = high.iloc[-1]
         vol_sma50 = volume.rolling(50).mean().iloc[-1]
 
-        # Minimum Headroom Floor at 14.0% (Captures RTX at 16.3%)
-        if not (14.0 <= headroom_52w <= 55.0):
-            return None, "Headroom <14% floor or >55%"
-
+        raw_headroom = ((high_52w - c0) / c0) * 100
         shelf_window = low.iloc[-60:-5]
         if len(shelf_window) < 18:
             return None, "Insufficient base formation window"
@@ -717,12 +708,12 @@ def check_liquidity_sweep(ticker, df, c0, daily_ema200, headroom_52w):
         tactical_stop = round(recent_flush_low * 0.995, 2)
         risk_pct = round(((pivot_trigger - tactical_stop) / pivot_trigger) * 100, 2)
 
-        if risk_pct > 6.5 or risk_pct <= 0:
-            return None, "Tactical risk invalid or >6.5%"
+        if risk_pct > 6.5 or risk_pct < 1.5:
+            return None, "Tactical risk invalid or outside 1.5%-6.5%"
 
-        reward_risk = headroom_52w / risk_pct
-        if reward_risk < 2.0:
-            return None, f"Low Asymmetry (R:R {round(reward_risk, 1)} < 2.0)"
+        reward_risk = raw_headroom / risk_pct
+        if reward_risk < 2.5:
+            return None, f"Low Asymmetry (R:R {round(reward_risk, 1)} < 2.5)"
 
         return {
             'Ticker': ticker,
@@ -730,7 +721,7 @@ def check_liquidity_sweep(ticker, df, c0, daily_ema200, headroom_52w):
             'Shelf_Level': round(support_shelf, 2),
             'Flush_Low': round(recent_flush_low, 2),
             'Sweep_Depth_%': round(undercut_pct, 2),
-            'Headroom_%': round(headroom_52w, 1),
+            'Headroom_%': round(raw_headroom, 1),
             'Vol_Ratio': f"{round(vol_ratio, 2)}x",
             'Pivot_Trigger': pivot_trigger,
             'Stop_Loss': tactical_stop,
@@ -741,48 +732,63 @@ def check_liquidity_sweep(ticker, df, c0, daily_ema200, headroom_52w):
         return None, f"Error: {type(e).__name__}"
 
 # ---------------------------------------------------------
-# 6. MASTER EVALUATION WRAPPER
+# 6. MASTER EVALUATION WRAPPER WITH SECTOR GATES
 # ---------------------------------------------------------
-EXCLUDED_SECTORS = {'Real Estate', 'Utilities'}
-EXCLUDED_INDUSTRIES = {'Banks - Regional', 'Regional - Banks', 'Savings & Cooperative Banks'}
+EXCLUDED_SECTORS = {
+    'Real Estate', 'Utilities', 'Consumer Defensive', 'Consumer Staples', 
+    'Financials', 'Financial Services', 'Basic Materials', 'Healthcare',
+    'Consumer Discretionary'
+}
 
-def evaluate_all_setups(ticker, daily_df, spy_3m_perf, sector_map):
+# Sub-industry keywords to cleanly filter non-core filler (BHE, VCYT, DOCU, IT, MGY, APD)
+BANNED_INDUSTRY_KEYWORDS = [
+    'apparel', 'retail', 'truck', 'freight', 'footwear', 'bank',
+    'credit', 'mortgage', 'homebuild', 'grocery', 'hotel', 'resort',
+    'cruise', 'marine', 'tobacco', 'publishing', 'broadcasting',
+    'ground transportation', 'building products', 'consumer finance',
+    'packaging', 'containers', 'auto parts', 'dealership', 'biotechnology',
+    'drug', 'pharmaceutical', 'medical devices', 'diagnostics',
+    'healthcare providers', 'industrial distribution', 'restaurant',
+    'machinery', 'heavy equipment', 'oil & gas midstream', 'pipeline',
+    'electronic manufacturing services', 'it consulting', 'research services'
+]
+
+def evaluate_all_setups(ticker, daily_df, spy_1m_perf, sector_map):
     try:
         daily_df = daily_df.dropna()
-        if len(daily_df) < 220:
-            return {'diagnostics': "Insufficient data (<220 sessions)"}
+        if len(daily_df) < 120:
+            return {'diagnostics': "Insufficient data (<120 sessions)"}
 
         c0 = daily_df['Close'].iloc[-1]
         volume = daily_df['Volume']
         vol_sma50 = volume.rolling(50).mean().iloc[-1]
         
         daily_dollar_vol = c0 * vol_sma50
-        if c0 < 10.0 or daily_dollar_vol < 18_000_000:
-            return {'diagnostics': "Liquidity Gate: Price <$10 or ADDV <$18M"}
+        if c0 < 10.0 or daily_dollar_vol < 12_000_000:
+            return {'diagnostics': "Liquidity Gate: Price <$10 or ADDV <$12M"}
 
-        # Relative Strength Gate (Allows -5.0% lag vs. SPY for defense/industrial hedges)
-        stock_3m_perf = ((c0 - daily_df['Close'].iloc[-63]) / daily_df['Close'].iloc[-63]) * 100
-        rs_relative = stock_3m_perf - spy_3m_perf
-        if rs_relative < -5.0:
-            return {'diagnostics': "Relative Strength: Lagging S&P 500 by >5% (3M)"}
+        stock_1m_perf = ((c0 - daily_df['Close'].iloc[-21]) / daily_df['Close'].iloc[-21]) * 100
+        rs_relative = stock_1m_perf - spy_1m_perf
+        if rs_relative < -12.0:
+            return {'diagnostics': "Relative Strength: Lagging S&P 500 by >12% (1M)"}
 
-        # Offline Sector Exclusions
         sec_info = sector_map.get(ticker, {'sector': 'Unknown', 'industry': 'Unknown'})
-        if sec_info['sector'] in EXCLUDED_SECTORS or sec_info['industry'] in EXCLUDED_INDUSTRIES:
-            return {'diagnostics': f"Sector Excluded ({sec_info['sector']} / {sec_info['industry']})"}
+        sec_name = sec_info.get('sector', '')
+        ind_name = sec_info.get('industry', '').lower()
+
+        # Hardcode exceptions for physical datacenter constraints like TPL or EME
+        if ticker not in ['TPL', 'EME']:
+            if sec_name in EXCLUDED_SECTORS or any(kw in ind_name for kw in BANNED_INDUSTRY_KEYWORDS):
+                return {'diagnostics': f"Sector Excluded ({sec_name} / {sec_info.get('industry')})"}
 
         daily_ema200 = daily_df['Close'].ewm(span=200, adjust=False).mean().iloc[-1]
         pct_above_200 = ((c0 - daily_ema200) / daily_ema200) * 100
 
-        if c0 < (0.95 * daily_ema200):
-            return {'diagnostics': "Universal Macro: Below Daily 200 EMA"}
-
         w_df = resample_daily_to_weekly(daily_df)
-        if len(w_df) < 40:
-            return {'diagnostics': "Insufficient weekly history (<40 weeks)"}
+        if len(w_df) < 24:
+            return {'diagnostics': "Insufficient weekly history (<24 weeks)"}
 
         high_52w = daily_df['High'].tail(252).max() if len(daily_df) >= 252 else daily_df['High'].max()
-        headroom_52w = ((high_52w - c0) / high_52w) * 100
 
         results = {
             'ticker': ticker,
@@ -798,22 +804,22 @@ def evaluate_all_setups(ticker, daily_df, spy_3m_perf, sector_map):
         }
 
         # 1. Base-Reset Inflection
-        res_br, r_br = check_base_reset(ticker, daily_df, w_df, c0, daily_ema200, pct_above_200, headroom_52w)
+        res_br, r_br = check_base_reset(ticker, daily_df, w_df, c0, daily_ema200, pct_above_200, high_52w)
         results['base_reset'] = res_br
         results['br_reason'] = r_br
 
         # 2. Momentum Bull Flag
-        res_htf, r_htf = check_htf(ticker, daily_df, c0, headroom_52w)
+        res_htf, r_htf = check_htf(ticker, daily_df, c0, high_52w)
         results['htf'] = res_htf
         results['htf_reason'] = r_htf
 
         # 3. Pocket Pivot Squeeze
-        res_pp, r_pp = check_pocket_pivot(ticker, daily_df, c0, daily_ema200, headroom_52w)
+        res_pp, r_pp = check_pocket_pivot(ticker, daily_df, c0, daily_ema200, high_52w)
         results['pocket_pivot'] = res_pp
         results['pp_reason'] = r_pp
 
         # 4. Liquidity Sweep
-        res_ls, r_ls = check_liquidity_sweep(ticker, daily_df, c0, daily_ema200, headroom_52w)
+        res_ls, r_ls = check_liquidity_sweep(ticker, daily_df, c0, daily_ema200, high_52w)
         results['liquidity_sweep'] = res_ls
         results['ls_reason'] = r_ls
 
@@ -830,28 +836,59 @@ def analyze_market_regime(total_evaluated, total_above_200, category_counts):
     print("                      MACRO MARKET REGIME & CAPITAL EXPOSURE DASHBOARD")
     print("="*112)
 
-    benchmarks = yf.download(
-        ['SPY', 'QQQ'],
+    cross_assets = yf.download(
+        ['SPY', 'QQQ', '^TNX', 'CL=F'],
         period='1y',
         interval='1d',
         progress=False,
         session=GLOBAL_HTTP_SESSION
     )
-    spy_close = benchmarks['Close']['SPY'].dropna()
-    qqq_close = benchmarks['Close']['QQQ'].dropna()
+    
+    close_df = cross_assets['Close']
+    spy_close = close_df['SPY'].dropna()
+    qqq_close = close_df['QQQ'].dropna()
 
     spy_c = spy_close.iloc[-1]
     spy_ema21 = spy_close.ewm(span=21, adjust=False).mean().iloc[-1]
     spy_sma50 = spy_close.rolling(50).mean().iloc[-1]
     spy_ema200 = spy_close.ewm(span=200, adjust=False).mean().iloc[-1]
 
-    qqq_c = qqq_close.iloc[-1]
-    qqq_sma50 = qqq_close.rolling(50).mean().iloc[-1]
-
     spy_above_21 = bool(spy_c > spy_ema21)
     spy_above_50 = bool(spy_c > spy_sma50)
     spy_above_200 = bool(spy_c > spy_ema200)
+
+    qqq_c = qqq_close.iloc[-1]
+    qqq_ema21 = qqq_close.ewm(span=21, adjust=False).mean().iloc[-1]
+    qqq_sma50 = qqq_close.rolling(50).mean().iloc[-1]
+    qqq_ema200 = qqq_close.ewm(span=200, adjust=False).mean().iloc[-1]
+
+    qqq_above_21 = bool(qqq_c > qqq_ema21)
     qqq_above_50 = bool(qqq_c > qqq_sma50)
+    qqq_above_200 = bool(qqq_c > qqq_ema200)
+    qqq_in_downtrend = (not qqq_above_50) or (not qqq_above_200) or (qqq_c < qqq_ema21 and qqq_ema21 < qqq_sma50)
+
+    macro_warnings = []
+    cross_asset_drag = False
+    
+    tnx_c = 0.0
+    if '^TNX' in close_df.columns:
+        tnx_s = close_df['^TNX'].dropna()
+        if not tnx_s.empty:
+            tnx_c = tnx_s.iloc[-1]
+            tnx_5d_chg = ((tnx_c - tnx_s.iloc[-5]) / tnx_s.iloc[-5]) * 100 if len(tnx_s) >= 5 else 0.0
+            if tnx_c >= 4.80 or tnx_5d_chg >= 3.5:
+                cross_asset_drag = True
+                macro_warnings.append(f"⚡ YIELD SURGE: 10-Yr Yield at {round(tnx_c, 2)}% (+{round(tnx_5d_chg, 1)}% 5d). Tech valuation multiple drag active.")
+
+    oil_c = 0.0
+    if 'CL=F' in close_df.columns:
+        oil_s = close_df['CL=F'].dropna()
+        if not oil_s.empty:
+            oil_c = oil_s.iloc[-1]
+            oil_5d_chg = ((oil_c - oil_s.iloc[-5]) / oil_s.iloc[-5]) * 100 if len(oil_s) >= 5 else 0.0
+            if oil_c >= 85.0 or oil_5d_chg >= 4.5:
+                cross_asset_drag = True
+                macro_warnings.append(f"🛢️ OIL PRICE SPIKE: WTI Crude at ${round(oil_c, 2)} (+{round(oil_5d_chg, 1)}% 5d). Headline inflation expectations repricing.")
 
     pct_above_200 = (total_above_200 / max(total_evaluated, 1)) * 100
     pct_below_200 = 100.0 - pct_above_200
@@ -861,38 +898,52 @@ def analyze_market_regime(total_evaluated, total_above_200, category_counts):
 
     calendar_alerts, seasonal_mult = MacroEventCalendar.evaluate_calendar()
 
-    if (not spy_above_200) or (not spy_above_50 and not qqq_above_50) or (pct_above_200 < 50.0):
+    if cross_asset_drag:
+        seasonal_mult = min(seasonal_mult, 0.65)
+
+    if (not spy_above_200) or (not qqq_above_200) or (not spy_above_50 and not qqq_above_50) or (pct_above_200 < 50.0):
         regime_status = "RED: CONFIRMED MACRO DOWNTREND"
-        action_plan = "AVOID ALL TRADING (100% Cash). Sidelined to preserve capital."
-        allowed_setups = "NONE. Correlation approaches 1.0; breakdowns cascade."
-        max_exposure = "0% (Sidelined)"
-        posture_box = "■ DOWNTREND DEFENSE: DO NOT DEPLOY CAPITAL ■"
-    elif spy_above_21 and spy_above_50 and (pct_above_200 >= 70.0) and (htf_cnt >= 5):
+        action_plan = "DEFENSIVE SIZING. Structural trend broken. Use extreme caution on breakouts."
+        allowed_setups = "Watchlist evaluation active. High-expectancy setups only."
+        max_exposure = "0% - 15% (Defensive Stance)"
+        posture_box = "■ DOWNTREND DEFENSE: TRADE SELECTIVELY WITH TIGHT RISK ■"
+
+    elif (spy_above_21 and spy_above_50 and qqq_above_21 and qqq_above_50 and qqq_above_200) and (pct_above_200 >= 70.0) and (not cross_asset_drag) and (htf_cnt >= 4):
         regime_status = "GREEN: EXPANSION / MOMENTUM REGIME"
-        action_plan = "AGGRESSIVE MARKUP. Trade traditional breakouts and continuation flags."
+        action_plan = "AGGRESSIVE MARKUP. Full green-light to trade traditional breakouts and momentum flags."
         allowed_setups = "Momentum Bull Flags, High Tight Flags, Pocket Pivots."
         eff_exp = int(100 * seasonal_mult)
         max_exposure = f"{int(80 * seasonal_mult)}% - {eff_exp}%"
         posture_box = "▲ EXPANSION BULL: BUY CONTINUATION & BREAKOUTS ▲"
+
     else:
-        regime_status = "AMBER: ROTATIONAL ACCUMULATION / RANGE DIGEST"
-        action_plan = "SELECTIVE MEAN-REVERSION. Strictly avoid chasing 52w-high breakouts."
-        allowed_setups = "Liquidity Sweeps (U&R) and Base Pocket Pivots (Risk <= 2.5%)."
-        eff_exp = int(50 * seasonal_mult)
-        max_exposure = f"{int(30 * seasonal_mult)}% - {eff_exp}% (Tight partials at 2R to 3R)"
+        regime_status = "AMBER: ROTATIONAL ACCUMULATION / MACRO HEADWIND"
+        if cross_asset_drag:
+            action_plan = "DEFENSIVE SELECTIVITY. Yield/Oil spike compressing multiples. Do NOT chase tech breakouts."
+        elif qqq_in_downtrend:
+            action_plan = "TECH DISTRIBUTION DRAG. QQQ lagging below short-term EMAs. Favor Non-Tech or Support Sweeps."
+        else:
+            action_plan = "SELECTIVE MEAN-REVERSION. Avoid 52w-high breakouts; buy structural support tests."
+        
+        allowed_setups = "Liquidity Sweeps (U&R), Cash-Flow Hedges, and Base Pocket Pivots (Risk <= 3.0%)."
+        eff_exp = int(45 * seasonal_mult)
+        max_exposure = f"{int(20 * seasonal_mult)}% - {eff_exp}% (Take fast partials at 2R)"
         posture_box = "◆ ROTATIONAL DIGEST: BUY SUPPORT SWEEPS ONLY ◆"
 
     print(f"  Regime Status       : {regime_status}")
     print(f"  Macro Posture       : {posture_box}")
-    print(f"  Max Account Exposure: {max_exposure} (Seasonal factor: {seasonal_mult}x)")
+    print(f"  Max Account Exposure: {max_exposure} (Macro/Cross-Asset Factor: {round(seasonal_mult, 2)}x)")
     print(f"  Recommended Tactics : {action_plan}")
     print(f"  Eligible Setups     : {allowed_setups}")
     print("-" * 112)
-    print(f"  INDEX BENCHMARKS    : SPY = ${round(spy_c, 2)} (Above 21 EMA: {spy_above_21} | Above 50 SMA: {spy_above_50})")
-    print(f"                        QQQ = ${round(qqq_c, 2)} (Above 50 SMA: {qqq_above_50})")
+    print(f"  EQUITY BENCHMARKS   : SPY = ${round(spy_c, 2)} (Above 21 EMA: {spy_above_21} | Above 50 SMA: {spy_above_50} | Above 200 EMA: {spy_above_200})")
+    print(f"                        QQQ = ${round(qqq_c, 2)} (Above 21 EMA: {qqq_above_21} | Above 50 SMA: {qqq_above_50} | Above 200 EMA: {qqq_above_200} | Downtrend: {qqq_in_downtrend})")
+    print(f"  CROSS-ASSET MACRO   : 10Y Treasury Yield = {round(tnx_c, 2)}% | WTI Crude Oil = ${round(oil_c, 2)}/bbl")
     print(f"  UNIVERSE BREADTH    : {round(pct_above_200, 1)}% of stocks > 200 EMA | {round(pct_below_200, 1)}% in Structural Downtrends")
     print(f"  CANDIDATE PROFILE   : Breakout/Momentum ({htf_cnt}) vs. False-Breakdown Sweeps ({sweep_cnt})")
     print("-" * 112)
+    for warn in macro_warnings:
+        print(f"  EXOGENOUS SHOCK     : {warn}")
     for alert in calendar_alerts:
         print(f"  CALENDAR & RELEASES : {alert}")
     print("=" * 112 + "\n")
@@ -906,10 +957,9 @@ def run_master_screener():
     universe, sector_map = fetch_institutional_universe_and_sectors()
     total = len(universe)
     print(f"Loaded institutional universe of {total} stocks.")
-    print(f"Excluding Real Estate, Utilities, Regional Banks & ADDV <$18M.")
+    print(f"Excluding Healthcare, Staples, Transports, Financials, Utilities, Real Estate, Retail & ADDV <$12M.")
     print(f"Scanning across 4 Setup Categories in batches of {CHUNK_SIZE}...\n")
 
-    # SPY 3-month performance benchmark
     spy_data = yf.download(
         'SPY',
         period='6mo',
@@ -917,9 +967,9 @@ def run_master_screener():
         progress=False,
         session=GLOBAL_HTTP_SESSION
     )['Close']
-    spy_3m_perf = ((spy_data.iloc[-1] - spy_data.iloc[-63]) / spy_data.iloc[-63]) * 100
-    if isinstance(spy_3m_perf, pd.Series):
-        spy_3m_perf = spy_3m_perf.iloc[0]
+    spy_1m_perf = ((spy_data.iloc[-1] - spy_data.iloc[-21]) / spy_data.iloc[-21]) * 100
+    if isinstance(spy_1m_perf, pd.Series):
+        spy_1m_perf = spy_1m_perf.iloc[0]
 
     base_resets = []
     htfs = []
@@ -971,9 +1021,9 @@ def run_master_screener():
             for sym in chunk:
                 if isinstance(batch_data.columns, pd.MultiIndex):
                     if sym in batch_data.columns.levels[0]:
-                        future_to_sym[executor.submit(evaluate_all_setups, sym, batch_data[sym], spy_3m_perf, sector_map)] = sym
+                        future_to_sym[executor.submit(evaluate_all_setups, sym, batch_data[sym], spy_1m_perf, sector_map)] = sym
                 else:
-                    future_to_sym[executor.submit(evaluate_all_setups, sym, batch_data, spy_3m_perf, sector_map)] = sym
+                    future_to_sym[executor.submit(evaluate_all_setups, sym, batch_data, spy_1m_perf, sector_map)] = sym
 
             for future in as_completed(future_to_sym):
                 total_evaluated += 1
@@ -1024,14 +1074,6 @@ def run_master_screener():
     total_above_200 = total_evaluated - macro_diag["Universal Macro: Below Daily 200 EMA"]
     regime = analyze_market_regime(total_evaluated, total_above_200, category_counts)
 
-    if "RED" in regime:
-        print("!"*112)
-        print(" [CIRCUIT BREAKER ACTIVE] Market conditions are unfavorable for swing trading.")
-        print(" Candidate outputs are locked to prevent capital allocation into a macro distribution tape.")
-        print("!"*112 + "\n")
-        return
-
-    # Profile Zacks Ranks and Earnings Dates
     unique_passed_tickers = list(set(
         [r['Ticker'] for r in base_resets] +
         [r['Ticker'] for r in htfs] +
@@ -1050,26 +1092,35 @@ def run_master_screener():
     zacks_map = profile_zacks_with_local_tenure(unique_passed_tickers)
     print(" done.\n")
 
-    for r in base_resets:
-        r['Zacks_Rank'] = zacks_map.get(r['Ticker'], 'N/A')
-        r['Earnings_Risk'] = earnings_map.get(r['Ticker'], 'Unknown')
-    for r in htfs:
-        r['Zacks_Rank'] = zacks_map.get(r['Ticker'], 'N/A')
-        r['Earnings_Risk'] = earnings_map.get(r['Ticker'], 'Unknown')
-    for r in pocket_pivots:
-        r['Zacks_Rank'] = zacks_map.get(r['Ticker'], 'N/A')
-        r['Earnings_Risk'] = earnings_map.get(r['Ticker'], 'Unknown')
-    for r in liquidity_sweeps:
-        r['Zacks_Rank'] = zacks_map.get(r['Ticker'], 'N/A')
-        r['Earnings_Risk'] = earnings_map.get(r['Ticker'], 'Unknown')
+    for pool in [base_resets, htfs, pocket_pivots, liquidity_sweeps]:
+        for r in pool:
+            r['Zacks_Rank'] = zacks_map.get(r['Ticker'], 'N/A')
+            r['Earnings_Risk'] = earnings_map.get(r['Ticker'], 'Unknown')
 
-    # Exclude Zacks #4/#5 (Sell/Strong Sell)
-    filtered_base_resets = [r for r in base_resets if any(r['Zacks_Rank'].startswith(rk) for rk in ['#1', '#2', '#3'])]
-    filtered_htfs = [r for r in htfs if any(r['Zacks_Rank'].startswith(rk) for rk in ['#1', '#2', '#3'])]
+    # CATEGORY 1 QUALITY WEEDER:
+    # Retains Zacks #1, #2 AND 'N/A' (Preserves unranked high-growth IPOs like ALAB)
+    filtered_base_resets = [
+        r for r in base_resets
+        if (any(r['Zacks_Rank'].startswith(rk) for rk in ['#1', '#2']) or r['Zacks_Rank'] == 'N/A')
+        and "🚨 DANGER" not in r['Earnings_Risk']
+    ]
+
+    # CATEGORIES 2, 3, 4 QUALITY WEEDER:
+    # Retains #1, #2, #3 and 'N/A', discarding #4/#5 and immediate earnings risks
+    def universal_quality_filter(pool):
+        return [
+            r for r in pool
+            if not any(r['Zacks_Rank'].startswith(rk) for rk in ['#4', '#5'])
+            and "🚨 DANGER" not in r['Earnings_Risk']
+        ]
+
+    filtered_htfs = universal_quality_filter(htfs)
+    filtered_pockets = universal_quality_filter(pocket_pivots)
+    filtered_sweeps = universal_quality_filter(liquidity_sweeps)
 
     # Candidate Output Tables & CSV Exports
     print("\n" + "="*148)
-    print("                    CATEGORY 1: BASE-RESET INFLECTIONS (R:R >= 2.0, Headroom >= 18%)")
+    print("                    CATEGORY 1: BASE-RESET INFLECTIONS (Above 200 EMA >= 0.5%, Headroom >= 16%, R:R >= 2.5)")
     print("="*148)
     if filtered_base_resets:
         df_br = pd.DataFrame(filtered_base_resets).sort_values(by='Conviction_Score', ascending=False).reset_index(drop=True)
@@ -1079,7 +1130,7 @@ def run_master_screener():
         print("No candidates currently meeting Base-Reset quality gates.")
 
     print("\n" + "="*148)
-    print("                    CATEGORY 2: MOMENTUM BULL FLAGS (Flag <= 16d, Depth <= 15%, R:R >= 2.0)")
+    print("                    CATEGORY 2: MOMENTUM BULL FLAGS (CAN SLIM Pole >= 45.0%, Flag <= 18d, Depth <= 14%, Risk >= 1.5%)")
     print("="*148)
     if filtered_htfs:
         df_htf = pd.DataFrame(filtered_htfs).sort_values(by='Pole_Gain_%', ascending=False).reset_index(drop=True)
@@ -1089,20 +1140,20 @@ def run_master_screener():
         print("No candidates currently meeting Momentum Flag quality gates.")
 
     print("\n" + "="*148)
-    print("                    CATEGORY 3: POCKET PIVOT SQUEEZES (R:R >= 2.0, Launch Off 10/21 EMA)")
+    print("                    CATEGORY 3: POCKET PIVOT SQUEEZES (Headroom >= 15%, R:R >= 2.0, Safe Earnings)")
     print("="*148)
-    if pocket_pivots:
-        df_pp = pd.DataFrame(pocket_pivots).sort_values(by='R_Ratio', ascending=False).reset_index(drop=True)
+    if filtered_pockets:
+        df_pp = pd.DataFrame(filtered_pockets).sort_values(by='R_Ratio', ascending=False).reset_index(drop=True)
         print(df_pp.to_string(index=False))
         df_pp.to_csv("watchlist_pocket_pivots.csv", index=False)
     else:
         print("No candidates currently meeting Pocket Pivot criteria.")
 
     print("\n" + "="*148)
-    print("                    CATEGORY 4: LIQUIDITY SWEEPS (Non-Bank/REIT, Headroom >= 14%, R:R >= 2.0)")
+    print("                    CATEGORY 4: LIQUIDITY SWEEPS (Price >= $15, Non-Retail/Midstream, R:R >= 2.5)")
     print("="*148)
-    if liquidity_sweeps:
-        df_ls = pd.DataFrame(liquidity_sweeps).sort_values(by='R_Ratio', ascending=False).reset_index(drop=True)
+    if filtered_sweeps:
+        df_ls = pd.DataFrame(filtered_sweeps).sort_values(by='R_Ratio', ascending=False).reset_index(drop=True)
         print(df_ls.to_string(index=False))
         df_ls.to_csv("watchlist_liquidity_sweeps.csv", index=False)
     else:
@@ -1127,8 +1178,8 @@ def run_master_screener():
 
     print_sub_funnel("CATEGORY 1 (BASE-RESET)", br_diag, len(filtered_base_resets))
     print_sub_funnel("CATEGORY 2 (MOMENTUM BULL FLAG)", htf_diag, len(filtered_htfs))
-    print_sub_funnel("CATEGORY 3 (POCKET PIVOT SQUEEZE)", pp_diag, len(pocket_pivots))
-    print_sub_funnel("CATEGORY 4 (LIQUIDITY SWEEP)", ls_diag, len(liquidity_sweeps))
+    print_sub_funnel("CATEGORY 3 (POCKET PIVOT SQUEEZE)", pp_diag, len(filtered_pockets))
+    print_sub_funnel("CATEGORY 4 (LIQUIDITY SWEEP)", ls_diag, len(filtered_sweeps))
     print("="*95 + "\n")
 
 if __name__ == "__main__":

@@ -1,2 +1,3 @@
 Ticker,Close,Headroom_%,Ext_10EMA_%,Above_200EMA_%,Vol_Pocket_Ratio,Pivot_Trigger,Stop_Loss,Risk_%,R_Ratio,Zacks_Rank,Earnings_Risk
-NEU,898.04,8.2,0.8,16.0,1.2x,898.93,881.51,1.94,4.23,N/A,SAFE (37d)
+LAUR,37.62,8.8,1.9,9.2,0.95x,37.83,36.85,2.59,9.65,#3 (New),SAFE (30d)
+NEU,912.44,7.2,2.0,17.7,0.96x,918.63,884.47,3.72,6.72,N/A,SAFE (37d)

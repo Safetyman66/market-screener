@@ -156,8 +156,8 @@
     "industry": "Technology Hardware, Storage & Peripherals"
   },
   "AMAT": {
-    "sector": "Information Technology",
-    "industry": "Semiconductor Materials & Equipment"
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment"
   },
   "APP": {
     "sector": "Communication Services",
@@ -669,7 +669,7 @@
   },
   "EME": {
     "sector": "Industrials",
-    "industry": "Construction & Engineering"
+    "industry": "Engineering & Construction"
   },
   "EMR": {
     "sector": "Industrials",
@@ -1112,8 +1112,8 @@
     "industry": "Asset Management & Custody Banks"
   },
   "KLAC": {
-    "sector": "Information Technology",
-    "industry": "Semiconductor Materials & Equipment"
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment"
   },
   "KHC": {
     "sector": "Consumer Staples",
@@ -1132,8 +1132,8 @@
     "industry": "Health Care Services"
   },
   "LRCX": {
-    "sector": "Information Technology",
-    "industry": "Semiconductor Materials & Equipment"
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment"
   },
   "LVS": {
     "sector": "Consumer Discretionary",
@@ -1648,7 +1648,7 @@
     "industry": "Retail REITs"
   },
   "SWKS": {
-    "sector": "Information Technology",
+    "sector": "Technology",
     "industry": "Semiconductors"
   },
   "SJM": {
@@ -1960,8 +1960,8 @@
     "industry": "Health Care Supplies"
   },
   "WDC": {
-    "sector": "Information Technology",
-    "industry": "Technology Hardware, Storage & Peripherals"
+    "sector": "Technology",
+    "industry": "Computer Hardware/Storage"
   },
   "WY": {
     "sector": "Real Estate",
@@ -2400,8 +2400,8 @@
     "industry": "Office REITs"
   },
   "CVLT": {
-    "sector": "Information Technology",
-    "industry": "Systems Software"
+    "sector": "Technology",
+    "industry": "Software"
   },
   "CW": {
     "sector": "Industrials",
@@ -2412,7 +2412,7 @@
     "industry": "Electronic Equipment & Instruments"
   },
   "CYTK": {
-    "sector": "Healthcare",
+    "sector": "Health Care",
     "industry": "Biotechnology"
   },
   "DAR": {
@@ -2820,7 +2820,7 @@
     "industry": "Retail REITs"
   },
   "KRYS": {
-    "sector": "Healthcare",
+    "sector": "Health Care",
     "industry": "Biotechnology"
   },
   "KTOS": {
@@ -3376,7 +3376,7 @@
     "industry": "Gas Utilities"
   },
   "SYNA": {
-    "sector": "Information Technology",
+    "sector": "Technology",
     "industry": "Semiconductors"
   },
   "TCBI": {
@@ -3436,8 +3436,8 @@
     "industry": "Construction & Engineering"
   },
   "TTMI": {
-    "sector": "Information Technology",
-    "industry": "Electronic Manufacturing Services"
+    "sector": "Technology",
+    "industry": "Electronic Components"
   },
   "TWLO": {
     "sector": "Information Technology",
@@ -4304,8 +4304,8 @@
     "industry": "Specialized Finance"
   },
   "EFOR": {
-    "sector": "Information Technology",
-    "industry": "IT Consulting & Other Services"
+    "sector": "Technology",
+    "industry": "Software"
   },
   "EGBN": {
     "sector": "Financials",
@@ -4652,8 +4652,8 @@
     "industry": "Homebuilding"
   },
   "ICHR": {
-    "sector": "Information Technology",
-    "industry": "Semiconductor Materials & Equipment"
+    "sector": "Technology",
+    "industry": "Semiconductor Equipment"
   },
   "ICUI": {
     "sector": "Health Care",
@@ -5208,8 +5208,8 @@
     "industry": "Oil & Gas Refining & Marketing"
   },
   "PAYC": {
-    "sector": "Industrials",
-    "industry": "Human Resource & Employment Services"
+    "sector": "Technology",
+    "industry": "Software"
   },
   "PAYO": {
     "sector": "Financials",
@@ -5232,8 +5232,8 @@
     "industry": "Pharmaceuticals"
   },
   "PDFS": {
-    "sector": "Information Technology",
-    "industry": "Semiconductor Materials & Equipment"
+    "sector": "Technology",
+    "industry": "Semiconductors"
   },
   "PEB": {
     "sector": "Real Estate",
