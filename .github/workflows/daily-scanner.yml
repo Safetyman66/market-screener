@@ -47,3 +47,23 @@ jobs:
             git commit -m "Auto-update scanner cache & watchlists [skip ci]"
             git push
           fi
+      - name: Deploy to Website Repository
+          env:
+            PAT_TOKEN: ${{ secrets.PAGES_DEPLOY_TOKEN }}
+          run: |
+            git config --global user.name "github-actions[bot]"
+            git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+            # Clone the public website repository into a temporary folder
+            git clone https://x-access-token:${PAT_TOKEN}@github.com/Safetyman66/corpacuity-website.git site_temp
+          
+            # Copy over the website files and PDF
+            cp index.html site_temp/
+            cp CNAME site_temp/
+            cp daily_market_intelligence.pdf site_temp/
+          
+            # Push changes to the public site repo
+            cd site_temp
+            git add index.html CNAME daily_market_intelligence.pdf
+            git commit -m "Auto-deploy daily market intelligence [skip ci]" || echo "No changes to commit"
+            git push origin main
