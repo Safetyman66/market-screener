@@ -1,5 +1,6 @@
-Ticker,Close,Pole_Gain_%,Flag_Days,Flag_Depth_%,10d_Tightness_%,Vol_DryUp,Pivot_Trigger,Stop_Loss,Risk_%,R_Ratio,Zacks_Rank,Earnings_Risk
-EFOR,32.83,94.8,9,8.4,8.4,0.62x,34.42,31.54,8.37,5.66,#3 (1d),SAFE (28d)
-PAYC,220.58,85.1,16,12.8,7.6,0.71x,244.98,213.65,12.79,3.33,#1 (2d),SAFE (35d)
-SPSC,81.01,52.4,11,12.7,6.7,0.74x,89.44,78.12,12.66,2.07,#3 (2d),SAFE (29d)
-HAE,105.79,47.4,6,5.4,6.5,0.71x,110.45,104.44,5.44,4.35,#3 (2d),SAFE (36d)
+Ticker,Close,Pole_Gain_%,Flag_Days,Flag_Depth_%,10d_Tightness_%,Vol_DryUp,Conviction_Score,Pivot_Trigger,Stop_Loss,Risk_%,R_Ratio,Zacks_Rank,Earnings_Risk
+EFOR,32.9,94.8,10,8.4,7.3,0.61x,5.66,34.42,31.54,8.37,5.66,#3 (1d),SAFE (28d)
+PAYC,218.58,85.1,17,13.3,8.8,0.71x,3.2,244.98,212.4,13.3,3.2,#1 (2d),SAFE (35d)
+SWKS,88.04,61.4,4,7.7,9.0,0.63x,4.01,92.8,85.69,7.66,4.01,#3 (1d),SAFE (34d)
+SPSC,82.15,52.4,12,12.7,6.4,0.74x,2.07,89.44,78.12,12.66,2.07,#3 (2d),SAFE (29d)
+HAE,105.8,47.4,7,5.4,5.4,0.71x,4.35,110.45,104.44,5.44,4.35,#3 (2d),SAFE (36d)
