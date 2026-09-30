@@ -29,6 +29,9 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Master Screener
+        env:
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          LINKEDIN_AUTHOR_URN: ${{ secrets.LINKEDIN_AUTHOR_URN }}
         run: |
           python scanner.py
 
