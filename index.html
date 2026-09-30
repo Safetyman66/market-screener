@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Corp Acuity | Institutional Market Intelligence</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --card-bg: #161b22;
+      --border: #30363d;
+      --text: #c9d1d9;
+      --text-bright: #f0f6fc;
+      --accent: #58a6ff;
+      --green: #3fb950;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 1.25rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #090d13;
+    }
+    .brand {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--text-bright);
+    }
+    .brand span {
+      color: var(--accent);
+      font-size: 0.85rem;
+      font-weight: 400;
+      margin-left: 0.5rem;
+    }
+    .nav-contact {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+    .nav-contact:hover {
+      text-decoration: underline;
+    }
+    main {
+      flex: 1;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem;
+      width: 100%;
+    }
+    .hero {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    .hero h1 {
+      font-size: 2.1rem;
+      color: var(--text-bright);
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.02em;
+    }
+    .hero p {
+      font-size: 1.05rem;
+      color: #8b949e;
+      max-width: 620px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.75rem;
+      margin-bottom: 1.75rem;
+    }
+    .card-title {
+      color: var(--text-bright);
+      margin-top: 0;
+      margin-bottom: 0.5rem;
+      font-size: 1.3rem;
+    }
+    .btn {
+      display: inline-block;
+      background-color: #238636;
+      color: #ffffff;
+      padding: 0.7rem 1.4rem;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-top: 1rem;
+      transition: background-color 0.15s ease;
+    }
+    .btn:hover {
+      background-color: #2ea043;
+    }
+    .features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .feature-item {
+      background: #0d1117;
+      border: 1px solid var(--border);
+      padding: 1rem;
+      border-radius: 6px;
+    }
+    .feature-item h4 {
+      margin: 0 0 0.4rem 0;
+      color: var(--text-bright);
+      font-size: 0.95rem;
+    }
+    .feature-item p {
+      margin: 0;
+      color: #8b949e;
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.5rem 2rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #8b949e;
+      background: #090d13;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">CORP ACUITY <span>// QUANTITATIVE RISK & INTELLIGENCE</span></div>
+    <a href="mailto:am@corpacuity.co.uk" class="nav-contact">Inquiries</a>
+  </header>
+
+  <main>
+    <div class="hero">
+      <h1>Daily Market Intelligence & Swing Radar</h1>
+      <p>Automated, systematic equity screening across 1,600+ tickers integrating momentum regimes, CAN SLIM fundamental catalysts, and price structure.</p>
+    </div>
+
+    <div class="card" style="text-align: center;">
+      <h2 class="card-title">Daily Intelligence Carousel</h2>
+      <p style="color: #8b949e; margin-bottom: 0.5rem;">Access today's market deck, macro exposure gauge, and actionable swing watchlists:</p>
+      <a href="daily_market_intelligence.pdf" target="_blank" class="btn">Open Daily PDF Carousel</a>
+    </div>
+
+    <div class="card">
+      <h3 class="card-title" style="font-size: 1.15rem;">Core Screener Methodologies</h3>
+      <div class="features">
+        <div class="feature-item">
+          <h4>Market Regime Analysis</h4>
+          <p>Index tracking across moving averages and distribution days to establish macro exposure postures.</p>
+        </div>
+        <div class="feature-item">
+          <h4>Fundamental Acceleration</h4>
+          <p>Earnings & sales momentum, Zacks rank trends, and institutional support criteria.</p>
+        </div>
+        <div class="feature-item">
+          <h4>Technical Structure</h4>
+          <p>Pocket pivots, contraction breakouts, volume dry-ups, and key moving average alignments.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 class="card-title" style="font-size: 1.15rem;">Institutional Access & Custom Feeds</h3>
+      <p style="color: #8b949e; margin-bottom: 0.75rem;">For full watchlist CSV data feeds, custom risk screens, or bespoke portfolio monitoring:</p>
+      <p style="margin: 0;"><strong style="color: var(--text-bright);">Direct Desk:</strong> <a href="mailto:am@corpacuity.co.uk" style="color: var(--accent); text-decoration: none;">am@corpacuity.co.uk</a></p>
+    </div>
+  </main>
+
+  <footer>
+    &copy; Corp Acuity Ltd. All rights reserved. Quantitative Market Intelligence.
+  </footer>
+</body>
+</html>
