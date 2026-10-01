@@ -1,9 +1,9 @@
-name: Daily Market Screener
+name: Daily Market Screener & Site Deploy
 
 on:
   schedule:
-    # Runs Monday through Friday at 21:30 UTC
-    - cron: '30 21 * * 1-5'
+    # 00:30 UTC Tuesday through Saturday
+    - cron: '30 0 * * 2-6'
   workflow_dispatch:
 
 jobs:
@@ -25,24 +25,21 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install yfinance pandas numpy requests lxml html5lib reportlab
 
-      - name: Run Master Screener
-        env:
-          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
-          LINKEDIN_AUTHOR_URN: ${{ secrets.LINKEDIN_AUTHOR_URN }}
+      - name: Run Master Screener (Calculations & PDF Generation)
         run: |
           python scanner.py
 
-      - name: Commit and push updated cache and CSV watchlists
+      - name: Commit and push updated artifacts and metadata
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add sector_cache.json zacks_rank_tracker.json watchlist_*.csv || true
+          git add sector_cache.json zacks_rank_tracker.json watchlist_*.csv daily_market_intelligence.pdf latest_post_meta.json || true
           if git diff --staged --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "Auto-update scanner cache & watchlists [skip ci]"
+            git commit -m "Auto-update scanner cache, PDF & post metadata [skip ci]"
             git push
           fi
 
@@ -52,17 +49,11 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-          # Clone the public website repository into a temporary folder
           git clone https://x-access-token:${PAT_TOKEN}@github.com/Safetyman66/corpacuity-website.git site_temp
-
-          # Copy over the website files and PDF
-          cp index.html site_temp/
-          cp CNAME site_temp/
+          cp index.html site_temp/ || true
+          cp CNAME site_temp/ || true
           cp daily_market_intelligence.pdf site_temp/
-
-          # Push changes to the public site repo
           cd site_temp
-          git add index.html CNAME daily_market_intelligence.pdf
+          git add -A
           git commit -m "Auto-deploy daily market intelligence [skip ci]" || echo "No changes to commit"
           git push origin main
