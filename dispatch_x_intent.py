@@ -53,7 +53,7 @@ def send_dispatch_email(intent_url, post_text):
     smtp_port = int(os.getenv("SMTP_PORT", "587"))
     smtp_user = os.getenv("SMTP_USER")
     smtp_pass = os.getenv("SMTP_PASS")
-    recipient = os.getenv("ALERT_RECIPIENT", "am@corpacuity.co.uk")
+    recipient = os.getenv("ALERT_RECIPIENT", "ajmcneilster@gmail.com")
 
     if not smtp_user or not smtp_pass:
         print("[X INTENT] SMTP credentials not provided in environment. Printing intent link to log:")

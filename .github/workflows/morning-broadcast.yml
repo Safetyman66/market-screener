@@ -40,6 +40,6 @@ jobs:
           SMTP_PORT: ${{ secrets.SMTP_PORT }}
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
-          ALERT_RECIPIENT: "am@corpacuity.co.uk"
+          ALERT_RECIPIENT: "ajmcneilster@gmail.com"
         run: |
           python dispatch_x_intent.py
