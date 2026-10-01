@@ -14,6 +14,7 @@ import pandas as pd
 import yfinance as yf
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
+import fitz  # PyMuPDF for rendering X cards
 from reportlab.lib.colors import HexColor
 from reportlab.pdfgen import canvas
 
@@ -104,7 +105,7 @@ def fetch_institutional_universe_and_sectors():
             tickers.add(sym)
             sec = str(row.get('GICS Sector', 'Unknown'))
             ind = str(row.get('GICS Sub-Industry', 'Unknown'))
-            sector_map.setdefault(sym, {'sector': sec, 'industry': ind})
+            sector_map.setdefault(sym, {'sector': sec, 'industry': ind} )
 
     except Exception as e:
         print(f"Warning: Ingestion error ({e}). Falling back to cached lists...")
@@ -293,6 +294,41 @@ class MacroEventCalendar:
                 alerts.append(f"IN {diff} DAYS: {desc}")
                 horizon_count += 1
 
+        # Quarter-End Rebalance & Seasonal Liquidity Check
+        is_quarter_end_month = month in [3, 6, 9, 12]
+        if is_quarter_end_month and day >= 24:
+            quarter_label = {3: "Q1", 6: "Q2", 9: "Q3", 12: "Q4"}[month]
+            if month == 9:
+                alerts.append(
+                    f"⚖️ {quarter_label} REBALANCE & FISCAL YEAR-END: Pension flows + mutual fund "
+                    f"tax-loss harvesting active. High risk of false breakouts & liquidation."
+                )
+                exposure_multiplier = min(exposure_multiplier, 0.60)
+            else:
+                alerts.append(
+                    f"⚖️ {quarter_label} QUARTER-END REBALANCING: 60/40 mechanical pension rebalancing. "
+                    f"Flows may distort single-stock technical breakouts."
+                )
+                exposure_multiplier = min(exposure_multiplier, 0.75)
+
+        elif month == 9 and 15 <= day < 24:
+            alerts.append("🍂 MID-SEPTEMBER SEASONAL DRAG: Post-OPEX de-risking & pre-rebalance supply active.")
+            exposure_multiplier = min(exposure_multiplier, 0.75)
+
+        elif month == 8 and day >= 10:
+            alerts.append("☀️ SUMMER DOLDRUMS: Thin liquidity & low volume. Breakouts prone to whipsaw.")
+            exposure_multiplier = min(exposure_multiplier, 0.75)
+
+        elif month == 4 and 10 <= day <= 17:
+            alerts.append("💸 US TAX FILING DRAIN: Retail cash outflows. Midday momentum fading.")
+            exposure_multiplier = min(exposure_multiplier, 0.80)
+
+        elif (month == 11 and day >= 20) or (month == 12 and 15 <= day < 24) or (month == 1 and day <= 10):
+            alerts.append("🎅 HIGH INFLOW WINDOW (Year-End Chase): Benchmark chasing active. Continuation favored.")
+
+        if day in [29, 30, 31, 1, 2, 3] and not (is_quarter_end_month and day >= 24):
+            alerts.append("📈 TURN-OF-MONTH (TOM) INFLOWS: Automated retirement allocations supporting baseline.")
+
         return alerts, exposure_multiplier
 
 # ---------------------------------------------------------
@@ -394,7 +430,7 @@ def evaluate_earnings_proximity(ticker):
     return "Unknown/TBD"
 
 # ---------------------------------------------------------
-# 5. PATTERN GATES (TUNED FOR 100% HARDWARE CAPTURE)
+# 5. PATTERN GATES
 # ---------------------------------------------------------
 def check_base_reset(ticker, daily_df, w_df, c0, daily_ema200, pct_above_200, high_52w):
     try:
@@ -736,20 +772,25 @@ def evaluate_all_setups(ticker, daily_df, spy_1m_perf, sector_map):
     try:
         daily_df = daily_df.dropna()
         if len(daily_df) < 120:
-            return {'diagnostics': "Insufficient data (<120 sessions)"}
+            return {'diagnostics': "Insufficient data (<120 sessions)", 'above_200': False}
 
         c0 = daily_df['Close'].iloc[-1]
+        
+        # Calculate true EMA200 status for accurate market breadth
+        daily_ema200 = daily_df['Close'].ewm(span=200, adjust=False).mean().iloc[-1]
+        is_above_200 = bool(c0 > daily_ema200)
+
         volume = daily_df['Volume']
         vol_sma50 = volume.rolling(50).mean().iloc[-1]
         
         daily_dollar_vol = c0 * vol_sma50
         if c0 < 10.0 or daily_dollar_vol < 12_000_000:
-            return {'diagnostics': "Liquidity Gate: Price <$10 or ADDV <$12M"}
+            return {'diagnostics': "Liquidity Gate: Price <$10 or ADDV <$12M", 'above_200': is_above_200}
 
         stock_1m_perf = ((c0 - daily_df['Close'].iloc[-21]) / daily_df['Close'].iloc[-21]) * 100
         rs_relative = stock_1m_perf - spy_1m_perf
         if rs_relative < -12.0:
-            return {'diagnostics': "Relative Strength: Lagging S&P 500 by >12% (1M)"}
+            return {'diagnostics': "Relative Strength: Lagging S&P 500 by >12% (1M)", 'above_200': is_above_200}
 
         sec_info = sector_map.get(ticker, {'sector': 'Unknown', 'industry': 'Unknown'})
         sec_name = sec_info.get('sector', '')
@@ -757,19 +798,19 @@ def evaluate_all_setups(ticker, daily_df, spy_1m_perf, sector_map):
 
         if ticker not in ['TPL', 'EME']:
             if sec_name in EXCLUDED_SECTORS or any(kw in ind_name for kw in BANNED_INDUSTRY_KEYWORDS):
-                return {'diagnostics': f"Sector Excluded ({sec_name} / {sec_info.get('industry')})"}
+                return {'diagnostics': f"Sector Excluded ({sec_name} / {sec_info.get('industry')})", 'above_200': is_above_200}
 
-        daily_ema200 = daily_df['Close'].ewm(span=200, adjust=False).mean().iloc[-1]
         pct_above_200 = ((c0 - daily_ema200) / daily_ema200) * 100
 
         w_df = resample_daily_to_weekly(daily_df)
         if len(w_df) < 24:
-            return {'diagnostics': "Insufficient weekly history (<24 weeks)"}
+            return {'diagnostics': "Insufficient weekly history (<24 weeks)", 'above_200': is_above_200}
 
         high_52w = daily_df['High'].tail(252).max() if len(daily_df) >= 252 else daily_df['High'].max()
 
         results = {
             'ticker': ticker,
+            'above_200': is_above_200,
             'base_reset': None,
             'htf': None,
             'pocket_pivot': None,
@@ -800,7 +841,7 @@ def evaluate_all_setups(ticker, daily_df, spy_1m_perf, sector_map):
         return results
 
     except Exception as e:
-        return {'diagnostics': f"Error: {type(e).__name__}"}
+        return {'diagnostics': f"Error: {type(e).__name__}", 'above_200': False}
 
 # ---------------------------------------------------------
 # 7. MACRO REGIME & EXPOSURE DASHBOARD
@@ -936,7 +977,7 @@ def analyze_market_regime(total_evaluated, total_above_200, category_counts):
     return regime_status, dashboard_data
 
 # ---------------------------------------------------------
-# 8. LINKEDIN CAROUSEL PDF GENERATOR (MOBILE 4:5 PORTRAIT: 1080x1350)
+# 8. LINKEDIN CAROUSEL PDF GENERATOR (MOBILE-MAX LEGIBILITY)
 # ---------------------------------------------------------
 def create_linkedin_carousel_pdf(
     filename,
@@ -952,199 +993,307 @@ def create_linkedin_carousel_pdf(
 ):
     w, h = 1080, 1350
     c = canvas.Canvas(filename, pagesize=(w, h))
-    today_str = datetime.date.today().strftime("%d %B %Y").upper()
+    today_str = datetime.date.today().strftime("%d %b %Y").upper()
 
     bg_color = HexColor("#0b0f19")
     card_bg = HexColor("#161e2e")
-    text_white = HexColor("#f8fafc")
+    card_inner = HexColor("#0f172a")
+    text_white = HexColor("#ffffff")
     text_muted = HexColor("#94a3b8")
     accent_cyan = HexColor("#38bdf8")
     accent_green = HexColor("#4ade80")
     accent_amber = HexColor("#fbbf24")
-    border_color = HexColor("#1e293b")
+    accent_red = HexColor("#f87171")
+    border_color = HexColor("#334155")
 
     def draw_base(header, slide_num=1, total_slides=7):
         c.setFillColor(bg_color)
         c.rect(0, 0, w, h, fill=True, stroke=False)
-        c.setFont("Helvetica-Bold", 24)
+
+        # Top Bar
+        c.setFont("Helvetica-Bold", 28)
         c.setFillColor(accent_cyan)
-        c.drawString(70, h - 80, header)
-        c.setFont("Helvetica", 20)
+        c.drawString(60, h - 80, header)
+        c.setFont("Helvetica-Bold", 24)
         c.setFillColor(text_muted)
-        c.drawRightString(w - 70, h - 80, today_str)
+        c.drawRightString(w - 60, h - 80, today_str)
+
         c.setStrokeColor(border_color)
         c.setLineWidth(2)
-        c.line(70, h - 105, w - 70, h - 105)
-        c.setFont("Helvetica", 18)
-        c.drawString(70, 50, f"CORP ACUITY // SLIDE {slide_num} OF {total_slides}")
-        c.drawRightString(w - 70, 50, "SWIPE ➔")
+        c.line(60, h - 105, w - 60, h - 105)
+
+        # Footer
+        c.setFont("Helvetica-Bold", 24)
+        c.setFillColor(text_muted)
+        c.drawString(60, 60, f"CORP ACUITY // SLIDE {slide_num} OF {total_slides}")
+        c.setFillColor(accent_cyan)
+        c.drawRightString(w - 60, 60, "SWIPE ➔")
 
     # SLIDE 1: HOOK & VALUE PROP
-    draw_base("DAILY MARKET REGIME & ALPHA ENGINE", 1, 7)
-    c.setFont("Helvetica-Bold", 54)
+    draw_base("DAILY ALPHA ENGINE", 1, 7)
+
+    c.setFont("Helvetica-Bold", 64)
     c.setFillColor(text_white)
-    c.drawString(70, h - 230, "The Noise-Filtered")
+    c.drawString(60, h - 210, "The Noise-Filtered")
     c.setFillColor(accent_cyan)
-    c.drawString(70, h - 300, "Institutional Screen.")
-    
+    c.drawString(60, h - 285, "Institutional Screen.")
+
     c.setFillColor(card_bg)
-    c.roundRect(70, h - 880, w - 140, 520, 24, fill=True, stroke=False)
-    c.setFont("Helvetica-Bold", 28)
+    c.roundRect(60, h - 920, w - 120, 590, 24, fill=True, stroke=False)
+
+    c.setFont("Helvetica-Bold", 34)
     c.setFillColor(accent_green)
-    c.drawString(110, h - 370, "SYSTEMATIC EXECUTION EDGE:")
+    c.drawString(100, h - 365, "SYSTEMATIC EDGE:")
 
-    points = [
-        ("• Mathematical Sizing First:", "We calculate universe breadth (% > 200 EMA) and macro shocks before risk."),
-        ("• Strict Regime Allocation:", "Capital preservation circuit-breakers trigger when distribution spreads."),
-        ("• 4 Non-Correlated Gate Models:", "Base-Resets, Momentum Flags, Pocket Pivots, and Support Sweeps isolate setups."),
-        ("• Strict Asymmetry Floor:", "Minimum 2.0R to 2.5R reward-to-risk required. Zero chasing extended breakouts.")
+    rules = [
+        ("Macro Sizing First", "Exposure is capped by breadth before stock picking."),
+        ("Strict 200 EMA Rule", "Zero long trades below structural moving averages."),
+        ("4 Hard Non-Correlated Gates", "Base-Resets, Momentum Flags, Pockets, and Sweeps."),
+        ("Strict 2.0R Minimum Floor", "Zero chasing. High reward-to-risk required on every setup.")
     ]
-    y = h - 430
-    for title, desc in points:
-        c.setFont("Helvetica-Bold", 22)
+
+    y_rule = h - 440
+    for r_title, r_desc in rules:
+        c.setFont("Helvetica-Bold", 28)
         c.setFillColor(text_white)
-        c.drawString(110, y, title)
-        c.setFont("Helvetica", 20)
+        c.drawString(100, y_rule, f"• {r_title}")
+        c.setFont("Helvetica", 24)
         c.setFillColor(text_muted)
-        c.drawString(110, y - 30, desc)
-        y -= 105
+        c.drawString(125, y_rule - 34, r_desc)
+        y_rule -= 105
 
-    c.setFont("Helvetica-Bold", 24)
+    c.setFont("Helvetica-Bold", 30)
     c.setFillColor(accent_amber)
-    c.drawCentredString(w / 2, 130, "Swipe to review macro posture & setups ➔")
+    c.drawCentredString(w / 2, 130, "Swipe to review regime & setups ➔")
     c.showPage()
 
-    # SLIDE 2: MACRO POSTURE
-    draw_base("MACRO REGIME & CAPITAL POSTURE", 2, 7)
-    c.setFillColor(card_bg)
-    c.roundRect(70, h - 410, w - 140, 270, 24, fill=True, stroke=False)
-    c.setFont("Helvetica", 22)
-    c.setFillColor(text_muted)
-    c.drawString(110, h - 180, "SYSTEM STATUS")
-    
-    regime_col = accent_green if "GREEN" in regime_status else (accent_amber if "AMBER" in regime_status else HexColor("#f87171"))
-    c.setFont("Helvetica-Bold", 36)
-    c.setFillColor(regime_col)
-    c.drawString(110, h - 235, regime_status)
-    
-    c.setFont("Helvetica-Bold", 22)
-    c.setFillColor(text_white)
-    c.drawString(110, h - 295, f"Macro Posture: {posture_box[:52]}")
-    c.drawString(110, h - 340, f"Max Permitted Exposure: {max_exposure}")
+    # SLIDE 2: MACRO POSTURE & COCKPIT
+    draw_base("MACRO REGIME COCKPIT", 2, 7)
 
+    # Status Hero Box
     c.setFillColor(card_bg)
-    c.roundRect(70, h - 940, w - 140, 480, 24, fill=True, stroke=False)
+    c.roundRect(60, h - 430, w - 120, 295, 24, fill=True, stroke=False)
+
     c.setFont("Helvetica-Bold", 26)
-    c.setFillColor(accent_cyan)
-    c.drawString(110, h - 470, "BREADTH & RISK RADAR")
-    c.setFont("Helvetica", 24)
-    c.setFillColor(text_white)
-    c.drawString(110, h - 530, f"Universe > 200-day EMA: {round(pct_above_200, 1)}%")
+    c.setFillColor(text_muted)
+    c.drawString(100, h - 180, "MARKET REGIME STATUS")
 
-    c.setFont("Helvetica-Bold", 22)
+    regime_col = accent_green if "GREEN" in regime_status else (accent_amber if "AMBER" in regime_status else accent_red)
+    c.setFont("Helvetica-Bold", 42)
+    c.setFillColor(regime_col)
+    c.drawString(100, h - 245, regime_status)
+
+    c.setFont("Helvetica-Bold", 30)
+    c.setFillColor(text_white)
+    c.drawString(100, h - 320, f"Max Exposure: {max_exposure}")
+    c.setFont("Helvetica", 24)
+    c.setFillColor(text_muted)
+    clean_posture = posture_box.replace("■", "").replace("▲", "").replace("◆", "").strip()[:48]
+    c.drawString(100, h - 370, clean_posture)
+
+    # Breadth & Radar Box
+    c.setFillColor(card_bg)
+    c.roundRect(60, h - 1000, w - 120, 520, 24, fill=True, stroke=False)
+
+    c.setFont("Helvetica-Bold", 32)
+    c.setFillColor(accent_cyan)
+    c.drawString(100, h - 495, "BREADTH & EVENT RADAR")
+
+    c.setFont("Helvetica-Bold", 36)
+    c.setFillColor(text_white)
+    c.drawString(100, h - 565, f"Universe > 200 EMA: {round(pct_above_200, 1)}%")
+
+    c.setStrokeColor(border_color)
+    c.setLineWidth(1)
+    c.line(100, h - 605, w - 100, h - 605)
+
+    c.setFont("Helvetica-Bold", 26)
     c.setFillColor(accent_amber)
-    c.drawString(110, h - 610, "SCHEDULED EVENT RADAR:")
-    y_a = h - 665
-    for alert in calendar_alerts[:4]:
-        c.setFont("Helvetica", 19)
-        c.setFillColor(text_muted)
-        c.drawString(110, y_a, alert.replace("🚨", "!").replace("⚠️", "-").replace("📅", "•")[:75])
-        y_a -= 55
+    c.drawString(100, h - 655, "IMMINENT MACRO PRINTS:")
+
+    y_al = h - 715
+    radar_events = calendar_alerts[:3] if calendar_alerts else ["Clear Runway: No high-impact events in 72h."]
+    for al in radar_events:
+        clean_al = al.replace("🚨", "! ").replace("⚠️", "- ").replace("📅", "• ")
+        c.setFont("Helvetica-Bold", 24)
+        c.setFillColor(text_white)
+        c.drawString(100, y_al, clean_al[:52])
+        y_al -= 65
+
     c.showPage()
 
-    # SLIDES 3 to 6: SETUP WINNERS
+    # SLIDES 3 to 6: SETUP WINNERS (CARD TILES)
     cards = [
-        ("CATEGORY 1: BASE-RESET INFLECTION", top_br, 3),
-        ("CATEGORY 2: MOMENTUM BULL FLAG", top_htf, 4),
-        ("CATEGORY 3: POCKET PIVOT SQUEEZE", top_pp, 5),
-        ("CATEGORY 4: LIQUIDITY SWEEP (U&R)", top_ls, 6)
+        ("BASE-RESET INFLECTION", top_br, 3),
+        ("MOMENTUM BULL FLAG", top_htf, 4),
+        ("POCKET PIVOT SQUEEZE", top_pp, 5),
+        ("LIQUIDITY SWEEP (U&R)", top_ls, 6)
     ]
-    for title, cand, s_idx in cards:
-        draw_base(title, s_idx, 7)
-        if cand:
-            c.setFillColor(card_bg)
-            c.roundRect(70, h - 450, w - 140, 310, 24, fill=True, stroke=False)
-            c.setFont("Helvetica-Bold", 76)
-            c.setFillColor(accent_cyan)
-            c.drawString(110, h - 240, f"${cand['Ticker']}")
-            c.setFont("Helvetica-Bold", 34)
-            c.setFillColor(text_white)
-            c.drawRightString(w - 110, h - 220, f"Last: ${cand['Close']}")
-            c.setFont("Helvetica", 24)
-            c.setFillColor(text_muted)
-            c.drawString(110, h - 330, f"Zacks Rank: {cand.get('Zacks_Rank', 'N/A')}")
-            c.drawString(110, h - 375, f"Earnings Runway: {cand.get('Earnings_Risk', 'N/A')}")
 
+    for cat_title, cand, s_idx in cards:
+        draw_base(cat_title, s_idx, 7)
+
+        if cand:
+            # Hero Header Card
             c.setFillColor(card_bg)
-            c.roundRect(70, h - 940, w - 140, 440, 24, fill=True, stroke=False)
-            c.setFont("Helvetica-Bold", 26)
-            c.setFillColor(accent_green)
-            c.drawString(110, h - 510, "TACTICAL ASYMMETRY PROFILE")
-            specs = [
-                ("Pivot Trigger", f"${cand.get('Pivot_Trigger', 'N/A')}"),
-                ("Tactical Invalidation", f"${cand.get('Stop_Loss', 'N/A')}"),
-                ("Calculated Risk", f"{cand.get('Risk_%', 'N/A')}%"),
-                ("52W High Headroom", f"{cand.get('Headroom_%', 'N/A')}%"),
-                ("Reward-to-Risk", f"{cand.get('R_Ratio', 'N/A')} R (Min 2.0R req.)"),
-            ]
-            ys = h - 575
-            for lbl, val in specs:
-                c.setFont("Helvetica", 22)
-                c.setFillColor(text_muted)
-                c.drawString(110, ys, lbl)
-                c.setFont("Helvetica-Bold", 22)
-                c.setFillColor(text_white)
-                c.drawRightString(w - 110, ys, str(val))
-                c.setStrokeColor(border_color)
-                c.setLineWidth(1)
-                c.line(110, ys - 15, w - 110, ys - 15)
-                ys -= 65
-        else:
-            c.setFillColor(card_bg)
-            c.roundRect(70, h - 580, w - 140, 360, 24, fill=True, stroke=False)
-            c.setFont("Helvetica-Bold", 34)
+            c.roundRect(60, h - 400, w - 120, 265, 24, fill=True, stroke=False)
+
+            c.setFont("Helvetica-Bold", 90)
+            c.setFillColor(accent_cyan)
+            c.drawString(100, h - 230, f"${cand['Ticker']}")
+
+            c.setFont("Helvetica-Bold", 40)
             c.setFillColor(text_white)
-            c.drawString(110, h - 320, "No Candidates Passed Today's Gates")
+            c.drawRightString(w - 100, h - 210, f"${cand['Close']:.2f}")
+
+            c.setFont("Helvetica-Bold", 28)
+            c.setFillColor(accent_green)
+            c.drawString(105, h - 315, f"Zacks: {cand.get('Zacks_Rank', 'N/A')}")
+            c.setFillColor(text_muted)
+            c.drawString(105, h - 355, f"Earnings: {cand.get('Earnings_Risk', 'N/A')}")
+
+            # 4 Large Metric Tile Cards
+            grid_y = h - 700
+            box_w = 450
+            box_h = 130
+
+            # Tile 1: Entry Trigger
+            c.setFillColor(card_inner)
+            c.roundRect(60, grid_y, box_w, box_h, 16, fill=True, stroke=False)
+            c.setFont("Helvetica-Bold", 22)
+            c.setFillColor(text_muted)
+            c.drawString(85, grid_y + 85, "PIVOT TRIGGER")
+            c.setFont("Helvetica-Bold", 42)
+            c.setFillColor(accent_green)
+            c.drawString(85, grid_y + 30, f"${cand.get('Pivot_Trigger', 0.0):.2f}")
+
+            # Tile 2: Stop Loss
+            c.setFillColor(card_inner)
+            c.roundRect(w - 60 - box_w, grid_y, box_w, box_h, 16, fill=True, stroke=False)
+            c.setFont("Helvetica-Bold", 22)
+            c.setFillColor(text_muted)
+            c.drawString(w - 60 - box_w + 25, grid_y + 85, "TACTICAL STOP")
+            c.setFont("Helvetica-Bold", 42)
+            c.setFillColor(accent_red)
+            c.drawString(w - 60 - box_w + 25, grid_y + 30, f"${cand.get('Stop_Loss', 0.0):.2f}")
+
+            # Tile 3: Calculated Risk
+            grid_y_low = grid_y - 155
+            c.setFillColor(card_inner)
+            c.roundRect(60, grid_y_low, box_w, box_h, 16, fill=True, stroke=False)
+            c.setFont("Helvetica-Bold", 22)
+            c.setFillColor(text_muted)
+            c.drawString(85, grid_y_low + 85, "STOP MARGIN RISK")
+            c.setFont("Helvetica-Bold", 42)
+            c.setFillColor(text_white)
+            c.drawString(85, grid_y_low + 30, f"{cand.get('Risk_%', 0.0):.2f}%")
+
+            # Tile 4: Reward-to-Risk
+            c.setFillColor(card_inner)
+            c.roundRect(w - 60 - box_w, grid_y_low, box_w, box_h, 16, fill=True, stroke=False)
+            c.setFont("Helvetica-Bold", 22)
+            c.setFillColor(text_muted)
+            c.drawString(w - 60 - box_w + 25, grid_y_low + 85, "ASYMMETRY RATIO")
+            c.setFont("Helvetica-Bold", 42)
+            c.setFillColor(accent_cyan)
+            c.drawString(w - 60 - box_w + 25, grid_y_low + 30, f"{cand.get('R_Ratio', 0.0):.1f} : 1.0")
+
+            # Headroom Banner Card
+            c.setFillColor(card_bg)
+            c.roundRect(60, grid_y_low - 170, w - 120, 135, 16, fill=True, stroke=False)
+            c.setFont("Helvetica-Bold", 28)
+            c.setFillColor(text_white)
+            c.drawString(100, grid_y_low - 100, f"Headroom to 52W High: +{cand.get('Headroom_%', 0.0):.1f}% Runway")
             c.setFont("Helvetica", 22)
             c.setFillColor(text_muted)
-            c.drawString(110, h - 380, "Parameters require min 2.0R asymmetry, institutional")
-            c.drawString(110, h - 420, "volume signature, and constructive 200 EMA alignment.")
-            c.setFont("Helvetica-Bold", 24)
+            c.drawString(100, grid_y_low - 140, "Conviction Score: Top decile institutional volume footprint")
+
+        else:
+            # Fallback Card
+            c.setFillColor(card_bg)
+            c.roundRect(60, h - 620, w - 120, 390, 24, fill=True, stroke=False)
+            c.setFont("Helvetica-Bold", 40)
+            c.setFillColor(text_white)
+            c.drawString(100, h - 330, "No Candidates Passed Today")
+            c.setFont("Helvetica", 26)
+            c.setFillColor(text_muted)
+            c.drawString(100, h - 410, "Required: Min 2.0R asymmetry, institutional")
+            c.drawString(100, h - 460, "volume signatures, and structural EMA support.")
+            c.setFont("Helvetica-Bold", 32)
             c.setFillColor(accent_amber)
-            c.drawString(110, h - 480, "Cash is a position. Discipline preserves capital.")
+            c.drawString(100, h - 540, "Cash is a position. Protect capital.")
+
         c.showPage()
 
-    # SLIDE 7: CTA & ARCHITECTURE
-    draw_base("SYSTEM RULES & ARCHITECTURE", 7, 7)
+    # SLIDE 7: CTA & PIPELINE ACCESS
+    draw_base("SYSTEM RULES & WATCHLIST", 7, 7)
+
     c.setFillColor(card_bg)
-    c.roundRect(70, h - 720, w - 140, 560, 24, fill=True, stroke=False)
-    c.setFont("Helvetica-Bold", 34)
-    c.setFillColor(text_white)
-    c.drawString(110, h - 230, "Systematic. Unemotional. Quantified.")
-    c.setFont("Helvetica", 22)
-    c.setFillColor(text_muted)
-    c.drawString(110, h - 300, "Every afternoon at US market close, our algorithm ingests the entire")
-    c.drawString(110, h - 340, "S&P 500, S&P 400, S&P 600, and Nasdaq-100 institutional universe.")
-    c.drawString(110, h - 380, "We strip out low liquidity, regional banks, and earnings landmines.")
+    c.roundRect(60, h - 750, w - 120, 600, 24, fill=True, stroke=False)
 
-    c.setFont("Helvetica-Bold", 26)
+    c.setFont("Helvetica-Bold", 42)
+    c.setFillColor(text_white)
+    c.drawString(100, h - 230, "Systematic. Quantified.")
+
+    c.setFont("Helvetica", 26)
+    c.setFillColor(text_muted)
+    c.drawString(100, h - 310, "Every afternoon after US market close, our engine")
+    c.drawString(100, h - 355, "scans the full 1,600+ stock universe, stripping out")
+    c.drawString(100, h - 400, "debt, bank hazards, and negative momentum.")
+
+    c.setFont("Helvetica-Bold", 32)
     c.setFillColor(accent_cyan)
-    c.drawString(110, h - 460, "Access the complete daily watchlist:")
-    c.setFont("Helvetica", 22)
-    c.setFillColor(text_white)
-    c.drawString(110, h - 510, "Contact Andrew McNeil: am@corpacuity.co.uk")
-    c.drawString(110, h - 550, "Full CSV datasets, Zacks rank tenure tracking, and custom screens.")
+    c.drawString(100, h - 490, "Access the complete daily watchlist:")
 
-    c.setFont("Helvetica-Bold", 14)
-    c.setFillColor(HexColor("#888888"))
-    c.drawString(110, h - 635, "DISCLAIMER:")
-    c.setFont("Helvetica", 14)
+    c.setFont("Helvetica-Bold", 34)
+    c.setFillColor(accent_green)
+    c.drawString(100, h - 560, "Andrew McNeil")
+
+    c.setFont("Helvetica-Bold", 28)
+    c.setFillColor(text_white)
+    c.drawString(100, h - 615, "am@corpacuity.co.uk")
+
+    c.setFont("Helvetica", 24)
     c.setFillColor(text_muted)
-    c.drawString(110, h - 665, "Quantitative market study for educational and informational purposes only.")
-    c.drawString(110, h - 690, "Not financial, investment, or trading advice. Past performance is not predictive.")
+    c.drawString(100, h - 670, "Full CSV datasets, Zacks rank tenure & risk analytics.")
+
+    # High-legibility Disclaimer
+    c.setFont("Helvetica", 20)
+    c.setFillColor(HexColor("#64748b"))
+    c.drawString(60, 140, "Disclaimer: Quantitative study for informational purposes only.")
+    c.drawString(60, 110, "Not financial, investment, or trading advice. Past asymmetry is not predictive.")
 
     c.save()
-    print(f"\n[CAROUSEL] Generated 7-slide mobile 4:5 PDF: {filename}")
+    print(f"\n[CAROUSEL] Generated ultra-legible 7-slide mobile PDF: {filename}")
+
+# ---------------------------------------------------------
+# 8B. RENDER HIGH-RES PNG CARDS FOR X INTENT DISPATCH
+# ---------------------------------------------------------
+def export_carousel_cards_for_web(pdf_path=CAROUSEL_PDF_FILENAME, max_pages=4):
+    """
+    Renders the first 4 slides of the daily PDF as high-resolution PNGs
+    stored in x_cards/ to be hosted on corpacuity.co.uk/x_cards/
+    """
+    if not os.path.exists(pdf_path):
+        print(f"[CARDS] Error: '{pdf_path}' not found.")
+        return []
+
+    os.makedirs("x_cards", exist_ok=True)
+    doc = fitz.open(pdf_path)
+    card_paths = []
+    matrix = fitz.Matrix(2.0, 2.0)  # 2x supersampling
+
+    pages_to_render = min(len(doc), max_pages)
+    for idx in range(pages_to_render):
+        page = doc.load_page(idx)
+        pix = page.get_pixmap(matrix=matrix, alpha=False)
+        out_file = os.path.join("x_cards", f"card_{idx + 1}.png")
+        pix.save(out_file)
+        card_paths.append(out_file)
+
+    doc.close()
+    print(f"[CARDS] Rendered {len(card_paths)} high-res PNG cards into x_cards/")
+    return card_paths
 
 # ---------------------------------------------------------
 # 9. LINKEDIN DYNAMIC POST & FIRST COMMENT PUBLISHER
@@ -1277,7 +1426,7 @@ def publish_to_linkedin(
             print(f"[LINKEDIN] File Stream Failed ({r_upload.status_code}): {r_upload.text}")
             return
 
-        # Step 3: Wait for LinkedIn's Async Document Media Processor
+        # Step 3: Wait for LinkedIn Media Processor
         print("[LINKEDIN] Document uploaded. Pausing 6 seconds for LinkedIn media processing...")
         time.sleep(6.0)
 
@@ -1361,6 +1510,7 @@ def run_master_screener():
 
     total_evaluated = 0
     total_passed_universal = 0
+    total_above_200 = 0  # Dedicated breadth counter
     total_chunks = (total + CHUNK_SIZE - 1) // CHUNK_SIZE
 
     for idx in range(0, total, CHUNK_SIZE):
@@ -1408,6 +1558,9 @@ def run_master_screener():
                 diag_status = res.get('diagnostics', 'Unknown')
                 macro_diag[diag_status] += 1
 
+                if res.get('above_200'):
+                    total_above_200 += 1
+
                 if diag_status == "Evaluated":
                     total_passed_universal += 1
                     matched_any = False
@@ -1448,7 +1601,7 @@ def run_master_screener():
         'pivot': len(pocket_pivots),
         'sweep': len(liquidity_sweeps)
     }
-    total_above_200 = total_evaluated - macro_diag["Universal Macro: Below Daily 200 EMA"]
+
     regime, dashboard = analyze_market_regime(total_evaluated, total_above_200, category_counts)
 
     unique_passed_tickers = list(set(
@@ -1536,7 +1689,7 @@ def run_master_screener():
     print("="*148)
 
     # ---------------------------------------------------------
-    # PRINT ORIGINAL DIAGNOSTIC ELIMINATION FUNNELS
+    # PRINT DIAGNOSTIC ELIMINATION FUNNELS
     # ---------------------------------------------------------
     print("\n" + "="*95)
     print(f"                 UNIVERSAL ELIMINATION FUNNEL (Evaluated {total_evaluated} Symbols)")
@@ -1560,7 +1713,7 @@ def run_master_screener():
     print("="*95 + "\n")
 
     # ---------------------------------------------------------
-    # PICK TOP 1 PER CATEGORY & GENERATE MOBILE 4:5 CAROUSEL PDF
+    # PICK TOP 1 PER CATEGORY & GENERATE CAROUSEL PDF
     # ---------------------------------------------------------
     top_br = sorted(filtered_base_resets, key=lambda x: x.get('Conviction_Score', 0), reverse=True)[0] if filtered_base_resets else None
     top_htf = sorted(filtered_htfs, key=lambda x: x.get('Conviction_Score', 0), reverse=True)[0] if filtered_htfs else None
@@ -1579,6 +1732,11 @@ def run_master_screener():
         top_pp=top_pp,
         top_ls=top_ls
     )
+
+    # ---------------------------------------------------------
+    # RENDER 4 PNG CARDS FOR WEB INTENT DISTRIBUTION
+    # ---------------------------------------------------------
+    export_carousel_cards_for_web(CAROUSEL_PDF_FILENAME, max_pages=4)
 
     # ---------------------------------------------------------
     # SAVE METADATA FOR MORNING BROADCAST WORKFLOW

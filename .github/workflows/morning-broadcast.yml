@@ -2,7 +2,7 @@ name: Morning Social Broadcast
 
 on:
   schedule:
-    # 07:00 UTC = 07:00 GMT / 08:00 BST Tuesday through Saturday
+    # 07:00 UTC Tuesday through Saturday (08:00 BST / 07:00 GMT)
     - cron: '0 7 * * 2-6'
   workflow_dispatch:
 
@@ -23,9 +23,9 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests reportlab yfinance pandas numpy pymupdf tweepy
+          pip install requests reportlab yfinance pandas numpy pymupdf
 
-      # Step 1: LinkedIn Broadcast (Native PDF Carousel + First Comment)
+      # Step 1: LinkedIn Document Carousel Post & Engagement First Comment
       - name: Publish to LinkedIn
         env:
           LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
@@ -33,13 +33,13 @@ jobs:
         run: |
           python publish_linkedin.py
 
-      # Step 2: X Broadcast (4 PNG Cards + Threaded Link to corpacuity.co.uk)
-      - name: Publish to X (Twitter)
+      # Step 2: X Morning Intent Dispatch Email
+      - name: Dispatch X Intent Link
         env:
-          X_API_KEY: ${{ secrets.X_API_KEY }}
-          X_API_SECRET: ${{ secrets.X_API_SECRET }}
-          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
-          X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
-          X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
+          SMTP_HOST: ${{ secrets.SMTP_HOST }}
+          SMTP_PORT: ${{ secrets.SMTP_PORT }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          ALERT_RECIPIENT: "am@corpacuity.co.uk"
         run: |
-          python publish_x.py
+          python dispatch_x_intent.py

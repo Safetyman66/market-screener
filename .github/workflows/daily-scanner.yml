@@ -2,7 +2,7 @@ name: Daily Market Screener & Site Deploy
 
 on:
   schedule:
-    # 00:30 UTC Tuesday through Saturday
+    # 00:30 UTC Tuesday through Saturday (capturing Mon-Fri US market closes)
     - cron: '30 0 * * 2-6'
   workflow_dispatch:
 
@@ -25,9 +25,9 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install yfinance pandas numpy requests lxml html5lib reportlab
+          pip install yfinance pandas numpy requests lxml html5lib reportlab pymupdf
 
-      - name: Run Master Screener (Calculations & PDF Generation)
+      - name: Run Master Screener (Calculations, PDF & X Cards)
         run: |
           python scanner.py
 
@@ -35,11 +35,11 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add sector_cache.json zacks_rank_tracker.json watchlist_*.csv daily_market_intelligence.pdf latest_post_meta.json || true
+          git add sector_cache.json zacks_rank_tracker.json watchlist_*.csv daily_market_intelligence.pdf latest_post_meta.json x_cards/ || true
           if git diff --staged --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "Auto-update scanner cache, PDF & post metadata [skip ci]"
+            git commit -m "Auto-update scanner cache, PDF, metadata & X cards [skip ci]"
             git push
           fi
 
@@ -50,10 +50,22 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git clone https://x-access-token:${PAT_TOKEN}@github.com/Safetyman66/corpacuity-website.git site_temp
+          
+          # Copy website structure
           cp index.html site_temp/ || true
+          cp intel.html site_temp/ || true
           cp CNAME site_temp/ || true
+          
+          # Copy PDF and intelligence metadata
           cp daily_market_intelligence.pdf site_temp/
+          cp latest_post_meta.json site_temp/ || true
+          cp watchlist_*.csv site_temp/ || true
+          
+          # Copy X visual card bundle
+          mkdir -p site_temp/x_cards
+          cp -r x_cards/* site_temp/x_cards/ || true
+
           cd site_temp
           git add -A
-          git commit -m "Auto-deploy daily market intelligence [skip ci]" || echo "No changes to commit"
+          git commit -m "Auto-deploy daily intelligence, terminal & X cards [skip ci]" || echo "No changes to commit"
           git push origin main
