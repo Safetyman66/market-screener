@@ -1,10 +1,12 @@
 {
   "date": "2026-10-02",
-  "regime_status": "CONFIRMED BULL RUN",
-  "exposure": "80% - 100%",
-  "pct_above_200": 77.1,
+  "regime_status": "SELECTIVE ACCUMULATION",
+  "exposure": "30% - 50%",
+  "pct_above_200": 45.6,
   "focus_tickers": [
-    "AAPL"
+    "MAT",
+    "A",
+    "ALGM"
   ],
   "top_runner": null
 }

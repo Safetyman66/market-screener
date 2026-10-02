@@ -6118,5 +6118,35 @@
   "INSM": {
     "sector": "Healthcare",
     "industry": "Biotechnology"
+  },
+  "CLS": {
+    "sector": "Technology",
+    "industry": "Electronic Components",
+    "name": "Celestica, Inc."
+  },
+  "CVE": {
+    "sector": "Energy",
+    "industry": "Oil & Gas Integrated",
+    "name": "Cenovus Energy Inc"
+  },
+  "CWR": {
+    "sector": "Unknown",
+    "industry": "Unknown",
+    "name": "CWR"
+  },
+  "FUTU": {
+    "sector": "Financial Services",
+    "industry": "Capital Markets",
+    "name": "Futu Holdings Limited"
+  },
+  "GCT": {
+    "sector": "Technology",
+    "industry": "Software - Infrastructure",
+    "name": "GigaCloud Technology Inc"
+  },
+  "IONQ": {
+    "sector": "Technology",
+    "industry": "Computer Hardware",
+    "name": "IonQ, Inc."
   }
 }

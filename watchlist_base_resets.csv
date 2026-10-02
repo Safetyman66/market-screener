@@ -1,1 +1,4 @@
-
+Ticker,Sector,Close,Pivot_Trigger,Stop_Loss,Risk_%,Target,R_Ratio,Zacks_Rank,Earnings_Risk,Category
+MAT,Consumer Discretionary,14.9,15.37,14.25,7.3,18.73,3.0,Rank 1 (Strong Buy),SAFE (>14d),Base-Reset
+ON,Information Technology,84.14,86.45,80.89,6.4,103.13,3.0,Rank 1 (Strong Buy),SAFE (>14d),Base-Reset
+SYNA,Technology,120.65,121.98,113.89,6.6,146.25,3.0,Rank 1 (Strong Buy),SAFE (>14d),Base-Reset
