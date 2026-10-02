@@ -1,0 +1,191 @@
+{
+  "generated_at": "2026-10-02 16:55 UTC",
+  "macro": {
+    "regime_status": "CONFIRMED BULL RUN",
+    "posture_box": "\u25b2 AGGRESSIVE EXPANSION: Pyramiding leading leaders (80-100% deployment).",
+    "max_exposure": "80% - 100%",
+    "pct_above_200": 77.1,
+    "tnx": 5.27,
+    "oil": 91.48,
+    "warnings": [
+      "Elevated 10Y Yields (5.27%) exerting valuation multiple compression.",
+      "WTI Crude inflation headwind at $91.48/bbl."
+    ]
+  },
+  "top_runner": null,
+  "watchlists": {
+    "base_resets": [],
+    "momentum_flags": [
+      {
+        "Ticker": "AAPL",
+        "Close": 333.56,
+        "Pivot_Trigger": 345.34,
+        "Stop_Loss": 322.56,
+        "Risk_%": 6.6,
+        "Target": 402.29,
+        "R_Ratio": 2.5,
+        "Zacks_Rank": "Rank 2 (Buy)",
+        "Earnings_Risk": "SAFE (>14d)",
+        "Category": "Momentum Flag"
+      },
+      {
+        "Ticker": "AMD",
+        "Close": 631.28,
+        "Pivot_Trigger": 645.46,
+        "Stop_Loss": 583.45,
+        "Risk_%": 9.6,
+        "Target": 800.48,
+        "R_Ratio": 2.5,
+        "Zacks_Rank": "Rank 2 (Buy)",
+        "Earnings_Risk": "SAFE (>14d)",
+        "Category": "Momentum Flag"
+      },
+      {
+        "Ticker": "ANET",
+        "Close": 206.18,
+        "Pivot_Trigger": 212.0,
+        "Stop_Loss": 197.6,
+        "Risk_%": 6.8,
+        "Target": 248.0,
+        "R_Ratio": 2.5,
+        "Zacks_Rank": "Rank 2 (Buy)",
+        "Earnings_Risk": "SAFE (>14d)",
+        "Category": "Momentum Flag"
+      },
+      {
+        "Ticker": "ASML",
+        "Close": 1868.02,
+        "Pivot_Trigger": 1873.5,
+        "Stop_Loss": 1712.57,
+        "Risk_%": 8.6,
+        "Target": 2275.83,
+        "R_Ratio": 2.5,
+        "Zacks_Rank": "Rank 2 (Buy)",
+        "Earnings_Risk": "SAFE (>14d)",
+        "Category": "Momentum Flag"
+      },
+      {
+        "Ticker": "CAT",
+        "Close": 850.75,
+        "Pivot_Trigger": 858.87,
+        "Stop_Loss": 792.08,
+        "Risk_%": 7.8,
+        "Target": 1025.84,
+        "R_Ratio": 2.5,
+        "Zacks_Rank": "Rank 2 (Buy)",
+        "Earnings_Risk": "SAFE (>14d)",
+        "Category": "Momentum Flag"
+      },
+      {
+        "Ticker": "FIX",
+        "Close": 1744.75,
+        "Pivot_Trigger": 1750.39,
+        "Stop_Loss": 1593.7,
+        "Risk_%": 9.0,
+        "Target": 2142.12,
+        "R_Ratio": 2.5,
+        "Zacks_Rank": "Rank 2 (Buy)",
+        "Earnings_Risk": "SAFE (>14d)",
+        "Category": "Momentum Flag"
+      },
+      {
+        "Ticker": "GEV",
+        "Close": 991.34,
+        "Pivot_Trigger": 1006.0,
+        "Stop_Loss": 925.79,
+        "Risk_%": 8.0,
+        "Target": 1206.53,
+        "R_Ratio": 2.5,
+        "Zacks_Rank": "Rank 2 (Buy)",
+        "Earnings_Risk": "SAFE (>14d)",
+        "Category": "Momentum Flag"
+      },
+      {
+        "Ticker": "GOOGL",
+        "Close": 344.06,
+        "Pivot_Trigger": 364.17,
+        "Stop_Loss": 330.92,
+        "Risk_%": 9.1,
+        "Target": 447.3,
+        "R_Ratio": 2.5,
+        "Zacks_Rank": "Rank 2 (Buy)",
+        "Earnings_Risk": "SAFE (>14d)",
+        "Category": "Momentum Flag"
+      },
+      {
+        "Ticker": "MSFT",
+        "Close": 514.24,
+        "Pivot_Trigger": 522.85,
+        "Stop_Loss": 496.3,
+        "Risk_%": 5.1,
+        "Target": 589.22,
+        "R_Ratio": 2.5,
+        "Zacks_Rank": "Rank 2 (Buy)",
+        "Earnings_Risk": "SAFE (>14d)",
+        "Category": "Momentum Flag"
+      },
+      {
+        "Ticker": "MU",
+        "Close": 1078.98,
+        "Pivot_Trigger": 1108.72,
+        "Stop_Loss": 1001.81,
+        "Risk_%": 9.6,
+        "Target": 1376.0,
+        "R_Ratio": 2.5,
+        "Zacks_Rank": "Rank 2 (Buy)",
+        "Earnings_Risk": "SAFE (>14d)",
+        "Category": "Momentum Flag"
+      },
+      {
+        "Ticker": "NVDA",
+        "Close": 235.36,
+        "Pivot_Trigger": 237.87,
+        "Stop_Loss": 224.46,
+        "Risk_%": 5.6,
+        "Target": 271.4,
+        "R_Ratio": 2.5,
+        "Zacks_Rank": "Rank 2 (Buy)",
+        "Earnings_Risk": "SAFE (>14d)",
+        "Category": "Momentum Flag"
+      },
+      {
+        "Ticker": "PLTR",
+        "Close": 190.22,
+        "Pivot_Trigger": 194.78,
+        "Stop_Loss": 181.97,
+        "Risk_%": 6.6,
+        "Target": 226.8,
+        "R_Ratio": 2.5,
+        "Zacks_Rank": "Rank 2 (Buy)",
+        "Earnings_Risk": "SAFE (>14d)",
+        "Category": "Momentum Flag"
+      },
+      {
+        "Ticker": "QQQ",
+        "Close": 749.8,
+        "Pivot_Trigger": 754.53,
+        "Stop_Loss": 726.72,
+        "Risk_%": 3.7,
+        "Target": 824.05,
+        "R_Ratio": 2.5,
+        "Zacks_Rank": "Rank 2 (Buy)",
+        "Earnings_Risk": "SAFE (>14d)",
+        "Category": "Momentum Flag"
+      },
+      {
+        "Ticker": "RS",
+        "Close": 399.27,
+        "Pivot_Trigger": 407.64,
+        "Stop_Loss": 375.58,
+        "Risk_%": 7.9,
+        "Target": 487.79,
+        "R_Ratio": 2.5,
+        "Zacks_Rank": "Rank 2 (Buy)",
+        "Earnings_Risk": "SAFE (>14d)",
+        "Category": "Momentum Flag"
+      }
+    ],
+    "pocket_pivots": [],
+    "liquidity_sweeps": []
+  }
+}

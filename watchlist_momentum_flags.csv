@@ -1,8 +1,15 @@
-Ticker,Close,Pole_Gain_%,Flag_Days,Flag_Depth_%,10d_Tightness_%,Vol_DryUp,Conviction_Score,Pivot_Trigger,Stop_Loss,Risk_%,R_Ratio,Zacks_Rank,Earnings_Risk
-SMCI,41.92,64.2,4,8.3,12.4,0.72x,3.87,43.76,40.13,8.3,3.87,#2 (1d),SAFE (32d)
-PLTR,190.04,62.7,5,5.1,11.6,0.5x,6.19,194.68,184.81,5.07,6.19,#1 (2d),SAFE (31d)
-SWKS,83.16,61.4,6,10.8,10.8,0.69x,2.83,92.8,82.74,10.84,2.83,#3 (3d),SAFE (32d)
-DOCU,69.74,59.0,12,13.7,10.2,0.69x,2.15,74.07,63.92,13.7,2.15,#3 (3d),SAFE (62d)
-RNG,78.31,56.0,6,11.7,12.5,0.75x,2.39,81.9,72.29,11.73,2.39,#3 (2d),SAFE (34d)
-PI,183.87,48.4,7,7.6,7.6,0.75x,3.17,186.66,172.4,7.64,3.17,#3 (2d),SAFE (26d)
-HAE,104.37,47.4,9,6.3,6.3,0.66x,3.77,110.45,103.51,6.28,3.77,#3 (4d),SAFE (34d)
+Ticker,Close,Pivot_Trigger,Stop_Loss,Risk_%,Target,R_Ratio,Zacks_Rank,Earnings_Risk,Category
+AAPL,333.56,345.34,322.56,6.6,402.29,2.5,Rank 2 (Buy),SAFE (>14d),Momentum Flag
+AMD,631.28,645.46,583.45,9.6,800.48,2.5,Rank 2 (Buy),SAFE (>14d),Momentum Flag
+ANET,206.18,212.0,197.6,6.8,248.0,2.5,Rank 2 (Buy),SAFE (>14d),Momentum Flag
+ASML,1868.02,1873.5,1712.57,8.6,2275.83,2.5,Rank 2 (Buy),SAFE (>14d),Momentum Flag
+CAT,850.75,858.87,792.08,7.8,1025.84,2.5,Rank 2 (Buy),SAFE (>14d),Momentum Flag
+FIX,1744.75,1750.39,1593.7,9.0,2142.12,2.5,Rank 2 (Buy),SAFE (>14d),Momentum Flag
+GEV,991.34,1006.0,925.79,8.0,1206.53,2.5,Rank 2 (Buy),SAFE (>14d),Momentum Flag
+GOOGL,344.06,364.17,330.92,9.1,447.3,2.5,Rank 2 (Buy),SAFE (>14d),Momentum Flag
+MSFT,514.24,522.85,496.3,5.1,589.22,2.5,Rank 2 (Buy),SAFE (>14d),Momentum Flag
+MU,1078.98,1108.72,1001.81,9.6,1376.0,2.5,Rank 2 (Buy),SAFE (>14d),Momentum Flag
+NVDA,235.36,237.87,224.46,5.6,271.4,2.5,Rank 2 (Buy),SAFE (>14d),Momentum Flag
+PLTR,190.22,194.78,181.97,6.6,226.8,2.5,Rank 2 (Buy),SAFE (>14d),Momentum Flag
+QQQ,749.8,754.53,726.72,3.7,824.05,2.5,Rank 2 (Buy),SAFE (>14d),Momentum Flag
+RS,399.27,407.64,375.58,7.9,487.79,2.5,Rank 2 (Buy),SAFE (>14d),Momentum Flag

@@ -1,0 +1,114 @@
+[
+  {
+    "date": "2026-10-02",
+    "ticker": "AAPL",
+    "category": "Momentum Flag",
+    "pivot": 345.34,
+    "stop": 322.56,
+    "r_ratio": 2.5
+  },
+  {
+    "date": "2026-10-02",
+    "ticker": "AMD",
+    "category": "Momentum Flag",
+    "pivot": 645.46,
+    "stop": 583.45,
+    "r_ratio": 2.5
+  },
+  {
+    "date": "2026-10-02",
+    "ticker": "ANET",
+    "category": "Momentum Flag",
+    "pivot": 212.0,
+    "stop": 197.6,
+    "r_ratio": 2.5
+  },
+  {
+    "date": "2026-10-02",
+    "ticker": "ASML",
+    "category": "Momentum Flag",
+    "pivot": 1873.5,
+    "stop": 1712.57,
+    "r_ratio": 2.5
+  },
+  {
+    "date": "2026-10-02",
+    "ticker": "CAT",
+    "category": "Momentum Flag",
+    "pivot": 858.87,
+    "stop": 792.08,
+    "r_ratio": 2.5
+  },
+  {
+    "date": "2026-10-02",
+    "ticker": "FIX",
+    "category": "Momentum Flag",
+    "pivot": 1750.39,
+    "stop": 1593.7,
+    "r_ratio": 2.5
+  },
+  {
+    "date": "2026-10-02",
+    "ticker": "GEV",
+    "category": "Momentum Flag",
+    "pivot": 1006.0,
+    "stop": 925.79,
+    "r_ratio": 2.5
+  },
+  {
+    "date": "2026-10-02",
+    "ticker": "GOOGL",
+    "category": "Momentum Flag",
+    "pivot": 364.17,
+    "stop": 330.92,
+    "r_ratio": 2.5
+  },
+  {
+    "date": "2026-10-02",
+    "ticker": "MSFT",
+    "category": "Momentum Flag",
+    "pivot": 522.85,
+    "stop": 496.3,
+    "r_ratio": 2.5
+  },
+  {
+    "date": "2026-10-02",
+    "ticker": "MU",
+    "category": "Momentum Flag",
+    "pivot": 1108.72,
+    "stop": 1001.81,
+    "r_ratio": 2.5
+  },
+  {
+    "date": "2026-10-02",
+    "ticker": "NVDA",
+    "category": "Momentum Flag",
+    "pivot": 237.87,
+    "stop": 224.46,
+    "r_ratio": 2.5
+  },
+  {
+    "date": "2026-10-02",
+    "ticker": "PLTR",
+    "category": "Momentum Flag",
+    "pivot": 194.78,
+    "stop": 181.97,
+    "r_ratio": 2.5
+  },
+  {
+    "date": "2026-10-02",
+    "ticker": "QQQ",
+    "category": "Momentum Flag",
+    "pivot": 754.53,
+    "stop": 726.72,
+    "r_ratio": 2.5
+  },
+  {
+    "date": "2026-10-02",
+    "ticker": "RS",
+    "category": "Momentum Flag",
+    "pivot": 407.64,
+    "stop": 375.58,
+    "r_ratio": 2.5
+  }
+]
