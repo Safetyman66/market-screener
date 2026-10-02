@@ -1,12 +1,65 @@
 {
+  "pdf_path": "daily_market_intelligence.pdf",
   "date": "2026-10-02",
-  "regime_status": "SELECTIVE ACCUMULATION",
-  "exposure": "30% - 50%",
-  "pct_above_200": 45.6,
+  "regime_status": "RED: CONFIRMED MACRO DOWNTREND",
+  "posture_box": "\u25a0 DOWNTREND DEFENSE: TRADE SELECTIVELY WITH TIGHT RISK \u25a0",
+  "max_exposure": "0% - 15% (Defensive Stance)",
+  "pct_above_200": 45.9,
   "focus_tickers": [
-    "MAT",
-    "A",
-    "ALGM"
+    "ICHR",
+    "HAE",
+    "LHX"
   ],
-  "top_runner": null
+  "top_runner": null,
+  "top_br": {
+    "Ticker": "ICHR",
+    "Close": 63.33,
+    "Headroom_%": 79.3,
+    "Above_200_%": 8.7,
+    "Hist_Now": -3.893,
+    "Vol_Ratio": "0.92x",
+    "Conviction_Score": 3.874,
+    "Pivot_Trigger": 65.93,
+    "Stop_Loss": 60.0,
+    "Risk_%": 8.99,
+    "R_Ratio": 8.83,
+    "Category": "Base-Reset",
+    "Zacks_Rank": "#1 (3d)",
+    "Earnings_Risk": "SAFE (31d)"
+  },
+  "top_htf": {
+    "Ticker": "HAE",
+    "Close": 104.79,
+    "Pole_Gain_%": 47.4,
+    "Flag_Days": 10,
+    "Flag_Depth_%": 6.3,
+    "10d_Tightness_%": 6.1,
+    "Vol_DryUp": "0.57x",
+    "Conviction_Score": 3.77,
+    "Pivot_Trigger": 110.45,
+    "Stop_Loss": 103.51,
+    "Risk_%": 6.28,
+    "R_Ratio": 3.77,
+    "Category": "Momentum Flag",
+    "Zacks_Rank": "#3 (4d)",
+    "Earnings_Risk": "SAFE (34d)"
+  },
+  "top_pp": null,
+  "top_ls": {
+    "Ticker": "LHX",
+    "Close": 237.0,
+    "Shelf_Level": 236.79,
+    "Flush_Low": 234.01,
+    "Sweep_Depth_%": 1.17,
+    "Headroom_%": 58.1,
+    "Vol_Ratio": "0.89x",
+    "Conviction_Score": 23.99,
+    "Pivot_Trigger": 238.62,
+    "Stop_Loss": 232.84,
+    "Risk_%": 2.42,
+    "R_Ratio": 23.99,
+    "Category": "Liquidity Sweep",
+    "Zacks_Rank": "#3 (New)",
+    "Earnings_Risk": "SAFE (27d)"
+  }
 }
