@@ -35,11 +35,11 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add sector_cache.json zacks_rank_tracker.json watchlist_*.csv daily_market_intelligence.pdf latest_post_meta.json x_cards/ || true
+          git add sector_cache.json zacks_rank_tracker.json trade_history.json terminal_feed.json watchlist_*.csv daily_market_intelligence.pdf latest_post_meta.json x_cards/ || true
           if git diff --staged --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "Auto-update scanner cache, PDF, metadata & X cards [skip ci]"
+            git commit -m "Auto-update scanner cache, trade history, web feed, PDF, metadata & X cards [skip ci]"
             git push
           fi
 
@@ -56,8 +56,9 @@ jobs:
           cp intel.html site_temp/ || true
           cp CNAME site_temp/ || true
           
-          # Copy PDF and intelligence metadata
+          # Copy PDF, web feed, and intelligence metadata
           cp daily_market_intelligence.pdf site_temp/
+          cp terminal_feed.json site_temp/ || true
           cp latest_post_meta.json site_temp/ || true
           cp watchlist_*.csv site_temp/ || true
           
@@ -67,5 +68,5 @@ jobs:
 
           cd site_temp
           git add -A
-          git commit -m "Auto-deploy daily intelligence, terminal & X cards [skip ci]" || echo "No changes to commit"
+          git commit -m "Auto-deploy daily intelligence, terminal feed & X cards [skip ci]" || echo "No changes to commit"
           git push origin main

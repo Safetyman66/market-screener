@@ -2,8 +2,8 @@ name: Morning Social Broadcast
 
 on:
   schedule:
-    # 07:00 UTC Tuesday through Saturday (08:00 BST / 07:00 GMT)
-    - cron: '0 7 * * 2-6'
+    # 07:14 UTC Tuesday through Saturday (08:14 BST / 07:14 GMT)
+    - cron: '14 7 * * 2-6'
   workflow_dispatch:
 
 jobs:
