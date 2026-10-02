@@ -3,339 +3,441 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Corp Acuity | Institutional Market Intelligence</title>
+  <title>Corp Acuity // Institutional Screener & Terminal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #0d1117;
-      --card-bg: #161b22;
-      --border: #30363d;
-      --text: #c9d1d9;
-      --text-bright: #f0f6fc;
-      --accent: #58a6ff;
-      --green: #3fb950;
-      --amber: #d29922;
+      --bg: #070a12;
+      --card-bg: #0f172a;
+      --card-inner: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --cyan: #38bdf8;
+      --green: #4ade80;
+      --amber: #fbbf24;
+      --red: #f87171;
     }
-    * {
-      box-sizing: border-box;
-    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       background-color: var(--bg);
       color: var(--text);
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
+      font-family: 'Inter', sans-serif;
+      line-height: 1.5;
+      padding-bottom: 60px;
     }
+
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
     header {
       border-bottom: 1px solid var(--border);
-      padding: 1.25rem 2rem;
+      padding: 18px 32px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #090d13;
-    }
-    .brand {
-      font-size: 1.15rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      color: var(--text-bright);
-    }
-    .brand span {
-      color: var(--accent);
-      font-size: 0.85rem;
-      font-weight: 400;
-      margin-left: 0.5rem;
-    }
-    .nav-contact {
-      color: var(--accent);
-      text-decoration: none;
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
-    .nav-contact:hover {
-      text-decoration: underline;
-    }
-    main {
-      flex: 1;
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 3rem 1.5rem;
-      width: 100%;
-    }
-    .hero {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-    .hero h1 {
-      font-size: 2.1rem;
-      color: var(--text-bright);
-      margin-bottom: 0.75rem;
-      letter-spacing: -0.02em;
-    }
-    .hero p {
-      font-size: 1.05rem;
-      color: #8b949e;
-      max-width: 620px;
-      margin: 0 auto;
-      line-height: 1.5;
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
     }
 
-    /* 5-Day Runner Teaser Card */
-    .runner-card {
-      background: linear-gradient(135deg, #161b22 0%, #1c2128 100%);
-      border: 1px solid var(--border);
-      border-left: 4px solid var(--green);
-      border-radius: 8px;
-      padding: 1.5rem;
-      margin-bottom: 1.75rem;
-      display: none; /* revealed dynamically once feed data loads */
-    }
-    .runner-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-bottom: 0.75rem;
-    }
-    .runner-tag {
-      background: rgba(210, 153, 34, 0.15);
-      color: var(--amber);
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      padding: 0.25rem 0.6rem;
-      border-radius: 20px;
-      text-transform: uppercase;
-    }
-    .runner-date {
-      font-size: 0.8rem;
-      color: #8b949e;
-      font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, monospace;
-    }
-    .runner-headline {
-      font-size: 1.45rem;
-      font-weight: 700;
-      color: var(--text-bright);
-      margin: 0 0 0.5rem 0;
-    }
-    .runner-stats {
+    .brand { font-size: 1.15rem; font-weight: 800; letter-spacing: -0.5px; }
+    .brand span { color: var(--cyan); }
+    .status-badge { font-size: 0.8rem; background: var(--card-inner); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border); }
+
+    .container { max-width: 1240px; margin: 0 auto; padding: 32px 20px; }
+
+    /* DASHBOARD CARDS */
+    .dashboard-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-      gap: 1rem;
-      background: #0d1117;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 1rem;
-      margin: 1rem 0;
-    }
-    .runner-stat-label {
-      font-size: 0.75rem;
-      color: #8b949e;
-      text-transform: uppercase;
-      font-weight: 600;
-      margin-bottom: 0.25rem;
-    }
-    .runner-stat-val {
-      font-size: 1.15rem;
-      font-weight: 700;
-      font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, monospace;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
     }
 
-    .card {
+    .dash-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1.75rem;
-      margin-bottom: 1.75rem;
+      border-radius: 12px;
+      padding: 20px;
     }
-    .card-title {
-      color: var(--text-bright);
-      margin-top: 0;
-      margin-bottom: 0.5rem;
-      font-size: 1.3rem;
-    }
-    .btn-group {
+
+    .dash-card h4 { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; letter-spacing: 0.5px; }
+    .dash-val { font-size: 1.85rem; font-weight: 800; }
+
+    /* 5-DAY ALPHA RUNNER CARD */
+    .runner-card {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.8));
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--amber);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 36px;
       display: flex;
       flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .runner-stats { display: flex; gap: 24px; flex-wrap: wrap; }
+    .stat-pill { background: var(--card-inner); padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); }
+    .stat-pill .title { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
+    .stat-pill .value { font-size: 1.15rem; font-weight: 700; }
+
+    /* SECTIONS & TABLES */
+    .section-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin: 36px 0 16px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .table-container {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow-x: auto;
+      position: relative;
+    }
+
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem; }
+    th { background: rgba(30, 41, 59, 0.7); padding: 12px 16px; font-weight: 600; color: var(--text-muted); border-bottom: 1px solid var(--border); }
+    td { padding: 14px 16px; border-bottom: 1px solid rgba(51, 65, 85, 0.4); }
+
+    .tag-green { color: var(--green); font-weight: 700; }
+    .tag-red { color: var(--red); font-weight: 600; }
+    .tag-cyan { color: var(--cyan); font-weight: 700; }
+    .tag-amber { color: var(--amber); font-weight: 600; }
+
+    /* TEASER LOCK OVERLAY */
+    .locked-row {
+      filter: blur(4px);
+      user-select: none;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    .gate-overlay {
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.2) 0%, rgba(15, 23, 42, 0.95) 80%);
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 180px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      padding-bottom: 24px;
+      z-index: 10;
+    }
+
+    .unlock-btn {
+      background: var(--green);
+      color: #070a12;
+      border: none;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 12px 28px;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(74, 222, 128, 0.3);
+      transition: all 0.2s ease;
+    }
+    .unlock-btn:hover { background: #38bdf8; color: #070a12; }
+
+    /* LEAD CAPTURE MODAL */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(7, 10, 18, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 100;
       justify-content: center;
-      gap: 0.75rem;
-      margin-top: 1rem;
+      align-items: center;
+      padding: 20px;
     }
-    .btn {
-      display: inline-block;
-      background-color: #238636;
-      color: #ffffff;
-      padding: 0.7rem 1.4rem;
-      text-decoration: none;
-      border-radius: 6px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      transition: background-color 0.15s ease;
-    }
-    .btn:hover {
-      background-color: #2ea043;
-    }
-    .btn-secondary {
-      background-color: #21262d;
-      color: var(--accent);
+
+    .modal-box {
+      background: var(--card-bg);
       border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      max-width: 480px;
+      width: 100%;
+      position: relative;
     }
-    .btn-secondary:hover {
-      background-color: #30363d;
+
+    .modal-close {
+      position: absolute;
+      top: 16px; right: 16px;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.25rem;
+      cursor: pointer;
     }
-    .features {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1rem;
-      margin-top: 1.5rem;
-    }
-    .feature-item {
-      background: #0d1117;
+
+    .modal-box h3 { font-size: 1.4rem; font-weight: 800; margin-bottom: 8px; }
+    .modal-box p { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 20px; }
+
+    .form-group { margin-bottom: 16px; }
+    .form-group label { display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+    .form-group input {
+      width: 100%;
+      padding: 12px 14px;
+      background: var(--card-inner);
       border: 1px solid var(--border);
-      padding: 1rem;
-      border-radius: 6px;
+      border-radius: 8px;
+      color: var(--text);
+      font-family: inherit;
     }
-    .feature-item h4 {
-      margin: 0 0 0.4rem 0;
-      color: var(--text-bright);
-      font-size: 0.95rem;
-    }
-    .feature-item p {
-      margin: 0;
-      color: #8b949e;
-      font-size: 0.85rem;
-      line-height: 1.4;
-    }
-    footer {
-      border-top: 1px solid var(--border);
-      padding: 1.5rem 2rem;
-      text-align: center;
-      font-size: 0.85rem;
-      color: #8b949e;
-      background: #090d13;
-    }
+    .form-group input:focus { outline: none; border-color: var(--cyan); }
   </style>
 </head>
 <body>
+
   <header>
-    <div class="brand">CORP ACUITY <span>// QUANTITATIVE RISK & INTELLIGENCE</span></div>
-    <a href="mailto:am@corpacuity.co.uk" class="nav-contact">Inquiries</a>
+    <div class="brand">CORP<span>ACUITY</span> // TERMINAL</div>
+    <div class="status-badge mono" id="lastUpdated">SYNCING...</div>
   </header>
 
-  <main>
-    <div class="hero">
-      <h1>Daily Market Intelligence & Swing Radar</h1>
-      <p>Automated, systematic equity screening across 1,600+ tickers integrating momentum regimes, CAN SLIM fundamental catalysts, and price structure.</p>
+  <div class="container">
+    
+    <!-- MACRO COCKPIT -->
+    <div class="dashboard-grid">
+      <div class="dash-card">
+        <h4>Regime Status</h4>
+        <div class="dash-val tag-green" id="regimeStatus">--</div>
+        <div class="mono" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;" id="postureBox">--</div>
+      </div>
+      <div class="dash-card">
+        <h4>Suggested Allocation</h4>
+        <div class="dash-val" id="maxExposure">--</div>
+        <div class="mono" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Dynamic sizing limit</div>
+      </div>
+      <div class="dash-card">
+        <h4>Breadth (>200 EMA)</h4>
+        <div class="dash-val tag-cyan" id="breadthPct">--%</div>
+        <div class="mono" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">1,600+ Security Universe</div>
+      </div>
+      <div class="dash-card">
+        <h4>Cross-Asset Radar</h4>
+        <div class="mono" style="font-size: 1.1rem; font-weight: 700;" id="macroRadar">10Y: -- | WTI: --</div>
+        <div class="mono" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Macro Headwind Monitor</div>
+      </div>
     </div>
 
-    <!-- 5-DAY RUNNER TEASER HERO BANNER -->
-    <div id="runner-hero-container" class="runner-card">
-      <div class="runner-header">
-        <span class="runner-tag">System Verification // 5-Day Alpha</span>
-        <span id="runner-trigger-date" class="runner-date"></span>
+    <!-- 5-DAY ALPHA RUNNER VERIFICATION -->
+    <div class="runner-card" id="runnerCard" style="display: none;">
+      <div>
+        <div class="mono" style="color: var(--amber); font-weight: 700; font-size: 0.8rem; text-transform: uppercase;">Top Trailing Setup Audit</div>
+        <div style="font-size: 1.5rem; font-weight: 800; margin-top: 2px;" id="runnerSymbol">--</div>
       </div>
-      <div class="runner-headline">
-        <span id="runner-ticker" style="color: var(--accent);">$---</span> Peak Run: 
-        <span id="runner-gain" style="color: var(--green);">+--%</span>
-      </div>
-      <p id="runner-summary" style="margin: 0; font-size: 0.9rem; color: #8b949e;">
-        Triggered via algorithmic screening with a strict 2.0R asymmetry floor.
-      </p>
-
       <div class="runner-stats">
-        <div>
-          <div class="runner-stat-label">Suggested Pivot</div>
-          <div id="runner-pivot" class="runner-stat-val" style="color: var(--text-bright);">$---</div>
-        </div>
-        <div>
-          <div class="runner-stat-label">5D Peak High</div>
-          <div id="runner-peak" class="runner-stat-val" style="color: var(--green);">$---</div>
-        </div>
-        <div>
-          <div class="runner-stat-label">Tactical Stop</div>
-          <div id="runner-stop" class="runner-stat-val" style="color: #f85149;">$---</div>
-        </div>
-        <div>
-          <div class="runner-stat-label">Captured Multiple</div>
-          <div id="runner-rmult" class="runner-stat-val" style="color: var(--accent);">--R</div>
-        </div>
-      </div>
-
-      <div style="text-align: right; margin-top: 0.75rem;">
-        <a href="intel.html" style="color: var(--accent); text-decoration: none; font-size: 0.9rem; font-weight: 600;">
-          Inspect Today's Active Setups ➔
-        </a>
+        <div class="stat-pill"><div class="title">Suggested Pivot</div><div class="value mono" id="runnerPivot">--</div></div>
+        <div class="stat-pill"><div class="title">Peak 5D High</div><div class="value mono tag-green" id="runnerHigh">--</div></div>
+        <div class="stat-pill"><div class="title">Max Gain</div><div class="value mono tag-green" id="runnerGain">--</div></div>
+        <div class="stat-pill"><div class="title">Captured Multiple</div><div class="value mono tag-cyan" id="runnerMultiple">--</div></div>
       </div>
     </div>
 
-    <!-- ACCESS OPTIONS CARD -->
-    <div class="card" style="text-align: center;">
-      <h2 class="card-title">Daily Intelligence Access</h2>
-      <p style="color: #8b949e; margin-bottom: 0.5rem;">Access today's market deck, macro exposure gauge, and actionable swing watchlists:</p>
-      <div class="btn-group">
-        <a href="intel.html" class="btn">Open Interactive Terminal</a>
-        <a href="daily_market_intelligence.pdf" target="_blank" class="btn btn-secondary">Open Daily PDF Carousel</a>
-      </div>
+    <!-- 1. BASE-RESET INFLECTIONS -->
+    <div class="section-title">
+      <div>1. Base-Reset Inflections <span class="mono" style="font-size: 0.8rem; color: var(--text-muted); font-weight: 400;">(Breakouts crossing 50 SMA on volume)</span></div>
+    </div>
+    <div class="table-container" id="container-base_resets">
+      <table>
+        <thead>
+          <tr><th>Ticker</th><th>Close</th><th>Trigger Pivot</th><th>Tactical Stop</th><th>Risk %</th><th>Asymmetry</th><th>Zacks Rank</th></tr>
+        </thead>
+        <tbody id="tbody-base_resets"></tbody>
+      </table>
     </div>
 
-    <div class="card">
-      <h3 class="card-title" style="font-size: 1.15rem;">Core Screener Methodologies</h3>
-      <div class="features">
-        <div class="feature-item">
-          <h4>Market Regime Analysis</h4>
-          <p>Index tracking across moving averages and distribution days to establish macro exposure postures.</p>
-        </div>
-        <div class="feature-item">
-          <h4>Fundamental Acceleration</h4>
-          <p>Earnings & sales momentum, Zacks rank trends, and institutional support criteria.</p>
-        </div>
-        <div class="feature-item">
-          <h4>Technical Structure</h4>
-          <p>Pocket pivots, contraction breakouts, volume dry-ups, and key moving average alignments.</p>
-        </div>
-      </div>
+    <!-- 2. MOMENTUM BULL FLAGS -->
+    <div class="section-title">
+      <div>2. Momentum Bull Flags <span class="mono" style="font-size: 0.8rem; color: var(--text-muted); font-weight: 400;">(CAN SLIM Pole &gt;= 45%, tight consolidation &lt;= 18d)</span></div>
+    </div>
+    <div class="table-container" id="container-momentum_flags">
+      <table>
+        <thead>
+          <tr><th>Ticker</th><th>Close</th><th>Trigger Pivot</th><th>Tactical Stop</th><th>Risk %</th><th>Asymmetry</th><th>Zacks Rank</th></tr>
+        </thead>
+        <tbody id="tbody-momentum_flags"></tbody>
+      </table>
     </div>
 
-    <div class="card">
-      <h3 class="card-title" style="font-size: 1.15rem;">Institutional Access & Custom Feeds</h3>
-      <p style="color: #8b949e; margin-bottom: 0.75rem;">For full watchlist CSV data feeds, custom risk screens, or bespoke portfolio monitoring:</p>
-      <p style="margin: 0;"><strong style="color: var(--text-bright);">Direct Desk:</strong> <a href="mailto:am@corpacuity.co.uk" style="color: var(--accent); text-decoration: none;">am@corpacuity.co.uk</a></p>
+    <!-- 3. POCKET PIVOT SQUEEZES -->
+    <div class="section-title">
+      <div>3. Pocket Pivot Squeezes <span class="mono" style="font-size: 0.8rem; color: var(--text-muted); font-weight: 400;">(Bollinger/Keltner squeeze launch off 10/21 EMA)</span></div>
     </div>
-  </main>
+    <div class="table-container" id="container-pocket_pivots">
+      <table>
+        <thead>
+          <tr><th>Ticker</th><th>Close</th><th>Trigger Pivot</th><th>Tactical Stop</th><th>Risk %</th><th>Asymmetry</th><th>Zacks Rank</th></tr>
+        </thead>
+        <tbody id="tbody-pocket_pivots"></tbody>
+      </table>
+    </div>
 
-  <footer>
-    &copy; Corp Acuity Ltd. All rights reserved. Quantitative Market Intelligence.
-  </footer>
+    <!-- 4. LIQUIDITY SWEEPS -->
+    <div class="section-title">
+      <div>4. Liquidity Sweeps <span class="mono" style="font-size: 0.8rem; color: var(--text-muted); font-weight: 400;">(Undercut &amp; rally reclaiming support)</span></div>
+    </div>
+    <div class="table-container" id="container-liquidity_sweeps">
+      <table>
+        <thead>
+          <tr><th>Ticker</th><th>Close</th><th>Trigger Pivot</th><th>Tactical Stop</th><th>Risk %</th><th>Asymmetry</th><th>Zacks Rank</th></tr>
+        </thead>
+        <tbody id="tbody-liquidity_sweeps"></tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <!-- LEAD CAPTURE MODAL -->
+  <div class="modal-backdrop" id="leadModal">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+      <h3>Unlock Complete Screener</h3>
+      <p>Enter your details below to access full CSV downloads, all filtered candidates, and daily institutional risk analytics.</p>
+      <form id="leadForm" onsubmit="handleLeadSubmit(event)">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" id="leadName" required placeholder="Andrew McNeil">
+        </div>
+        <div class="form-group">
+          <label>Business Email</label>
+          <input type="email" id="leadEmail" required placeholder="name@company.com">
+        </div>
+        <button type="submit" class="unlock-btn" style="width: 100%; margin-top: 8px;">View Full Terminal Access</button>
+      </form>
+    </div>
+  </div>
 
   <script>
-    async function loadLandingRunner() {
-      try {
-        const res = await fetch('terminal_feed.json?v=' + Date.now());
-        if (!res.ok) return;
-        const data = await res.json();
-        const runner = data.top_runner;
+    let terminalData = null;
 
-        if (runner && runner.max_gain_pct > 0) {
-          document.getElementById('runner-ticker').innerText = '$' + runner.ticker;
-          document.getElementById('runner-gain').innerText = '+' + runner.max_gain_pct + '%';
-          document.getElementById('runner-trigger-date').innerText = 'Triggered: ' + runner.rec_date;
-          document.getElementById('runner-pivot').innerText = '$' + runner.entry_pivot.toFixed(2);
-          document.getElementById('runner-peak').innerText = '$' + runner.peak_high.toFixed(2);
-          document.getElementById('runner-stop').innerText = '$' + runner.stop_loss.toFixed(2);
-          document.getElementById('runner-rmult').innerText = runner.r_multiple + 'R';
-          document.getElementById('runner-summary').innerText = 
-            `Triggered via ${runner.category} pattern with non-negotiable invalidation stop at $${runner.stop_loss.toFixed(2)}.`;
-          
-          document.getElementById('runner-hero-container').style.display = 'block';
+    function isUnlocked() {
+      return localStorage.getItem('corpacuity_unlocked') === 'true';
+    }
+
+    function openModal() {
+      document.getElementById('leadModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('leadModal').style.display = 'none';
+    }
+
+    function handleLeadSubmit(e) {
+      e.preventDefault();
+      const name = document.getElementById('leadName').value;
+      const email = document.getElementById('leadEmail').value;
+
+      // Optional: send to your form handler (e.g., Formspree endpoint)
+      try {
+        fetch('https://formspree.io/f/mqaeovbd', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: name, email: email, timestamp: new Date().toISOString() })
+        });
+      } catch (err) {}
+
+      localStorage.setItem('corpacuity_unlocked', 'true');
+      closeModal();
+      renderWatchlists();
+    }
+
+    async function initTerminal() {
+      try {
+        const res = await fetch('terminal_feed.json?t=' + new Date().getTime());
+        terminalData = await res.json();
+        
+        // 1. Render Dashboard
+        document.getElementById('lastUpdated').textContent = terminalData.generated_at;
+        document.getElementById('regimeStatus').textContent = terminalData.macro.regime_status;
+        document.getElementById('postureBox').textContent = terminalData.macro.posture_box.replace(/[■▲◆]/g, '').trim();
+        document.getElementById('maxExposure').textContent = terminalData.macro.max_exposure;
+        document.getElementById('breadthPct').textContent = terminalData.macro.pct_above_200 + '%';
+        document.getElementById('macroRadar').textContent = `10Y: ${terminalData.macro.tnx}% | WTI: $${terminalData.macro.oil}`;
+
+        // 2. Render Top Runner
+        if (terminalData.top_runner && terminalData.top_runner.max_gain_pct > 0) {
+          const r = terminalData.top_runner;
+          document.getElementById('runnerCard').style.display = 'flex';
+          document.getElementById('runnerSymbol').textContent = `$${r.ticker} (${r.category})`;
+          document.getElementById('runnerPivot').textContent = `$${r.entry_pivot.toFixed(2)}`;
+          document.getElementById('runnerHigh').textContent = `$${r.peak_high.toFixed(2)}`;
+          document.getElementById('runnerGain').textContent = `+${r.max_gain_pct}%`;
+          document.getElementById('runnerMultiple').textContent = `${r.r_multiple}R`;
         }
-      } catch (err) {
-        // Stays hidden until first run with historical data
+
+        renderWatchlists();
+      } catch (e) {
+        console.error("Error loading terminal data:", e);
       }
     }
-    window.addEventListener('DOMContentLoaded', loadLandingRunner);
+
+    function renderWatchlists() {
+      if (!terminalData) return;
+      const unlocked = isUnlocked();
+      const categories = ['base_resets', 'momentum_flags', 'pocket_pivots', 'liquidity_sweeps'];
+
+      categories.forEach(cat => {
+        const tbody = document.getElementById(`tbody-${cat}`);
+        const container = document.getElementById(`container-${cat}`);
+        const rows = terminalData.watchlists[cat] || [];
+        tbody.innerHTML = '';
+
+        // Clean up previous overlay
+        const existingOverlay = container.querySelector('.gate-overlay');
+        if (existingOverlay) existingOverlay.remove();
+
+        if (rows.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:24px;">No candidates meeting strict 2.0R asymmetry floor today. Cash is a position.</td></tr>`;
+          return;
+        }
+
+        rows.forEach((r, idx) => {
+          const tr = document.createElement('tr');
+          // If locked, rows after index 0 are blurred
+          if (!unlocked && idx > 0) {
+            tr.classList.add('locked-row');
+          }
+
+          tr.innerHTML = `
+            <td class="mono" style="font-weight:700; color:var(--cyan);">$${r.Ticker}</td>
+            <td class="mono">$${r.Close.toFixed(2)}</td>
+            <td class="mono tag-green">$${r.Pivot_Trigger.toFixed(2)}</td>
+            <td class="mono tag-red">$${r.Stop_Loss.toFixed(2)}</td>
+            <td class="mono">${r['Risk_%']}%</td>
+            <td class="mono tag-cyan">${r.R_Ratio}R</td>
+            <td class="mono tag-amber">${r.Zacks_Rank || 'Rank 1'}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        // Add Gate Overlay if locked and more than 1 row exists
+        if (!unlocked && rows.length > 1) {
+          const overlay = document.createElement('div');
+          overlay.className = 'gate-overlay';
+          overlay.innerHTML = `<button class="unlock-btn" onclick="openModal()">Unlock ${rows.length - 1} More ${cat.replace('_', ' ').toUpperCase()} & Full CSVs</button>`;
+          container.appendChild(overlay);
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', initTerminal);
   </script>
 </body>
 </html>

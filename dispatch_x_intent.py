@@ -35,12 +35,12 @@ def build_x_intent_url():
 
     # Clean text payload (no outbound link on main post to protect reach)
     post_text = (
-        f"CORP ACUITY // DAILY MARKET INTELLIGENCE\n\n"
-        f"• Macro Regime: {regime_label}\n"
+        f"CORP ACUITY // DAILY MARKET INTEL\n\n"
+        f"• Regime: {regime_label}\n"
         f"• Capital Allocation: {exposure}\n"
-        f"• Universe Breadth: {pct_above_200}% > 200 EMA\n"
+        f"• Breadth: {pct_above_200}% > 200 EMA\n"
         f"• Focus Setups: {cashtag_line}\n\n"
-        f"4-Card Morning Intelligence Deck below 🧵👇\n\n"
+        f"4-Card Morning Intel Deck below 🧵👇\n\n"
         f"$SPY $QQQ #FinTwit #Trading #StockMarket"
     )
 
