@@ -1,2 +1,2 @@
 Ticker,Close,Headroom_%,Ext_10EMA_%,Above_200EMA_%,Vol_Pocket_Ratio,Conviction_Score,Pivot_Trigger,Stop_Loss,Risk_%,R_Ratio,Zacks_Rank,Earnings_Risk
-GOOGL,344.08,18.6,0.1,4.7,1.05x,5.66,352.6,340.99,3.29,5.66,#3 (2d),SAFE (27d)
+PWR,662.6,19.0,2.8,10.3,0.99x,4.92,664.36,638.71,3.86,4.92,#1 (3d),SAFE (27d)
