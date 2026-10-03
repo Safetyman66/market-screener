@@ -1,1 +1,2 @@
-
+Ticker,Close,Headroom_%,Ext_10EMA_%,Above_200EMA_%,Vol_Pocket_Ratio,Conviction_Score,Pivot_Trigger,Stop_Loss,Risk_%,R_Ratio,Category,Zacks_Rank,Earnings_Risk
+GEV,988.7,21.0,2.8,9.7,1.21x,4.09,1006.0,954.37,5.13,4.09,Pocket Pivot,#3 (4d),SAFE (25d)
