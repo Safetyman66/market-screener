@@ -34,19 +34,21 @@
 
     header {
       border-bottom: 1px solid var(--border);
-      padding: 18px 32px;
+      padding: 16px 32px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(15, 23, 42, 0.8);
+      background: rgba(15, 23, 42, 0.85);
       backdrop-filter: blur(12px);
       position: sticky;
       top: 0;
       z-index: 50;
     }
 
-    .brand { font-size: 1.15rem; font-weight: 800; letter-spacing: -0.5px; }
-    .brand span { color: var(--cyan); }
+    .brand-wrap { display: flex; align-items: center; gap: 14px; text-decoration: none; color: inherit; }
+    .brand-logo { height: 40px; width: 40px; object-fit: contain; border-radius: 6px; background: #ffffff; padding: 2px; }
+    .brand-name { font-size: 1.15rem; font-weight: 800; letter-spacing: -0.5px; }
+    .brand-name span { color: var(--cyan); }
     .status-badge { font-size: 0.8rem; background: var(--card-inner); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border); }
 
     .container { max-width: 1240px; margin: 0 auto; padding: 32px 20px; }
@@ -116,7 +118,6 @@
     .tag-cyan { color: var(--cyan); font-weight: 700; }
     .tag-amber { color: var(--amber); font-weight: 600; }
 
-    /* TEASER LOCK OVERLAY */
     .locked-row {
       filter: blur(4px);
       user-select: none;
@@ -153,7 +154,6 @@
     }
     .unlock-btn:hover { background: #38bdf8; color: #070a12; }
 
-    /* LEAD CAPTURE MODAL */
     .modal-backdrop {
       display: none;
       position: fixed;
@@ -206,7 +206,10 @@
 <body>
 
   <header>
-    <div class="brand">CORP<span>ACUITY</span> // TERMINAL</div>
+    <a href="index.html" class="brand-wrap">
+      <img src="logo.png" alt="Corp Acuity Logo" class="brand-logo" onerror="this.style.display='none'">
+      <div class="brand-name">CORP<span>ACUITY</span> // TERMINAL</div>
+    </a>
     <div class="status-badge mono" id="lastUpdated">SYNCING...</div>
   </header>
 
@@ -216,7 +219,7 @@
     <div class="dashboard-grid">
       <div class="dash-card">
         <h4>Regime Status</h4>
-        <div class="dash-val tag-green" id="regimeStatus">--</div>
+        <div class="dash-val tag-amber" id="regimeStatus">--</div>
         <div class="mono" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;" id="postureBox">--</div>
       </div>
       <div class="dash-card">
@@ -239,8 +242,8 @@
     <!-- 5-DAY ALPHA RUNNER VERIFICATION -->
     <div class="runner-card" id="runnerCard" style="display: none;">
       <div>
-        <div class="mono" style="color: var(--amber); font-weight: 700; font-size: 0.8rem; text-transform: uppercase;">Top Trailing Setup Audit</div>
-        <div style="font-size: 1.5rem; font-weight: 800; margin-top: 2px;" id="runnerSymbol">--</div>
+        <div class="mono" style="color: var(--amber); font-weight: 700; font-size: 0.85rem; text-transform: uppercase;">How did we do? Here is our top performer over the last 5 days!</div>
+        <div style="font-size: 1.5rem; font-weight: 800; margin-top: 4px;" id="runnerSymbol">--</div>
       </div>
       <div class="runner-stats">
         <div class="stat-pill"><div class="title">Suggested Pivot</div><div class="value mono" id="runnerPivot">--</div></div>
@@ -304,6 +307,13 @@
 
   </div>
 
+  <footer style="margin-top: 60px; padding: 24px 0; border-top: 1px solid var(--border); text-align: center; font-size: 0.85rem; color: var(--text-muted);">
+    <div>&copy; 2026 Corp Acuity Ltd. Registered in England &amp; Wales (#15050713).</div>
+    <div style="margin-top: 8px;">
+      <a href="legal.html" style="color: var(--cyan); text-decoration: none;">Terms, Copyright &amp; Disclaimers</a>
+    </div>
+  </footer>
+
   <!-- LEAD CAPTURE MODAL -->
   <div class="modal-backdrop" id="leadModal">
     <div class="modal-box">
@@ -344,7 +354,6 @@
       const name = document.getElementById('leadName').value;
       const email = document.getElementById('leadEmail').value;
 
-      // Optional: send to your form handler (e.g., Formspree endpoint)
       try {
         fetch('https://formspree.io/f/mqaeovbd', {
           method: 'POST',
@@ -363,15 +372,22 @@
         const res = await fetch('terminal_feed.json?t=' + new Date().getTime());
         terminalData = await res.json();
         
-        // 1. Render Dashboard
         document.getElementById('lastUpdated').textContent = terminalData.generated_at;
-        document.getElementById('regimeStatus').textContent = terminalData.macro.regime_status;
+        const regElem = document.getElementById('regimeStatus');
+        regElem.textContent = terminalData.macro.regime_status;
+        if (terminalData.macro.regime_status.includes("GREEN")) {
+          regElem.className = "dash-val tag-green";
+        } else if (terminalData.macro.regime_status.includes("AMBER")) {
+          regElem.className = "dash-val tag-amber";
+        } else {
+          regElem.className = "dash-val tag-red";
+        }
+
         document.getElementById('postureBox').textContent = terminalData.macro.posture_box.replace(/[■▲◆]/g, '').trim();
         document.getElementById('maxExposure').textContent = terminalData.macro.max_exposure;
         document.getElementById('breadthPct').textContent = terminalData.macro.pct_above_200 + '%';
         document.getElementById('macroRadar').textContent = `10Y: ${terminalData.macro.tnx}% | WTI: $${terminalData.macro.oil}`;
 
-        // 2. Render Top Runner
         if (terminalData.top_runner && terminalData.top_runner.max_gain_pct > 0) {
           const r = terminalData.top_runner;
           document.getElementById('runnerCard').style.display = 'flex';
@@ -399,7 +415,6 @@
         const rows = terminalData.watchlists[cat] || [];
         tbody.innerHTML = '';
 
-        // Clean up previous overlay
         const existingOverlay = container.querySelector('.gate-overlay');
         if (existingOverlay) existingOverlay.remove();
 
@@ -410,7 +425,6 @@
 
         rows.forEach((r, idx) => {
           const tr = document.createElement('tr');
-          // If locked, rows after index 0 are blurred
           if (!unlocked && idx > 0) {
             tr.classList.add('locked-row');
           }
@@ -427,7 +441,6 @@
           tbody.appendChild(tr);
         });
 
-        // Add Gate Overlay if locked and more than 1 row exists
         if (!unlocked && rows.length > 1) {
           const overlay = document.createElement('div');
           overlay.className = 'gate-overlay';

@@ -2,16 +2,6 @@
 """
 Corp Acuity // Master Market Screener & Alpha Engine
 Author: Corp Acuity Ltd
-Preserves full institutional architecture:
-- 1,600+ universe ingestion (S&P 500, 400, 600, Nasdaq-100, Core Growth)
-- Strict sector exclusion, ADDV >= $12M, RS vs SPY, and banned industry filters
-- Base-Reset (Weekly MACD curl), CAN SLIM Bull Flag (45% pole), Pocket Pivot (Squeeze), Liquidity Sweep (U&R)
-- Zacks Rank local tenure tracker & Earnings proximity gate
-- Trailing 5-Day Runner Tracker (trade_history.json)
-- 8-Slide Document Carousel PDF (Slide 8 CTA -> corpacuity.co.uk)
-- 4-Card Visual Rasterizer for X (Stamped Card 1 of 4 to Card 4 of 4)
-- Web Terminal Feed Exporter (terminal_feed.json)
-- Exported LinkedIn Document Publisher & First-Comment Engine
 """
 
 import io
@@ -871,7 +861,7 @@ def evaluate_all_setups(ticker, daily_df, spy_1m_perf, sector_map):
         return {'diagnostics': f"Error: {type(e).__name__}", 'above_200': False}
 
 # ---------------------------------------------------------
-# 7. MACRO REGIME & EXPOSURE DASHBOARD
+# 7. RECALIBRATED MACRO REGIME & EXPOSURE ENGINE
 # ---------------------------------------------------------
 def analyze_market_regime(total_evaluated, total_above_200, category_counts):
     print("\n" + "="*112)
@@ -907,7 +897,6 @@ def analyze_market_regime(total_evaluated, total_above_200, category_counts):
     qqq_above_21 = bool(qqq_c > qqq_ema21)
     qqq_above_50 = bool(qqq_c > qqq_sma50)
     qqq_above_200 = bool(qqq_c > qqq_ema200)
-    qqq_in_downtrend = (not qqq_above_50) or (not qqq_above_200) or (qqq_c < qqq_ema21 and qqq_ema21 < qqq_sma50)
 
     macro_warnings = []
     cross_asset_drag = False
@@ -918,72 +907,51 @@ def analyze_market_regime(total_evaluated, total_above_200, category_counts):
         if not tnx_s.empty:
             tnx_c = tnx_s.iloc[-1]
             tnx_5d_chg = ((tnx_c - tnx_s.iloc[-5]) / tnx_s.iloc[-5]) * 100 if len(tnx_s) >= 5 else 0.0
-            if tnx_c >= 4.80 or tnx_5d_chg >= 3.5:
+            if tnx_c >= 4.75:
                 cross_asset_drag = True
-                macro_warnings.append(f"⚡ YIELD SURGE: 10-Yr Yield at {round(tnx_c, 2)}% (+{round(tnx_5d_chg, 1)}% 5d). Multiple drag active.")
+                macro_warnings.append(f"⚡ 10Y Yield elevated at {round(tnx_c, 2)}% (Valuation compression).")
 
     oil_c = 0.0
     if 'CL=F' in close_df.columns:
         oil_s = close_df['CL=F'].dropna()
         if not oil_s.empty:
             oil_c = oil_s.iloc[-1]
-            oil_5d_chg = ((oil_c - oil_s.iloc[-5]) / oil_s.iloc[-5]) * 100 if len(oil_s) >= 5 else 0.0
-            if oil_c >= 85.0 or oil_5d_chg >= 4.5:
+            if oil_c >= 88.0:
                 cross_asset_drag = True
-                macro_warnings.append(f"🛢️ OIL PRICE SPIKE: WTI Crude at ${round(oil_c, 2)} (+{round(oil_5d_chg, 1)}% 5d). Inflation expectations repricing.")
+                macro_warnings.append(f"🛢️ WTI Crude at ${round(oil_c, 2)}/bbl (Inflation drag).")
 
     pct_above_200 = (total_above_200 / max(total_evaluated, 1)) * 100
-    pct_below_200 = 100.0 - pct_above_200
-    htf_cnt = category_counts.get('htf', 0)
-    sweep_cnt = category_counts.get('sweep', 0)
     calendar_alerts, seasonal_mult = MacroEventCalendar.evaluate_calendar()
 
-    if cross_asset_drag:
-        seasonal_mult = min(seasonal_mult, 0.65)
+    # --- RECALIBRATED REGIME MATHEMATICAL GATES ---
+    major_structural_break = (not spy_above_200) or (not qqq_above_200) or (pct_above_200 < 38.0)
+    confirmed_bull_alignment = (spy_above_200 and qqq_above_200) and (spy_above_50 or qqq_above_50) and (pct_above_200 >= 55.0)
 
-    if (not spy_above_200) or (not qqq_above_200) or (not spy_above_50 and not qqq_above_50) or (pct_above_200 < 50.0):
+    if major_structural_break:
         regime_status = "RED: CONFIRMED MACRO DOWNTREND"
-        action_plan = "DEFENSIVE SIZING. Structural trend broken. Use extreme caution on breakouts."
-        allowed_setups = "Watchlist evaluation active. High-expectancy setups only."
-        max_exposure = "0% - 15% (Defensive Stance)"
+        action_plan = "Structural index trend broken (<200 EMA) or breadth collapsed (<38%). Strict capital preservation."
+        max_exposure = "0% - 15%"
         posture_box = "■ DOWNTREND DEFENSE: TRADE SELECTIVELY WITH TIGHT RISK ■"
-    elif (spy_above_21 and spy_above_50 and qqq_above_21 and qqq_above_50 and qqq_above_200) and (pct_above_200 >= 70.0) and (not cross_asset_drag) and (htf_cnt >= 4):
-        regime_status = "GREEN: EXPANSION / MOMENTUM REGIME"
-        action_plan = "AGGRESSIVE MARKUP. Full green-light to trade traditional breakouts and momentum flags."
-        allowed_setups = "Momentum Bull Flags, High Tight Flags, Pocket Pivots."
-        eff_exp = int(100 * seasonal_mult)
-        max_exposure = f"{int(80 * seasonal_mult)}% - {eff_exp}%"
+    elif confirmed_bull_alignment and not cross_asset_drag:
+        regime_status = "GREEN: CONFIRMED EXPANSION"
+        action_plan = "Broad market in confirmed structural uptrend. Green-light to pyramid momentum leaders and breakouts."
+        max_exposure = f"{int(70 * seasonal_mult)}% - {int(100 * seasonal_mult)}%"
         posture_box = "▲ EXPANSION BULL: BUY CONTINUATION & BREAKOUTS ▲"
     else:
-        regime_status = "AMBER: ROTATIONAL ACCUMULATION / MACRO HEADWIND"
-        if cross_asset_drag:
-            action_plan = "DEFENSIVE SELECTIVITY. Yield/Oil spike compressing multiples. Do NOT chase tech breakouts."
-        elif qqq_in_downtrend:
-            action_plan = "TECH DISTRIBUTION DRAG. QQQ lagging below short-term EMAs. Favor Non-Tech or Support Sweeps."
-        else:
-            action_plan = "SELECTIVE MEAN-REVERSION. Avoid 52w-high breakouts; buy structural support tests."
-        
-        allowed_setups = "Liquidity Sweeps (U&R), Cash-Flow Hedges, and Base Pocket Pivots (Risk <= 3.0%)."
-        eff_exp = int(45 * seasonal_mult)
-        max_exposure = f"{int(20 * seasonal_mult)}% - {eff_exp}% (Take fast partials at 2R)"
-        posture_box = "◆ ROTATIONAL DIGEST: BUY SUPPORT SWEEPS ONLY ◆"
+        regime_status = "AMBER: ROTATIONAL ACCUMULATION"
+        action_plan = f"Indices holding 200 EMA with breadth digesting ({round(pct_above_200, 1)}%). Deploy capital selectively into support sweeps and base inflections."
+        max_exposure = f"{int(30 * seasonal_mult)}% - {int(60 * seasonal_mult)}%"
+        posture_box = "◆ ROTATIONAL ACCUMULATION: BUY HIGH ASYMMETRY PIVOTS ◆"
 
     print(f"  Regime Status       : {regime_status}")
     print(f"  Macro Posture       : {posture_box}")
-    print(f"  Max Account Exposure: {max_exposure} (Macro/Cross-Asset Factor: {round(seasonal_mult, 2)}x)")
+    print(f"  Max Account Exposure: {max_exposure} (Calendar Multiplier: {round(seasonal_mult, 2)}x)")
     print(f"  Recommended Tactics : {action_plan}")
-    print(f"  Eligible Setups     : {allowed_setups}")
     print("-" * 112)
-    print(f"  EQUITY BENCHMARKS   : SPY = ${round(spy_c, 2)} (Above 21 EMA: {spy_above_21} | Above 50 SMA: {spy_above_50} | Above 200 EMA: {spy_above_200})")
-    print(f"                        QQQ = ${round(qqq_c, 2)} (Above 21 EMA: {qqq_above_21} | Above 50 SMA: {qqq_above_50} | Above 200 EMA: {qqq_above_200} | Downtrend: {qqq_in_downtrend})")
-    print(f"  CROSS-ASSET MACRO   : 10Y Treasury Yield = {round(tnx_c, 2)}% | WTI Crude Oil = ${round(oil_c, 2)}/bbl")
-    print(f"  UNIVERSE BREADTH    : {round(pct_above_200, 1)}% of stocks > 200 EMA | {round(pct_below_200, 1)}% in Structural Downtrends")
-    print(f"  CANDIDATE PROFILE   : Breakout/Momentum ({htf_cnt}) vs. False-Breakdown Sweeps ({sweep_cnt})")
-    print("-" * 112)
-    for warn in macro_warnings:
-        print(f"  EXOGENOUS SHOCK     : {warn}")
-    for alert in calendar_alerts:
-        print(f"  CALENDAR & RELEASES : {alert}")
+    print(f"  EQUITY BENCHMARKS   : SPY = ${round(spy_c, 2)} (>21 EMA: {spy_above_21} | >50 SMA: {spy_above_50} | >200 EMA: {spy_above_200})")
+    print(f"                        QQQ = ${round(qqq_c, 2)} (>21 EMA: {qqq_above_21} | >50 SMA: {qqq_above_50} | >200 EMA: {qqq_above_200})")
+    print(f"  CROSS-ASSET RADAR   : 10Y Yield = {round(tnx_c, 2)}% | WTI Crude = ${round(oil_c, 2)}/bbl")
+    print(f"  UNIVERSE BREADTH    : {round(pct_above_200, 1)}% of stocks > 200 EMA")
     print("=" * 112 + "\n")
 
     dashboard_data = {
@@ -992,9 +960,11 @@ def analyze_market_regime(total_evaluated, total_above_200, category_counts):
         'max_exposure': max_exposure,
         'action_plan': action_plan,
         'spy_c': round(spy_c, 2),
-        'spy_status': f"Above 21:{spy_above_21} | 50:{spy_above_50} | 200:{spy_above_200}",
+        'spy_above_200': spy_above_200,
+        'spy_above_50': spy_above_50,
         'qqq_c': round(qqq_c, 2),
-        'qqq_status': f"Above 21:{qqq_above_21} | 50:{qqq_above_50} | 200:{qqq_above_200}",
+        'qqq_above_200': qqq_above_200,
+        'qqq_above_50': qqq_above_50,
         'tnx': round(tnx_c, 2),
         'oil': round(oil_c, 2),
         'pct_above_200': round(pct_above_200, 1),
@@ -1007,10 +977,6 @@ def analyze_market_regime(total_evaluated, total_above_200, category_counts):
 # 8. TRAILING 5-DAY RUNNER TRACKER & EVALUATOR
 # ---------------------------------------------------------
 def update_and_evaluate_trailing_runners(todays_candidates):
-    """
-    Maintains a rolling 35-day log of recommended setups and calculates
-    the stock that gained the most from suggested pivot to peak high over the trailing 5 trading days.
-    """
     history = load_json_cache(HISTORY_TRACKER_FILE)
     if not isinstance(history, list):
         history = []
@@ -1115,7 +1081,8 @@ def create_linkedin_carousel_pdf(
     top_br,
     top_htf,
     top_pp,
-    top_ls
+    top_ls,
+    dashboard=None
 ):
     w, h = 1080, 1080
     c = canvas.Canvas(filename, pagesize=(w, h))
@@ -1133,12 +1100,10 @@ def create_linkedin_carousel_pdf(
     def draw_base(header, slide_num, total_slides=8):
         c.setFillColor(bg_color)
         c.rect(0, 0, w, h, fill=True, stroke=False)
-
         c.setFont("Helvetica-Bold", 14)
         c.setFillColor(text_muted)
         c.drawString(60, h - 50, "CORP ACUITY // INSTITUTIONAL INTELLIGENCE")
         c.drawRightString(w - 60, h - 50, f"{slide_num} of {total_slides}")
-
         c.setStrokeColor(card_inner)
         c.setLineWidth(1)
         c.line(60, h - 65, w - 60, h - 65)
@@ -1177,53 +1142,98 @@ def create_linkedin_carousel_pdf(
     c.drawCentredString(w / 2, 80, "Swipe across for today's verified setups & regime metrics ➔")
     c.showPage()
 
-    # ---------------- SLIDE 2: MACRO REGIME COCKPIT ----------------
+    # ---------------- SLIDE 2: EXPANDED MACRO REGIME COCKPIT ----------------
     draw_base("MACRO REGIME COCKPIT", 2, 8)
     c.setFont("Helvetica-Bold", 32)
     c.setFillColor(accent_cyan)
     c.drawString(60, h - 120, "SYSTEM REGIME POSTURE")
 
+    # Hero Status Card
     c.setFillColor(card_bg)
-    c.roundRect(60, h - 360, w - 120, 210, 16, fill=True, stroke=False)
-    c.setFont("Helvetica-Bold", 20)
+    c.roundRect(60, h - 340, w - 120, 195, 16, fill=True, stroke=False)
+    c.setFont("Helvetica-Bold", 18)
     c.setFillColor(text_muted)
-    c.drawString(90, h - 170, "CURRENT REGIME STATUS")
-    c.setFont("Helvetica-Bold", 40)
+    c.drawString(90, h - 165, "CURRENT REGIME STATUS")
+    c.setFont("Helvetica-Bold", 38)
     c.setFillColor(accent_green if "GREEN" in regime_status else (accent_amber if "AMBER" in regime_status else accent_red))
-    c.drawString(90, h - 225, regime_status)
+    c.drawString(90, h - 215, regime_status)
 
     c.setFont("Helvetica-Bold", 22)
     c.setFillColor(text_white)
-    c.drawString(90, h - 280, f"Max Suggested Exposure: {max_exposure}")
-    c.setFont("Helvetica", 18)
+    c.drawString(90, h - 265, f"Suggested Allocation: {max_exposure}")
+    c.setFont("Helvetica", 17)
     c.setFillColor(text_muted)
     clean_posture = posture_box.replace("■", "").replace("▲", "").replace("◆", "").strip()
-    c.drawString(90, h - 320, clean_posture[:64])
+    c.drawString(90, h - 305, clean_posture[:68])
 
-    box_w = (w - 150) / 2
+    # 4-Tile Dashboard Grid on Slide 2
+    tile_w = (w - 150) / 2
+    tile_h = 135
+
+    # Tile 1: Universe Breadth
     c.setFillColor(card_bg)
-    c.roundRect(60, h - 600, box_w, 200, 16, fill=True, stroke=False)
-    c.setFont("Helvetica-Bold", 18)
+    c.roundRect(60, h - 500, tile_w, tile_h, 14, fill=True, stroke=False)
+    c.setFont("Helvetica-Bold", 16)
     c.setFillColor(text_muted)
-    c.drawString(85, h - 440, "UNIVERSE BREADTH (>200 EMA)")
-    c.setFont("Helvetica-Bold", 44)
+    c.drawString(85, h - 390, "UNIVERSE BREADTH (>200 EMA)")
+    c.setFont("Helvetica-Bold", 36)
     c.setFillColor(accent_cyan)
-    c.drawString(85, h - 510, f"{round(pct_above_200, 1)}%")
-    c.setFont("Helvetica", 16)
+    c.drawString(85, h - 440, f"{round(pct_above_200, 1)}%")
+    c.setFont("Helvetica", 14)
     c.setFillColor(text_muted)
-    c.drawString(85, h - 560, "Long-term structural trend health")
+    c.drawString(85, h - 475, "Consolidating above 38% panic floor")
 
+    # Tile 2: Cross-Asset Radar
     c.setFillColor(card_bg)
-    c.roundRect(60 + box_w + 30, h - 600, box_w, 200, 16, fill=True, stroke=False)
-    c.setFont("Helvetica-Bold", 18)
+    c.roundRect(60 + tile_w + 30, h - 500, tile_w, tile_h, 14, fill=True, stroke=False)
+    c.setFont("Helvetica-Bold", 16)
     c.setFillColor(text_muted)
-    c.drawString(85 + box_w + 30, h - 440, "IMMINENT MACRO PRINTS")
+    c.drawString(85 + tile_w + 30, h - 390, "CROSS-ASSET RADAR")
+    c.setFont("Helvetica-Bold", 24)
+    c.setFillColor(text_white)
+    tnx_str = f"10Y Yield: {dashboard.get('tnx', 4.25)}%" if dashboard else "10Y Yield: Normal"
+    oil_str = f"WTI Crude: ${dashboard.get('oil', 75.0)}/bbl" if dashboard else "WTI: Normal"
+    c.drawString(85 + tile_w + 30, h - 435, tnx_str)
+    c.drawString(85 + tile_w + 30, h - 475, oil_str)
+
+    # Tile 3: Equity Benchmarks
+    c.setFillColor(card_bg)
+    c.roundRect(60, h - 660, tile_w, tile_h, 14, fill=True, stroke=False)
+    c.setFont("Helvetica-Bold", 16)
+    c.setFillColor(text_muted)
+    c.drawString(85, h - 550, "INDEX STRUCTURAL HEALTH")
+    c.setFont("Helvetica-Bold", 22)
+    spy_above_200 = dashboard.get('spy_above_200', True) if dashboard else True
+    qqq_above_200 = dashboard.get('qqq_above_200', True) if dashboard else True
+    c.setFillColor(accent_green if spy_above_200 else accent_red)
+    c.drawString(85, h - 595, f"SPY: {'Above 200 EMA' if spy_above_200 else 'Below 200 EMA'}")
+    c.setFillColor(accent_green if qqq_above_200 else accent_red)
+    c.drawString(85, h - 635, f"QQQ: {'Above 200 EMA' if qqq_above_200 else 'Below 200 EMA'}")
+
+    # Tile 4: Tactical Action Directive
+    c.setFillColor(card_bg)
+    c.roundRect(60 + tile_w + 30, h - 660, tile_w, tile_h, 14, fill=True, stroke=False)
+    c.setFont("Helvetica-Bold", 16)
+    c.setFillColor(text_muted)
+    c.drawString(85 + tile_w + 30, h - 550, "TACTICAL DIRECTIVE")
+    c.setFont("Helvetica", 15)
+    c.setFillColor(text_white)
+    action_text = dashboard.get('action_plan', 'Trade high asymmetry setups.') if dashboard else 'Trade setups.'
+    c.drawString(85 + tile_w + 30, h - 590, action_text[:42])
+    c.drawString(85 + tile_w + 30, h - 620, action_text[42:84])
+
+    # Upcoming Radar Strip
+    c.setFillColor(card_inner)
+    c.roundRect(60, h - 850, w - 120, 160, 14, fill=True, stroke=False)
+    c.setFont("Helvetica-Bold", 18)
+    c.setFillColor(accent_amber)
+    c.drawString(85, h - 710, "IMMINENT MACRO RADAR & RELEASES:")
     c.setFont("Helvetica", 16)
     c.setFillColor(text_white)
-    y_cal = h - 490
+    y_cal = h - 745
     radar = calendar_alerts[:3] if calendar_alerts else ["Clear Runway: No high-impact shocks in 72h."]
     for al in radar:
-        c.drawString(85 + box_w + 30, y_cal, al.replace("🚨", "! ")[:35])
+        c.drawString(85, y_cal, al.replace("🚨", "! ")[:75])
         y_cal -= 35
 
     c.showPage()
@@ -1234,7 +1244,7 @@ def create_linkedin_carousel_pdf(
     if top_runner and top_runner.get('max_gain_pct', 0) > 0:
         c.setFont("Helvetica-Bold", 32)
         c.setFillColor(accent_amber)
-        c.drawString(60, h - 140, "TOP TRAILING SETUP PERFORMANCE")
+        c.drawString(60, h - 140, "How did we do? Here is our top performer over the last 5 days!")
 
         c.setFont("Helvetica-Bold", 52)
         c.setFillColor(text_white)
@@ -1306,13 +1316,13 @@ def create_linkedin_carousel_pdf(
     else:
         c.setFillColor(card_bg)
         c.roundRect(60, h - 600, w - 120, 360, 24, fill=True, stroke=False)
-        c.setFont("Helvetica-Bold", 36)
-        c.setFillColor(text_white)
-        c.drawString(100, h - 350, "5-Day Performance Tracking Active")
-        c.setFont("Helvetica", 24)
+        c.setFont("Helvetica-Bold", 34)
+        c.setFillColor(accent_amber)
+        c.drawString(100, h - 350, "How did we do? Here is our top performer over the last 5 days!")
+        c.setFont("Helvetica", 22)
         c.setFillColor(text_muted)
-        c.drawString(100, h - 420, "Logged setups are evaluated nightly against post-entry highs.")
-        c.drawString(100, h - 470, "Performance metrics automatically populate on subsequent runs.")
+        c.drawString(100, h - 420, "Logged setups are evaluated nightly against subsequent post-entry peak highs.")
+        c.drawString(100, h - 465, "Audited 5-day R-multiple tracking populates on subsequent sessions.")
 
     c.showPage()
 
@@ -1430,13 +1440,6 @@ def create_linkedin_carousel_pdf(
 # 10. RENDER HIGH-RES PNG CARDS FOR X (STAMPED 1 OF 4 TO 4 OF 4)
 # ---------------------------------------------------------
 def export_carousel_cards_for_web(pdf_path=CAROUSEL_PDF_FILENAME):
-    """
-    Renders 4 high-res PNG cards for X:
-    - Card 1: Slide 1 (Cover, Briefing & Website CTA)
-    - Card 2: Slide 2 (Macro Regime Cockpit)
-    - Card 3: Slide 3 (5-Day Top Runner Teaser)
-    - Card 4: Slide 4 (Top Setup 1)
-    """
     if not os.path.exists(pdf_path):
         print(f"[CARDS] Error: '{pdf_path}' not found.")
         return []
@@ -1576,7 +1579,6 @@ def publish_to_linkedin(
     }
 
     try:
-        # Step 1: Initialize Document Upload
         init_res = requests.post(
             "https://api.linkedin.com/rest/documents?action=initializeUpload",
             headers=headers,
@@ -1591,7 +1593,6 @@ def publish_to_linkedin(
         upload_url = init_data["uploadUrl"]
         doc_urn = init_data["document"]
 
-        # Step 2: Upload PDF Binary
         with open(pdf_path, "rb") as f:
             pdf_bytes = f.read()
 
@@ -1605,11 +1606,9 @@ def publish_to_linkedin(
             print(f"[LINKEDIN] File Stream Failed ({r_upload.status_code}): {r_upload.text}")
             return
 
-        # Step 3: Wait for LinkedIn Media Processing
         print("[LINKEDIN] Document uploaded. Pausing 6 seconds for LinkedIn media processing...")
         time.sleep(6.0)
 
-        # Step 4: Create Carousel Post
         commentary = build_dynamic_linkedin_post(
             regime_status,
             posture_box,
@@ -1866,7 +1865,8 @@ def run_master_screener():
         top_br=top_br,
         top_htf=top_htf,
         top_pp=top_pp,
-        top_ls=top_ls
+        top_ls=top_ls,
+        dashboard=dashboard
     )
 
     # ---------------- 4 PNG CARDS FOR X ----------------
