@@ -1,20 +1,22 @@
 {
-  "generated_at": "2026-10-03 05:37 UTC",
+  "generated_at": "2026-10-03 12:17 UTC",
   "macro": {
-    "regime_status": "RED: CONFIRMED MACRO DOWNTREND",
-    "posture_box": "\u25a0 DOWNTREND DEFENSE: TRADE SELECTIVELY WITH TIGHT RISK \u25a0",
-    "max_exposure": "0% - 15% (Defensive Stance)",
-    "action_plan": "DEFENSIVE SIZING. Structural trend broken. Use extreme caution on breakouts.",
+    "regime_status": "AMBER: ROTATIONAL ACCUMULATION",
+    "posture_box": "\u25c6 ROTATIONAL ACCUMULATION: BUY HIGH ASYMMETRY PIVOTS \u25c6",
+    "max_exposure": "30% - 60%",
+    "action_plan": "Indices holding 200 EMA with breadth digesting (45.1%). Deploy capital selectively into support sweeps and base inflections.",
     "spy_c": 769.64,
-    "spy_status": "Above 21:True | 50:True | 200:True",
+    "spy_above_200": true,
+    "spy_above_50": true,
     "qqq_c": 749.58,
-    "qqq_status": "Above 21:True | 50:True | 200:True",
+    "qqq_above_200": true,
+    "qqq_above_50": true,
     "tnx": 5.28,
     "oil": 91.11,
     "pct_above_200": 45.1,
     "warnings": [
-      "\u26a1 YIELD SURGE: 10-Yr Yield at 5.28% (+0.7% 5d). Multiple drag active.",
-      "\ud83d\udee2\ufe0f OIL PRICE SPIKE: WTI Crude at $91.11 (+-1.6% 5d). Inflation expectations repricing."
+      "\u26a1 10Y Yield elevated at 5.28% (Valuation compression).",
+      "\ud83d\udee2\ufe0f WTI Crude at $91.11/bbl (Inflation drag)."
     ],
     "calendar": [
       "IN 4 DAYS: FOMC MINUTES RELEASE (2:00 PM ET): Midday algo volatility",
@@ -132,22 +134,6 @@
         "Earnings_Risk": "SAFE (31d)"
       },
       {
-        "Ticker": "ENS",
-        "Close": 196.3,
-        "Headroom_%": 24.1,
-        "Above_200_%": 8.1,
-        "Hist_Now": -3.734,
-        "Vol_Ratio": "1.11x",
-        "Conviction_Score": 1.232,
-        "Pivot_Trigger": 199.14,
-        "Stop_Loss": 181.06,
-        "Risk_%": 9.08,
-        "R_Ratio": 2.65,
-        "Category": "Base-Reset",
-        "Zacks_Rank": "#2 (3d)",
-        "Earnings_Risk": "SAFE (32d)"
-      },
-      {
         "Ticker": "EME",
         "Close": 786.61,
         "Headroom_%": 21.0,
@@ -162,6 +148,22 @@
         "Category": "Base-Reset",
         "Zacks_Rank": "#1 (4d)",
         "Earnings_Risk": "SAFE (26d)"
+      },
+      {
+        "Ticker": "ENS",
+        "Close": 196.3,
+        "Headroom_%": 24.1,
+        "Above_200_%": 8.1,
+        "Hist_Now": -3.734,
+        "Vol_Ratio": "1.11x",
+        "Conviction_Score": 1.232,
+        "Pivot_Trigger": 199.14,
+        "Stop_Loss": 181.06,
+        "Risk_%": 9.08,
+        "R_Ratio": 2.65,
+        "Category": "Base-Reset",
+        "Zacks_Rank": "#2 (3d)",
+        "Earnings_Risk": "SAFE (32d)"
       },
       {
         "Ticker": "FIX",
@@ -260,22 +262,6 @@
         "Earnings_Risk": "SAFE (32d)"
       },
       {
-        "Ticker": "PGNY",
-        "Close": 25.23,
-        "Headroom_%": 31.1,
-        "Above_200_%": 1.1,
-        "Hist_Now": -0.537,
-        "Vol_Ratio": "1.08x",
-        "Conviction_Score": 0.687,
-        "Pivot_Trigger": 25.96,
-        "Stop_Loss": 24.79,
-        "Risk_%": 4.51,
-        "R_Ratio": 6.89,
-        "Category": "Base-Reset",
-        "Zacks_Rank": "#2 (3d)",
-        "Earnings_Risk": "SAFE (33d)"
-      },
-      {
         "Ticker": "PDFS",
         "Close": 55.5,
         "Headroom_%": 29.2,
@@ -289,6 +275,22 @@
         "R_Ratio": 2.66,
         "Category": "Base-Reset",
         "Zacks_Rank": "#2 (4d)",
+        "Earnings_Risk": "SAFE (33d)"
+      },
+      {
+        "Ticker": "PGNY",
+        "Close": 25.23,
+        "Headroom_%": 31.1,
+        "Above_200_%": 1.1,
+        "Hist_Now": -0.537,
+        "Vol_Ratio": "1.08x",
+        "Conviction_Score": 0.687,
+        "Pivot_Trigger": 25.96,
+        "Stop_Loss": 24.79,
+        "Risk_%": 4.51,
+        "R_Ratio": 6.89,
+        "Category": "Base-Reset",
+        "Zacks_Rank": "#2 (3d)",
         "Earnings_Risk": "SAFE (33d)"
       },
       {
@@ -563,23 +565,6 @@
         "Earnings_Risk": "SAFE (19d)"
       },
       {
-        "Ticker": "HCSG",
-        "Close": 20.87,
-        "Shelf_Level": 20.6,
-        "Flush_Low": 20.17,
-        "Sweep_Depth_%": 2.09,
-        "Headroom_%": 23.4,
-        "Vol_Ratio": "1.7x",
-        "Conviction_Score": 5.34,
-        "Pivot_Trigger": 20.99,
-        "Stop_Loss": 20.07,
-        "Risk_%": 4.38,
-        "R_Ratio": 5.34,
-        "Category": "Liquidity Sweep",
-        "Zacks_Rank": "#3 (3d)",
-        "Earnings_Risk": "SAFE (18d)"
-      },
-      {
         "Ticker": "HQY",
         "Close": 90.04,
         "Shelf_Level": 87.27,
@@ -595,6 +580,23 @@
         "Category": "Liquidity Sweep",
         "Zacks_Rank": "#3 (3d)",
         "Earnings_Risk": "SAFE (>14d)"
+      },
+      {
+        "Ticker": "HCSG",
+        "Close": 20.87,
+        "Shelf_Level": 20.6,
+        "Flush_Low": 20.17,
+        "Sweep_Depth_%": 2.09,
+        "Headroom_%": 23.4,
+        "Vol_Ratio": "1.7x",
+        "Conviction_Score": 5.34,
+        "Pivot_Trigger": 20.99,
+        "Stop_Loss": 20.07,
+        "Risk_%": 4.38,
+        "R_Ratio": 5.34,
+        "Category": "Liquidity Sweep",
+        "Zacks_Rank": "#3 (3d)",
+        "Earnings_Risk": "SAFE (18d)"
       },
       {
         "Ticker": "LYV",
@@ -780,7 +782,7 @@
         "Risk_%": 2.41,
         "R_Ratio": 8.2,
         "Category": "Liquidity Sweep",
-        "Zacks_Rank": "#3 (1d)",
+        "Zacks_Rank": "#3 (New)",
         "Earnings_Risk": "SAFE (33d)"
       }
     ]

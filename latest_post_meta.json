@@ -1,9 +1,9 @@
 {
   "pdf_path": "daily_market_intelligence.pdf",
   "date": "2026-10-03",
-  "regime_status": "RED: CONFIRMED MACRO DOWNTREND",
-  "posture_box": "\u25a0 DOWNTREND DEFENSE: TRADE SELECTIVELY WITH TIGHT RISK \u25a0",
-  "max_exposure": "0% - 15% (Defensive Stance)",
+  "regime_status": "AMBER: ROTATIONAL ACCUMULATION",
+  "posture_box": "\u25c6 ROTATIONAL ACCUMULATION: BUY HIGH ASYMMETRY PIVOTS \u25c6",
+  "max_exposure": "30% - 60%",
   "pct_above_200": 45.1,
   "focus_tickers": [
     "ICHR",
