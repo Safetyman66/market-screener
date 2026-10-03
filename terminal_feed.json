@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-03 12:17 UTC",
+  "generated_at": "2026-10-03 12:41 UTC",
   "macro": {
     "regime_status": "AMBER: ROTATIONAL ACCUMULATION",
     "posture_box": "\u25c6 ROTATIONAL ACCUMULATION: BUY HIGH ASYMMETRY PIVOTS \u25c6",
@@ -565,23 +565,6 @@
         "Earnings_Risk": "SAFE (19d)"
       },
       {
-        "Ticker": "HQY",
-        "Close": 90.04,
-        "Shelf_Level": 87.27,
-        "Flush_Low": 86.01,
-        "Sweep_Depth_%": 1.44,
-        "Headroom_%": 19.5,
-        "Vol_Ratio": "1.05x",
-        "Conviction_Score": 3.26,
-        "Pivot_Trigger": 91.02,
-        "Stop_Loss": 85.58,
-        "Risk_%": 5.98,
-        "R_Ratio": 3.26,
-        "Category": "Liquidity Sweep",
-        "Zacks_Rank": "#3 (3d)",
-        "Earnings_Risk": "SAFE (>14d)"
-      },
-      {
         "Ticker": "HCSG",
         "Close": 20.87,
         "Shelf_Level": 20.6,
@@ -597,6 +580,23 @@
         "Category": "Liquidity Sweep",
         "Zacks_Rank": "#3 (3d)",
         "Earnings_Risk": "SAFE (18d)"
+      },
+      {
+        "Ticker": "HQY",
+        "Close": 90.04,
+        "Shelf_Level": 87.27,
+        "Flush_Low": 86.01,
+        "Sweep_Depth_%": 1.44,
+        "Headroom_%": 19.5,
+        "Vol_Ratio": "1.05x",
+        "Conviction_Score": 3.26,
+        "Pivot_Trigger": 91.02,
+        "Stop_Loss": 85.58,
+        "Risk_%": 5.98,
+        "R_Ratio": 3.26,
+        "Category": "Liquidity Sweep",
+        "Zacks_Rank": "#3 (3d)",
+        "Earnings_Risk": "SAFE (>14d)"
       },
       {
         "Ticker": "LYV",
