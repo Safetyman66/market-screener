@@ -71,7 +71,7 @@
       flex: 1;
       max-width: 1100px;
       margin: 0 auto;
-      padding: 4rem 1.5rem 2rem;
+      padding: 3rem 1.5rem 2rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -111,14 +111,14 @@
       padding: 0.65rem 1.2rem;
       max-width: 760px;
       line-height: 1.5;
-      margin-bottom: 2.25rem;
+      margin-bottom: 2rem;
     }
     .cta-group {
       display: flex;
       gap: 1rem;
       flex-wrap: wrap;
       justify-content: center;
-      margin-bottom: 3.5rem;
+      margin-bottom: 2.5rem;
     }
     .btn {
       padding: 0.85rem 1.75rem;
@@ -148,6 +148,82 @@
       background: var(--card-bg);
       border-color: var(--accent);
       transform: translateY(-1px);
+    }
+    /* Macro Environment Live Widget */
+    .macro-panel {
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.75rem;
+      text-align: left;
+      margin-bottom: 2.5rem;
+    }
+    .macro-panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+    }
+    .macro-panel-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .macro-status-tag {
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 0.3rem 0.75rem;
+      border-radius: 6px;
+      background: rgba(251, 191, 36, 0.15);
+      color: var(--amber);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+    }
+    .macro-stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+    .stat-box {
+      background: var(--card-inner);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+    .stat-value {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .macro-context-box {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      font-size: 0.88rem;
+      line-height: 1.55;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .macro-context-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
     }
     .grid {
       display: grid;
@@ -214,6 +290,50 @@
       <a href="daily_market_intelligence.pdf" target="_blank" class="btn btn-secondary">Open Today's Summary Carousel (PDF)</a>
     </div>
 
+    <!-- Live Macroenvironment & Seasonality Context Panel -->
+    <div class="macro-panel">
+      <div class="macro-panel-header">
+        <div class="macro-panel-title">
+          <span>🌐 Macro Regime & Seasonal Environment</span>
+        </div>
+        <div id="liveRegimeStatus" class="macro-status-tag">AMBER: ROTATIONAL ACCUMULATION</div>
+      </div>
+
+      <div class="macro-stats-row">
+        <div class="stat-box">
+          <div class="stat-label">Universe Breadth (> 200 EMA)</div>
+          <div id="liveBreadth" class="stat-value">52.4%</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Max Account Exposure</div>
+          <div id="liveExposure" class="stat-value">30% - 60%</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">10Y Yield / WTI Crude</div>
+          <div id="liveCrossAsset" class="stat-value">4.24% / $73.80</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">OPEX Invalidation Clock</div>
+          <div id="liveOpexClock" class="stat-value" style="color:var(--amber);">11 Days</div>
+        </div>
+      </div>
+
+      <div class="macro-context-box">
+        <div class="macro-context-item">
+          <span>📅</span>
+          <div><strong style="color:var(--accent);">Monthly Seasonality:</strong> <span id="seasonalityText">October Volatility & Inflection: Renowned 'bear killer' month. Elevated pre-earnings and OPEX volatility frequently forms major market swing bottoms.</span></div>
+        </div>
+        <div class="macro-context-item">
+          <span>⏱️</span>
+          <div><strong style="color:var(--amber);">Derivatives Window:</strong> <span id="opexContextText">Monthly Options Expiration (OPEX) occurs on the third Friday. Expect dealer gamma positioning, index pinning, and erratic volatility within 7 days of expiration.</span></div>
+        </div>
+        <div class="macro-context-item">
+          <span>⚡</span>
+          <div><strong style="color:var(--red);">Exogenous Shock Radar:</strong> <span id="shockRadarText">10Y Yield & Oil holding within baseline bounds. No acute macro divergence detected.</span></div>
+        </div>
+      </div>
+    </div>
+
     <div class="grid">
       <div class="feature-card">
         <h3>1. Macro Regime Gate</h3>
@@ -238,7 +358,6 @@
   </footer>
 
   <script>
-    // Update badge if unlocked in localStorage
     if (localStorage.getItem('corpacuity_unlocked') === 'true') {
       const b = document.getElementById('navBadge');
       if (b) {
@@ -246,6 +365,51 @@
         b.classList.add("unlocked");
       }
     }
+
+    async function hydrateMacroPanel() {
+      try {
+        const res = await fetch('terminal_feed.json?cache_bust=' + Date.now());
+        if (!res.ok) return;
+        const data = await res.json();
+        const macro = data.macro;
+        if (!macro) return;
+
+        const regEl = document.getElementById('liveRegimeStatus');
+        regEl.innerText = macro.regime_status || "AMBER: ROTATIONAL ACCUMULATION";
+        if (macro.regime_status && macro.regime_status.includes("GREEN")) {
+          regEl.style.color = "var(--green)";
+          regEl.style.borderColor = "rgba(74, 222, 128, 0.4)";
+          regEl.style.background = "rgba(74, 222, 128, 0.15)";
+        } else if (macro.regime_status && macro.regime_status.includes("RED")) {
+          regEl.style.color = "var(--red)";
+          regEl.style.borderColor = "rgba(248, 113, 113, 0.4)";
+          regEl.style.background = "rgba(248, 113, 113, 0.15)";
+        }
+
+        document.getElementById('liveBreadth').innerText = (macro.pct_above_200 || 0) + "%";
+        document.getElementById('liveExposure').innerText = macro.max_exposure || "30% - 60%";
+        document.getElementById('liveCrossAsset').innerText = `${macro.tnx || 4.25}% / $${macro.oil || 75.0}`;
+
+        const opexDays = macro.days_to_opx !== undefined ? macro.days_to_opx : 11;
+        const opexLabel = macro.opx_label || "Monthly OPEX";
+        document.getElementById('liveOpexClock').innerText = `${opexDays} Days (${opexLabel})`;
+
+        if (macro.seasonality) {
+          document.getElementById('seasonalityText').innerText = macro.seasonality;
+        }
+
+        document.getElementById('opexContextText').innerText = 
+          `${opexDays} trading day(s) until ${opexLabel}. Derivatives market maker gamma pinning and roll-over volume create non-fundamental single-stock false breakouts.`;
+
+        if (macro.warnings && macro.warnings.length > 0) {
+          document.getElementById('shockRadarText').innerHTML = macro.warnings.join('<br>');
+        }
+      } catch (e) {
+        console.warn("Macro widget hydration notice:", e);
+      }
+    }
+
+    hydrateMacroPanel();
   </script>
 </body>
 </html>
