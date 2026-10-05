@@ -5,6 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Daily Market Intelligence Terminal | Corp Acuity</title>
   <link rel="icon" type="image/png" href="logo.png" />
+  
+  <!-- EmailJS SDK & Initialization -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>
+    (function(){
+      emailjs.init({
+        publicKey: "4UwWioU7Are22Ah_O",
+      });
+    })();
+  </script>
+
   <style>
     :root {
       --bg: #070a12;
@@ -520,7 +531,7 @@
       <div id="modalSuccessContent" class="success-container" style="display:none;">
         <div class="icon">🔓</div>
         <h3>Access Granted</h3>
-        <p>You are now viewing today's full institutional scan. A link and daily intelligence update will also be routed to your email.</p>
+        <p>You are now viewing today's full institutional scan. A link and daily intelligence update has been routed to your email.</p>
         <button class="btn-unlock" style="width:100%;" onclick="confirmSuccessAndContinue()">Continue to Terminal ➔</button>
       </div>
     </div>
@@ -679,14 +690,19 @@
       btn.disabled = true;
       btn.innerText = "Unlocking terminal...";
 
+      const leadName = document.getElementById('leadName').value;
+      const leadEmail = document.getElementById('leadEmail').value;
+      const leadLocation = document.getElementById('leadLocation').value || "Not Specified";
+
       const payload = {
-        name: document.getElementById('leadName').value,
-        email: document.getElementById('leadEmail').value,
-        location: document.getElementById('leadLocation').value || "Not Specified",
+        name: leadName,
+        email: leadEmail,
+        location: leadLocation,
         timestamp: new Date().toISOString(),
         source: "Daily Screener Terminal Lead Gate"
       };
 
+      // 1. Submit lead record to Formspree dashboard
       try {
         await fetch("https://formspree.io/f/maeqyzoj", {
           method: "POST",
@@ -697,7 +713,18 @@
         console.error("Formspree transmission notice:", err);
       }
 
-      // Show Success State
+      // 2. Dispatch instant confirmation email to user via EmailJS
+      try {
+        await emailjs.send("service_7ftmqeu", "template_3njnkmf", {
+          user_name: leadName,
+          user_email: leadEmail,
+        });
+        console.log("[EMAIL] Confirmation sent to user successfully.");
+      } catch (err) {
+        console.error("[EMAIL] EmailJS dispatch notice:", err);
+      }
+
+      // 3. Display success screen
       document.getElementById('modalFormContent').style.display = 'none';
       document.getElementById('modalSuccessContent').style.display = 'block';
       btn.disabled = false;
