@@ -1,6 +1,8 @@
 Ticker,Close,Pole_Gain_%,Flag_Days,Flag_Depth_%,10d_Tightness_%,Vol_DryUp,Conviction_Score,Pivot_Trigger,Stop_Loss,Risk_%,R_Ratio,Category,Zacks_Rank,Earnings_Risk
-DOCU,69.01,59.0,13,13.7,9.2,0.67x,2.15,74.07,63.92,13.7,2.15,Momentum Flag,#3 (4d),SAFE (61d)
-HAE,104.68,47.4,10,6.3,6.1,0.62x,3.77,110.45,103.51,6.28,3.77,Momentum Flag,#3 (5d),SAFE (33d)
-NSIT,160.66,46.9,11,9.9,7.2,0.74x,2.37,168.5,151.82,9.9,2.37,Momentum Flag,#2 (4d),SAFE (26d)
-RNG,78.28,56.0,7,11.7,11.7,0.74x,2.39,81.9,72.29,11.73,2.39,Momentum Flag,#3 (3d),SAFE (33d)
-SPSC,82.35,52.4,15,12.7,7.5,0.7x,2.07,89.44,78.12,12.66,2.07,Momentum Flag,#3 (5d),SAFE (26d)
+AVTR,15.57,49.4,12,9.2,6.7,0.73x,2.68,16.05,14.57,9.22,2.68,Momentum Flag,#2 (6d),SAFE (23d)
+DELL,554.83,65.9,11,12.6,9.5,0.63x,2.61,595.51,520.18,12.65,2.61,Momentum Flag,#1 (3d),SAFE (53d)
+DOCU,70.14,59.0,14,13.7,9.7,0.51x,2.15,74.07,63.92,13.7,2.15,Momentum Flag,#3 (6d),SAFE (59d)
+HAE,105.27,47.4,11,6.3,6.1,0.53x,3.77,110.45,103.51,6.28,3.77,Momentum Flag,#3 (7d),SAFE (31d)
+NSIT,159.89,46.9,12,9.9,7.2,0.64x,2.37,168.5,151.82,9.9,2.37,Momentum Flag,#2 (6d),SAFE (24d)
+RNG,79.86,56.0,8,11.7,11.7,0.7x,2.39,81.9,72.29,11.73,2.39,Momentum Flag,#3 (5d),SAFE (31d)
+SPSC,81.76,52.4,16,12.7,7.5,0.65x,2.07,89.44,78.12,12.66,2.07,Momentum Flag,#3 (7d),SAFE (24d)
