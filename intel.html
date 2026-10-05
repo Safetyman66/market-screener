@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Corp Acuity // Institutional Screener & Terminal</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Market Intelligence Terminal | Corp Acuity</title>
+  <link rel="icon" type="image/png" href="logo.png" />
   <style>
     :root {
       --bg: #070a12;
@@ -14,93 +12,175 @@
       --card-inner: #1e293b;
       --border: #334155;
       --text: #f8fafc;
-      --text-muted: #94a3b8;
-      --cyan: #38bdf8;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
       --green: #4ade80;
       --amber: #fbbf24;
       --red: #f87171;
     }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
     body {
       background-color: var(--bg);
       color: var(--text);
-      font-family: 'Inter', sans-serif;
-      line-height: 1.5;
-      padding-bottom: 60px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
-
-    .mono { font-family: 'JetBrains Mono', monospace; }
-
     header {
       border-bottom: 1px solid var(--border);
-      padding: 16px 32px;
+      padding: 1rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
       background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(12px);
       position: sticky;
       top: 0;
       z-index: 50;
+      backdrop-filter: blur(8px);
     }
-
-    .brand-wrap { display: flex; align-items: center; gap: 14px; text-decoration: none; color: inherit; }
-    .brand-logo { height: 40px; width: 40px; object-fit: contain; border-radius: 6px; background: #ffffff; padding: 2px; }
-    .brand-name { font-size: 1.15rem; font-weight: 800; letter-spacing: -0.5px; }
-    .brand-name span { color: var(--cyan); }
-    .status-badge { font-size: 0.8rem; background: var(--card-inner); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border); }
-
-    .container { max-width: 1240px; margin: 0 auto; padding: 32px 20px; }
-
-    /* DASHBOARD CARDS */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    .brand img {
+      height: 28px;
+      width: auto;
+    }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .nav-badge {
+      font-size: 0.75rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: 9999px;
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      font-weight: 600;
+    }
+    .nav-badge.unlocked {
+      background: rgba(74, 222, 128, 0.1);
+      color: var(--green);
+      border-color: rgba(74, 222, 128, 0.3);
+    }
+    main {
+      flex: 1;
+      max-width: 1300px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+    .hero-header {
+      margin-bottom: 1.5rem;
+    }
+    .hero-header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 0.35rem;
+    }
+    .hero-header p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    .plain-english-explainer {
+      display: inline-block;
+      font-size: 0.9rem;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 6px;
+      padding: 0.5rem 1rem;
+      margin-top: 0.25rem;
+      margin-bottom: 1rem;
+    }
+    .posture-banner {
+      width: 100%;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border: 1px solid transparent;
+    }
+    .posture-banner.green {
+      background: rgba(74, 222, 128, 0.1);
+      border-color: rgba(74, 222, 128, 0.3);
+      color: var(--green);
+    }
+    .posture-banner.amber {
+      background: rgba(251, 191, 36, 0.1);
+      border-color: rgba(251, 191, 36, 0.3);
+      color: var(--amber);
+    }
+    .posture-banner.red {
+      background: rgba(248, 113, 113, 0.1);
+      border-color: rgba(248, 113, 113, 0.3);
+      color: var(--red);
+    }
     .dashboard-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 16px;
-      margin-bottom: 32px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
     }
-
     .dash-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 20px;
+      border-radius: 10px;
+      padding: 1.25rem;
     }
-
-    .dash-card h4 { font-size: 0.75rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px; letter-spacing: 0.5px; }
-    .dash-val { font-size: 1.85rem; font-weight: 800; }
-
-    /* 5-DAY ALPHA RUNNER CARD */
-    .runner-card {
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.8));
-      border: 1px solid var(--border);
-      border-left: 4px solid var(--amber);
-      border-radius: 12px;
-      padding: 24px;
-      margin-bottom: 36px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .runner-stats { display: flex; gap: 24px; flex-wrap: wrap; }
-    .stat-pill { background: var(--card-inner); padding: 8px 16px; border-radius: 8px; border: 1px solid var(--border); }
-    .stat-pill .title { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
-    .stat-pill .value { font-size: 1.15rem; font-weight: 700; }
-
-    /* SECTIONS & TABLES */
-    .section-title {
-      font-size: 1.25rem;
+    .dash-card-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
       font-weight: 700;
-      margin: 36px 0 16px 0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
     }
-
+    .dash-card-val {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+      overflow-x: auto;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .tab-btn.active {
+      background: var(--card-inner);
+      color: var(--accent);
+      border: 1px solid var(--border);
+    }
     .table-container {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -108,240 +188,483 @@
       overflow-x: auto;
       position: relative;
     }
-
-    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 0.88rem; }
-    th { background: rgba(30, 41, 59, 0.7); padding: 12px 16px; font-weight: 600; color: var(--text-muted); border-bottom: 1px solid var(--border); }
-    td { padding: 14px 16px; border-bottom: 1px solid rgba(51, 65, 85, 0.4); }
-
-    .tag-green { color: var(--green); font-weight: 700; }
-    .tag-red { color: var(--red); font-weight: 600; }
-    .tag-cyan { color: var(--cyan); font-weight: 700; }
-    .tag-amber { color: var(--amber); font-weight: 600; }
-
-    .locked-row {
-      filter: blur(4px);
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+    th {
+      background: var(--card-inner);
+      padding: 0.85rem 1rem;
+      color: var(--muted);
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+      cursor: help;
+    }
+    th[title] {
+      text-decoration: underline dotted var(--muted);
+    }
+    td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+      white-space: nowrap;
+    }
+    tr.locked-row td {
+      filter: blur(5px);
       user-select: none;
       pointer-events: none;
-      opacity: 0.5;
     }
-
+    .ticker-pill {
+      font-weight: 700;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.1);
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+    }
+    .r-pill {
+      color: var(--green);
+      font-weight: 700;
+    }
+    .zacks-pill {
+      color: var(--amber);
+      font-weight: 600;
+    }
     .gate-overlay {
-      background: linear-gradient(180deg, rgba(15, 23, 42, 0.2) 0%, rgba(15, 23, 42, 0.95) 80%);
       position: absolute;
-      bottom: 0;
+      top: 140px;
       left: 0;
       right: 0;
-      height: 180px;
+      bottom: 0;
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.1) 0%, rgba(15, 23, 42, 0.95) 40%, #0f172a 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: flex-end;
-      padding-bottom: 24px;
-      z-index: 10;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+      backdrop-filter: blur(2px);
     }
-
-    .unlock-btn {
-      background: var(--green);
-      color: #070a12;
+    .gate-overlay h3 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+    .gate-overlay p {
+      color: var(--muted);
+      max-width: 520px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 1.25rem;
+    }
+    .btn-unlock {
+      background: var(--accent);
+      color: #04101e;
       border: none;
+      padding: 0.85rem 1.75rem;
       font-weight: 700;
       font-size: 0.95rem;
-      padding: 12px 28px;
       border-radius: 8px;
       cursor: pointer;
-      box-shadow: 0 4px 20px rgba(74, 222, 128, 0.3);
-      transition: all 0.2s ease;
+      transition: transform 0.2s;
     }
-    .unlock-btn:hover { background: #38bdf8; color: #070a12; }
-
+    .btn-unlock:hover {
+      transform: translateY(-2px);
+      background: #7dd3fc;
+    }
+    /* Modal Styles */
     .modal-backdrop {
       display: none;
       position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
+      inset: 0;
       background: rgba(7, 10, 18, 0.85);
       backdrop-filter: blur(8px);
       z-index: 100;
-      justify-content: center;
       align-items: center;
-      padding: 20px;
+      justify-content: center;
+      padding: 1.5rem;
     }
-
-    .modal-box {
+    .modal-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 32px;
-      max-width: 480px;
+      border-radius: 14px;
+      max-width: 500px;
       width: 100%;
+      padding: 2rem;
       position: relative;
     }
-
-    .modal-close {
+    .modal-card h2 {
+      font-size: 1.4rem;
+      margin-bottom: 0.4rem;
+    }
+    .modal-card p {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+    .close-btn {
       position: absolute;
-      top: 16px; right: 16px;
+      top: 1.25rem;
+      right: 1.25rem;
       background: transparent;
       border: none;
-      color: var(--text-muted);
-      font-size: 1.25rem;
+      color: var(--muted);
+      font-size: 1.4rem;
       cursor: pointer;
     }
-
-    .modal-box h3 { font-size: 1.4rem; font-weight: 800; margin-bottom: 8px; }
-    .modal-box p { font-size: 0.88rem; color: var(--text-muted); margin-bottom: 20px; }
-
-    .form-group { margin-bottom: 16px; }
-    .form-group label { display: block; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+    .form-group {
+      margin-bottom: 1.15rem;
+      text-align: left;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.35rem;
+    }
     .form-group input {
       width: 100%;
-      padding: 12px 14px;
+      padding: 0.75rem;
+      border-radius: 6px;
       background: var(--card-inner);
       border: 1px solid var(--border);
-      border-radius: 8px;
       color: var(--text);
-      font-family: inherit;
+      font-size: 0.9rem;
+      outline: none;
     }
-    .form-group input:focus { outline: none; border-color: var(--cyan); }
+    .form-group input:focus {
+      border-color: var(--accent);
+    }
+    .submit-btn {
+      width: 100%;
+      background: var(--accent);
+      color: #04101e;
+      border: none;
+      padding: 0.85rem;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      margin-top: 0.5rem;
+      transition: background 0.2s;
+    }
+    .submit-btn:hover {
+      background: #7dd3fc;
+    }
+    .micro-notice {
+      margin-top: 1rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.4;
+      text-align: left;
+      border-top: 1px solid var(--border);
+      padding-top: 0.85rem;
+    }
+    .success-container {
+      text-align: center;
+      padding: 1rem 0;
+    }
+    .success-container .icon {
+      font-size: 2.8rem;
+      margin-bottom: 0.8rem;
+    }
+    .success-container h3 {
+      font-size: 1.35rem;
+      color: var(--green);
+      margin-bottom: 0.5rem;
+    }
+    .success-container p {
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      align-items: center;
+      margin-top: 3rem;
+    }
+    footer a {
+      color: var(--muted);
+      text-decoration: underline;
+    }
+    footer a:hover {
+      color: var(--accent);
+    }
   </style>
 </head>
 <body>
-
   <header>
-    <a href="index.html" class="brand-wrap">
-      <img src="logo.png" alt="Corp Acuity Logo" class="brand-logo" onerror="this.style.display='none'">
-      <div class="brand-name">CORP<span>ACUITY</span> // TERMINAL</div>
+    <a href="/" class="brand">
+      <img src="logo.png" alt="Corp Acuity Logo" onerror="this.style.display='none'" />
+      <span>CORP ACUITY TERMINAL</span>
     </a>
-    <div class="status-badge mono" id="lastUpdated">SYNCING...</div>
+    <div class="nav-actions">
+      <a href="daily_market_intelligence.pdf" target="_blank" style="color:var(--muted); text-decoration:none; font-size:0.85rem;">View PDF Carousel ➔</a>
+      <div id="navBadge" class="nav-badge">Beta Access</div>
+    </div>
   </header>
 
-  <div class="container">
-    
-    <!-- MACRO COCKPIT -->
+  <main>
+    <div class="hero-header">
+      <h1>Daily Institutional Screener & Alpha Engine</h1>
+      <p>Systematic screening with strict 2.0R asymmetry floors and 200 EMA breadth filters.</p>
+      <div class="plain-english-explainer">
+        💡 <strong>In plain terms:</strong> We scan 1,600+ liquid US stocks every morning to isolate high-probability momentum setups where the mathematical upside is at least double the risk.
+      </div>
+    </div>
+
+    <!-- Plain English Posture Banner -->
+    <div id="postureBanner" class="posture-banner amber">
+      <span id="postureIcon">🟡</span>
+      <span id="postureText">Market Health: Defensive (Trim exposure, protect capital)</span>
+    </div>
+
     <div class="dashboard-grid">
       <div class="dash-card">
-        <h4>Regime Status</h4>
-        <div class="dash-val tag-amber" id="regimeStatus">--</div>
-        <div class="mono" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;" id="postureBox">--</div>
+        <div class="dash-card-label">Regime Status</div>
+        <div id="regimeStatus" class="dash-card-val" style="color:var(--amber);">AMBER</div>
       </div>
       <div class="dash-card">
-        <h4>Suggested Allocation</h4>
-        <div class="dash-val" id="maxExposure">--</div>
-        <div class="mono" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Dynamic sizing limit</div>
+        <div class="dash-card-label">Breadth (> 200 EMA)</div>
+        <div id="breadthVal" class="dash-card-val">52.4%</div>
       </div>
       <div class="dash-card">
-        <h4>Breadth (>200 EMA)</h4>
-        <div class="dash-val tag-cyan" id="breadthPct">--%</div>
-        <div class="mono" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">1,600+ Security Universe</div>
+        <div class="dash-card-label">Allowed Exposure</div>
+        <div id="exposureVal" class="dash-card-val">30% - 60%</div>
       </div>
       <div class="dash-card">
-        <h4>Cross-Asset Radar</h4>
-        <div class="mono" style="font-size: 1.1rem; font-weight: 700;" id="macroRadar">10Y: -- | WTI: --</div>
-        <div class="mono" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Macro Headwind Monitor</div>
+        <div class="dash-card-label">10Y Yield / WTI</div>
+        <div id="crossAssetVal" class="dash-card-val">4.24% / $73.80</div>
       </div>
     </div>
 
-    <!-- 5-DAY ALPHA RUNNER VERIFICATION -->
-    <div class="runner-card" id="runnerCard" style="display: none;">
-      <div>
-        <div class="mono" style="color: var(--amber); font-weight: 700; font-size: 0.85rem; text-transform: uppercase;">How did we do? Here is our top performer over the last 5 days!</div>
-        <div style="font-size: 1.5rem; font-weight: 800; margin-top: 4px;" id="runnerSymbol">--</div>
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchCategory('base_resets')">1. Base-Reset Inflections</button>
+      <button class="tab-btn" onclick="switchCategory('momentum_flags')">2. Momentum Flags (HTF)</button>
+      <button class="tab-btn" onclick="switchCategory('pocket_pivots')">3. Pocket Pivots</button>
+      <button class="tab-btn" onclick="switchCategory('liquidity_sweeps')">4. Liquidity Sweeps</button>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th title="Security ticker symbol">Ticker</th>
+            <th title="Latest market closing price">Close</th>
+            <th title="The exact price level that confirms the breakout entry">Trigger Pivot</th>
+            <th title="The risk management exit level if the trade moves against you">Tactical Stop</th>
+            <th title="Distance to stop loss">Risk %</th>
+            <th title="Reward-to-risk ratio (all setups require >= 2.0R)">Asymmetry</th>
+            <th title="Institutional earnings estimate revision strength (Rank 1 = Strong Buy)">Zacks Rank</th>
+            <th title="Days until next earnings report">Earnings Proximity</th>
+          </tr>
+        </thead>
+        <tbody id="screenerTableBody">
+          <!-- Populated dynamically via JS -->
+        </tbody>
+      </table>
+
+      <!-- Gating Overlay -->
+      <div id="gateOverlay" class="gate-overlay">
+        <h3>Unlock Today's Full Institutional Scan</h3>
+        <p>You are viewing candidate #1. Unlock all remaining verified setups across Base-Resets, Momentum Flags, Pocket Pivots, and Liquidity Sweeps.</p>
+        <button class="btn-unlock" onclick="openModal()">Unlock Complete Watchlist (Free Beta)</button>
       </div>
-      <div class="runner-stats">
-        <div class="stat-pill"><div class="title">Suggested Pivot</div><div class="value mono" id="runnerPivot">--</div></div>
-        <div class="stat-pill"><div class="title">Peak 5D High</div><div class="value mono tag-green" id="runnerHigh">--</div></div>
-        <div class="stat-pill"><div class="title">Max Gain</div><div class="value mono tag-green" id="runnerGain">--</div></div>
-        <div class="stat-pill"><div class="title">Captured Multiple</div><div class="value mono tag-cyan" id="runnerMultiple">--</div></div>
+    </div>
+  </main>
+
+  <!-- Lead Capture Modal -->
+  <div id="leadModal" class="modal-backdrop">
+    <div class="modal-card">
+      <button class="close-btn" onclick="closeModal()">&times;</button>
+      <div id="modalFormContent">
+        <h2>Institutional Terminal Access</h2>
+        <p>Instant access to all verified setups, Zacks rank tenures, and nightly screening CSV feeds.</p>
+
+        <form id="leadForm" onsubmit="handleLeadSubmit(event)">
+          <div class="form-group">
+            <label for="leadName">Full Name</label>
+            <input type="text" id="leadName" name="name" required placeholder="e.g. Andrew McNeil" />
+          </div>
+
+          <div class="form-group">
+            <label for="leadEmail">Business / Trade Email</label>
+            <input type="email" id="leadEmail" name="email" required placeholder="name@company.com" />
+          </div>
+
+          <div class="form-group">
+            <label for="leadLocation">Location / Region (Optional)</label>
+            <input type="text" id="leadLocation" name="location" placeholder="e.g. London, UK or New York, US" />
+          </div>
+
+          <button type="submit" id="submitBtn" class="submit-btn">Unlock Full Terminal Now</button>
+
+          <div class="micro-notice">
+            🔒 <strong>Early Beta Access:</strong> Free during our introductory phase. Advanced intraday scans and real-time execution alerts will move behind a premium tier in the future. By signing up, you lock in early-bird consideration.
+          </div>
+        </form>
+      </div>
+
+      <!-- Confirmation / Success UX State -->
+      <div id="modalSuccessContent" class="success-container" style="display:none;">
+        <div class="icon">🔓</div>
+        <h3>Access Granted</h3>
+        <p>You are now viewing today's full institutional scan. A link and daily intelligence update will also be routed to your email.</p>
+        <button class="btn-unlock" style="width:100%;" onclick="confirmSuccessAndContinue()">Continue to Terminal ➔</button>
       </div>
     </div>
-
-    <!-- 1. BASE-RESET INFLECTIONS -->
-    <div class="section-title">
-      <div>1. Base-Reset Inflections <span class="mono" style="font-size: 0.8rem; color: var(--text-muted); font-weight: 400;">(Breakouts crossing 50 SMA on volume)</span></div>
-    </div>
-    <div class="table-container" id="container-base_resets">
-      <table>
-        <thead>
-          <tr><th>Ticker</th><th>Close</th><th>Trigger Pivot</th><th>Tactical Stop</th><th>Risk %</th><th>Asymmetry</th><th>Zacks Rank</th></tr>
-        </thead>
-        <tbody id="tbody-base_resets"></tbody>
-      </table>
-    </div>
-
-    <!-- 2. MOMENTUM BULL FLAGS -->
-    <div class="section-title">
-      <div>2. Momentum Bull Flags <span class="mono" style="font-size: 0.8rem; color: var(--text-muted); font-weight: 400;">(CAN SLIM Pole &gt;= 45%, tight consolidation &lt;= 18d)</span></div>
-    </div>
-    <div class="table-container" id="container-momentum_flags">
-      <table>
-        <thead>
-          <tr><th>Ticker</th><th>Close</th><th>Trigger Pivot</th><th>Tactical Stop</th><th>Risk %</th><th>Asymmetry</th><th>Zacks Rank</th></tr>
-        </thead>
-        <tbody id="tbody-momentum_flags"></tbody>
-      </table>
-    </div>
-
-    <!-- 3. POCKET PIVOT SQUEEZES -->
-    <div class="section-title">
-      <div>3. Pocket Pivot Squeezes <span class="mono" style="font-size: 0.8rem; color: var(--text-muted); font-weight: 400;">(Bollinger/Keltner squeeze launch off 10/21 EMA)</span></div>
-    </div>
-    <div class="table-container" id="container-pocket_pivots">
-      <table>
-        <thead>
-          <tr><th>Ticker</th><th>Close</th><th>Trigger Pivot</th><th>Tactical Stop</th><th>Risk %</th><th>Asymmetry</th><th>Zacks Rank</th></tr>
-        </thead>
-        <tbody id="tbody-pocket_pivots"></tbody>
-      </table>
-    </div>
-
-    <!-- 4. LIQUIDITY SWEEPS -->
-    <div class="section-title">
-      <div>4. Liquidity Sweeps <span class="mono" style="font-size: 0.8rem; color: var(--text-muted); font-weight: 400;">(Undercut &amp; rally reclaiming support)</span></div>
-    </div>
-    <div class="table-container" id="container-liquidity_sweeps">
-      <table>
-        <thead>
-          <tr><th>Ticker</th><th>Close</th><th>Trigger Pivot</th><th>Tactical Stop</th><th>Risk %</th><th>Asymmetry</th><th>Zacks Rank</th></tr>
-        </thead>
-        <tbody id="tbody-liquidity_sweeps"></tbody>
-      </table>
-    </div>
-
   </div>
 
-  <footer style="margin-top: 60px; padding: 24px 0; border-top: 1px solid var(--border); text-align: center; font-size: 0.85rem; color: var(--text-muted);">
-    <div>&copy; 2026 Corp Acuity Ltd. Registered in England &amp; Wales (#15050713).</div>
-    <div style="margin-top: 8px;">
-      <a href="legal.html" style="color: var(--cyan); text-decoration: none;">Terms, Copyright &amp; Disclaimers</a>
+  <footer>
+    <div>&copy; 2026 Corp Acuity Ltd. Quantitative Market Intelligence. All rights reserved.</div>
+    <div>
+      <a href="legal.html">Legal Disclaimer, Privacy Policy & Terms</a>
     </div>
   </footer>
 
-  <!-- LEAD CAPTURE MODAL -->
-  <div class="modal-backdrop" id="leadModal">
-    <div class="modal-box">
-      <button class="modal-close" onclick="closeModal()">&times;</button>
-      <h3>Unlock Complete Screener</h3>
-      <p>Enter your details below to access full CSV downloads, all filtered candidates, and daily institutional risk analytics.</p>
-      <form id="leadForm" onsubmit="handleLeadSubmit(event)">
-        <div class="form-group">
-          <label>Your Name</label>
-          <input type="text" id="leadName" required placeholder="Andrew McNeil">
-        </div>
-        <div class="form-group">
-          <label>Business Email</label>
-          <input type="email" id="leadEmail" required placeholder="name@company.com">
-        </div>
-        <button type="submit" class="unlock-btn" style="width: 100%; margin-top: 8px;">View Full Terminal Access</button>
-      </form>
-    </div>
-  </div>
-
   <script>
-    let terminalData = null;
+    let screenerData = null;
+    let currentCategory = 'base_resets';
 
+    // 1. Initial State Check
     function isUnlocked() {
       return localStorage.getItem('corpacuity_unlocked') === 'true';
     }
 
+    function syncNavBadge() {
+      const b = document.getElementById('navBadge');
+      if (b && isUnlocked()) {
+        b.innerText = "Status: Beta Access Unlocked";
+        b.classList.add("unlocked");
+      }
+    }
+
+    // 2. Fetch Terminal Data Feed
+    async function loadTerminalData() {
+      try {
+        const res = await fetch('terminal_feed.json?cache_bust=' + Date.now());
+        if (!res.ok) throw new Error("Feed not found");
+        screenerData = await res.json();
+        renderMacroDashboard(screenerData.macro);
+        renderTable();
+      } catch (err) {
+        console.warn("Using baseline fallback data:", err);
+        renderFallback();
+      }
+    }
+
+    function renderMacroDashboard(macro) {
+      if (!macro) return;
+      const statusEl = document.getElementById('regimeStatus');
+      const breadthEl = document.getElementById('breadthVal');
+      const expEl = document.getElementById('exposureVal');
+      const caEl = document.getElementById('crossAssetVal');
+      const banner = document.getElementById('postureBanner');
+      const bannerText = document.getElementById('postureText');
+      const bannerIcon = document.getElementById('postureIcon');
+
+      const isGreen = macro.regime_status && macro.regime_status.includes('GREEN');
+      const isRed = macro.regime_status && macro.regime_status.includes('RED');
+
+      if (isGreen) {
+        statusEl.innerText = "GREEN";
+        statusEl.style.color = "var(--green)";
+        banner.className = "posture-banner green";
+        bannerIcon.innerText = "🟢";
+        bannerText.innerText = "Market Health: Risk-On (Focus on momentum breakouts and continuation)";
+      } else if (isRed) {
+        statusEl.innerText = "RED";
+        statusEl.style.color = "var(--red)";
+        banner.className = "posture-banner red";
+        bannerIcon.innerText = "🔴";
+        bannerText.innerText = "Market Health: Bearish Distribution (Strict capital preservation, minimal exposure)";
+      } else {
+        statusEl.innerText = "AMBER";
+        statusEl.style.color = "var(--amber)";
+        banner.className = "posture-banner amber";
+        bannerIcon.innerText = "🟡";
+        bannerText.innerText = "Market Health: Defensive (Trim exposure, protect capital, buy high asymmetry pivots only)";
+      }
+
+      breadthEl.innerText = (macro.pct_above_200 || 0) + "%";
+      expEl.innerText = macro.max_exposure || "30% - 60%";
+      caEl.innerText = `${macro.tnx || 4.25}% / $${macro.oil || 75.0}`;
+    }
+
+    function switchCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('onclick').includes(cat));
+      });
+      renderTable();
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('screenerTableBody');
+      const overlay = document.getElementById('gateOverlay');
+      tbody.innerHTML = '';
+
+      const rows = (screenerData && screenerData.watchlists && screenerData.watchlists[currentCategory]) ? screenerData.watchlists[currentCategory] : [];
+
+      if (!rows || rows.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--muted);">No setups currently met strict mathematical asymmetry and risk gates. Cash is a valid position.</td></tr>`;
+        overlay.style.display = 'none';
+        return;
+      }
+
+      const unlocked = isUnlocked();
+
+      rows.forEach((r, idx) => {
+        const isLocked = !unlocked && idx > 0;
+        const tr = document.createElement('tr');
+        if (isLocked) tr.className = 'locked-row';
+
+        tr.innerHTML = `
+          <td><span class="ticker-pill">$${r.Ticker}</span></td>
+          <td>$${Number(r.Close).toFixed(2)}</td>
+          <td><strong>$${Number(r.Pivot_Trigger).toFixed(2)}</strong></td>
+          <td style="color:var(--red);">$${Number(r.Stop_Loss).toFixed(2)}</td>
+          <td>${r['Risk_%']}%</td>
+          <td><span class="r-pill">${r.R_Ratio}R</span></td>
+          <td><span class="zacks-pill">${r.Zacks_Rank || 'N/A'}</span></td>
+          <td>${r.Earnings_Risk || 'SAFE (>14d)'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      overlay.style.display = (unlocked || rows.length <= 1) ? 'none' : 'flex';
+      syncNavBadge();
+    }
+
+    function renderFallback() {
+      screenerData = {
+        macro: { regime_status: "AMBER", pct_above_200: 51.8, max_exposure: "30% - 60%", tnx: 4.24, oil: 74.5 },
+        watchlists: {
+          base_resets: [
+            { Ticker: "LITE", Close: 84.50, Pivot_Trigger: 86.20, Stop_Loss: 80.50, 'Risk_%': 6.6, R_Ratio: 3.2, Zacks_Rank: "#1 (New)", Earnings_Risk: "SAFE (>14d)" },
+            { Ticker: "POET", Close: 4.85, Pivot_Trigger: 5.10, Stop_Loss: 4.60, 'Risk_%': 9.8, R_Ratio: 2.8, Zacks_Rank: "#2 (12d)", Earnings_Risk: "SAFE (>14d)" }
+          ]
+        }
+      };
+      renderMacroDashboard(screenerData.macro);
+      renderTable();
+    }
+
+    // Modal & Form Handling
     function openModal() {
+      document.getElementById('modalFormContent').style.display = 'block';
+      document.getElementById('modalSuccessContent').style.display = 'none';
       document.getElementById('leadModal').style.display = 'flex';
     }
 
@@ -349,108 +672,49 @@
       document.getElementById('leadModal').style.display = 'none';
     }
 
-    function handleLeadSubmit(e) {
+    async function handleLeadSubmit(e) {
       e.preventDefault();
-      const name = document.getElementById('leadName').value;
-      const email = document.getElementById('leadEmail').value;
+      const btn = document.getElementById('submitBtn');
+      const originalText = btn.innerText;
+      btn.disabled = true;
+      btn.innerText = "Unlocking terminal...";
+
+      const payload = {
+        name: document.getElementById('leadName').value,
+        email: document.getElementById('leadEmail').value,
+        location: document.getElementById('leadLocation').value || "Not Specified",
+        timestamp: new Date().toISOString(),
+        source: "Daily Screener Terminal Lead Gate"
+      };
 
       try {
-        fetch('https://formspree.io/f/mqaeovbd', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: name, email: email, timestamp: new Date().toISOString() })
+        await fetch("https://formspree.io/f/mqaeovbd", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Accept": "application/json" },
+          body: JSON.stringify(payload)
         });
-      } catch (err) {}
+      } catch (err) {
+        console.error("Formspree transmission notice:", err);
+      }
 
+      // Show Success State
+      document.getElementById('modalFormContent').style.display = 'none';
+      document.getElementById('modalSuccessContent').style.display = 'block';
+      btn.disabled = false;
+      btn.innerText = originalText;
+    }
+
+    function confirmSuccessAndContinue() {
       localStorage.setItem('corpacuity_unlocked', 'true');
       closeModal();
-      renderWatchlists();
+      renderTable();
     }
 
-    async function initTerminal() {
-      try {
-        const res = await fetch('terminal_feed.json?t=' + new Date().getTime());
-        terminalData = await res.json();
-        
-        document.getElementById('lastUpdated').textContent = terminalData.generated_at;
-        const regElem = document.getElementById('regimeStatus');
-        regElem.textContent = terminalData.macro.regime_status;
-        if (terminalData.macro.regime_status.includes("GREEN")) {
-          regElem.className = "dash-val tag-green";
-        } else if (terminalData.macro.regime_status.includes("AMBER")) {
-          regElem.className = "dash-val tag-amber";
-        } else {
-          regElem.className = "dash-val tag-red";
-        }
-
-        document.getElementById('postureBox').textContent = terminalData.macro.posture_box.replace(/[■▲◆]/g, '').trim();
-        document.getElementById('maxExposure').textContent = terminalData.macro.max_exposure;
-        document.getElementById('breadthPct').textContent = terminalData.macro.pct_above_200 + '%';
-        document.getElementById('macroRadar').textContent = `10Y: ${terminalData.macro.tnx}% | WTI: $${terminalData.macro.oil}`;
-
-        if (terminalData.top_runner && terminalData.top_runner.max_gain_pct > 0) {
-          const r = terminalData.top_runner;
-          document.getElementById('runnerCard').style.display = 'flex';
-          document.getElementById('runnerSymbol').textContent = `$${r.ticker} (${r.category})`;
-          document.getElementById('runnerPivot').textContent = `$${r.entry_pivot.toFixed(2)}`;
-          document.getElementById('runnerHigh').textContent = `$${r.peak_high.toFixed(2)}`;
-          document.getElementById('runnerGain').textContent = `+${r.max_gain_pct}%`;
-          document.getElementById('runnerMultiple').textContent = `${r.r_multiple}R`;
-        }
-
-        renderWatchlists();
-      } catch (e) {
-        console.error("Error loading terminal data:", e);
-      }
-    }
-
-    function renderWatchlists() {
-      if (!terminalData) return;
-      const unlocked = isUnlocked();
-      const categories = ['base_resets', 'momentum_flags', 'pocket_pivots', 'liquidity_sweeps'];
-
-      categories.forEach(cat => {
-        const tbody = document.getElementById(`tbody-${cat}`);
-        const container = document.getElementById(`container-${cat}`);
-        const rows = terminalData.watchlists[cat] || [];
-        tbody.innerHTML = '';
-
-        const existingOverlay = container.querySelector('.gate-overlay');
-        if (existingOverlay) existingOverlay.remove();
-
-        if (rows.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; color:var(--text-muted); padding:24px;">No candidates meeting strict 2.0R asymmetry floor today. Cash is a position.</td></tr>`;
-          return;
-        }
-
-        rows.forEach((r, idx) => {
-          const tr = document.createElement('tr');
-          if (!unlocked && idx > 0) {
-            tr.classList.add('locked-row');
-          }
-
-          tr.innerHTML = `
-            <td class="mono" style="font-weight:700; color:var(--cyan);">$${r.Ticker}</td>
-            <td class="mono">$${r.Close.toFixed(2)}</td>
-            <td class="mono tag-green">$${r.Pivot_Trigger.toFixed(2)}</td>
-            <td class="mono tag-red">$${r.Stop_Loss.toFixed(2)}</td>
-            <td class="mono">${r['Risk_%']}%</td>
-            <td class="mono tag-cyan">${r.R_Ratio}R</td>
-            <td class="mono tag-amber">${r.Zacks_Rank || 'Rank 1'}</td>
-          `;
-          tbody.appendChild(tr);
-        });
-
-        if (!unlocked && rows.length > 1) {
-          const overlay = document.createElement('div');
-          overlay.className = 'gate-overlay';
-          overlay.innerHTML = `<button class="unlock-btn" onclick="openModal()">Unlock ${rows.length - 1} More ${cat.replace('_', ' ').toUpperCase()} & Full CSVs</button>`;
-          container.appendChild(overlay);
-        }
-      });
-    }
-
-    document.addEventListener('DOMContentLoaded', initTerminal);
+    // Run on startup
+    window.addEventListener('DOMContentLoaded', () => {
+      syncNavBadge();
+      loadTerminalData();
+    });
   </script>
 </body>
 </html>

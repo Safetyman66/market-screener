@@ -1,12 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Corp Acuity // Systematic Market Intelligence & Institutional Screener</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Corp Acuity | Quantitative Treasury & Market Intelligence</title>
+  <link rel="icon" type="image/png" href="logo.png" />
   <style>
     :root {
       --bg: #070a12;
@@ -14,262 +12,240 @@
       --card-inner: #1e293b;
       --border: #334155;
       --text: #f8fafc;
-      --text-muted: #94a3b8;
-      --cyan: #38bdf8;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
       --green: #4ade80;
       --amber: #fbbf24;
       --red: #f87171;
     }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
     body {
       background-color: var(--bg);
       color: var(--text);
-      font-family: 'Inter', sans-serif;
-      line-height: 1.6;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
     }
-
-    .mono { font-family: 'JetBrains Mono', monospace; }
-
     header {
       border-bottom: 1px solid var(--border);
-      padding: 16px 32px;
+      padding: 1.25rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(15, 23, 42, 0.85);
-      backdrop-filter: blur(12px);
-      position: sticky;
-      top: 0;
-      z-index: 50;
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(8px);
     }
-
-    .brand-wrap {
+    .brand {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 0.75rem;
       text-decoration: none;
-      color: inherit;
+      color: var(--text);
+      font-weight: 700;
+      letter-spacing: 0.05em;
     }
-
-    .brand-logo {
-      height: 42px;
-      width: 42px;
-      object-fit: contain;
-      border-radius: 6px;
-      background: #ffffff;
-      padding: 2px;
+    .brand img {
+      height: 32px;
+      width: auto;
     }
-
-    .brand-name {
-      font-size: 1.15rem;
-      font-weight: 800;
-      letter-spacing: -0.5px;
-    }
-
-    .brand-name span { color: var(--cyan); }
-
-    .nav-links a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.9rem;
+    .nav-badge {
+      font-size: 0.75rem;
+      padding: 0.3rem 0.6rem;
+      border-radius: 9999px;
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.3);
       font-weight: 600;
-      margin-left: 24px;
-      transition: color 0.2s;
     }
-
-    .nav-links a:hover { color: var(--cyan); }
-
-    .hero-container {
+    .nav-badge.unlocked {
+      background: rgba(74, 222, 128, 0.1);
+      color: var(--green);
+      border-color: rgba(74, 222, 128, 0.3);
+    }
+    main {
+      flex: 1;
       max-width: 1100px;
       margin: 0 auto;
-      padding: 60px 20px 40px 20px;
-      flex: 1;
-    }
-
-    .badge-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(56, 189, 248, 0.1);
-      border: 1px solid rgba(56, 189, 248, 0.3);
-      color: var(--cyan);
-      font-size: 0.8rem;
-      font-weight: 700;
-      padding: 6px 14px;
-      border-radius: 20px;
-      margin-bottom: 24px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
-
-    h1 {
-      font-size: clamp(2.2rem, 5vw, 3.8rem);
-      font-weight: 800;
-      line-height: 1.15;
-      letter-spacing: -1px;
-      margin-bottom: 20px;
-    }
-
-    .hero-desc {
-      font-size: 1.15rem;
-      color: var(--text-muted);
-      max-width: 760px;
-      margin-bottom: 36px;
-    }
-
-    .hero-actions {
+      padding: 4rem 1.5rem 2rem;
       display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-      margin-bottom: 50px;
-    }
-
-    .btn {
-      display: inline-flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 14px 28px;
-      border-radius: 8px;
+      text-align: center;
+    }
+    .hero-tag {
+      color: var(--accent);
+      font-size: 0.85rem;
       font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    h1 {
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      line-height: 1.15;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.25rem;
+      background: linear-gradient(180deg, #ffffff 0%, #94a3b8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .subtitle {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 720px;
+      line-height: 1.6;
+      margin-bottom: 0.75rem;
+    }
+    .plain-english-explainer {
+      font-size: 0.95rem;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 8px;
+      padding: 0.65rem 1.2rem;
+      max-width: 760px;
+      line-height: 1.5;
+      margin-bottom: 2.25rem;
+    }
+    .cta-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 3.5rem;
+    }
+    .btn {
+      padding: 0.85rem 1.75rem;
+      border-radius: 8px;
+      font-weight: 600;
       font-size: 0.95rem;
       text-decoration: none;
       transition: all 0.2s ease;
-      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
     }
-
     .btn-primary {
-      background: var(--green);
-      color: #070a12;
-      box-shadow: 0 4px 20px rgba(74, 222, 128, 0.25);
+      background: var(--accent);
+      color: #04101e;
     }
-
     .btn-primary:hover {
-      background: #38bdf8;
-      box-shadow: 0 4px 20px rgba(56, 189, 248, 0.3);
-      color: #070a12;
+      background: #7dd3fc;
+      transform: translateY(-1px);
     }
-
     .btn-secondary {
       background: var(--card-inner);
-      color: var(--cyan);
+      color: var(--text);
       border: 1px solid var(--border);
     }
-
     .btn-secondary:hover {
-      background: #334155;
-      color: #ffffff;
+      background: var(--card-bg);
+      border-color: var(--accent);
+      transform: translateY(-1px);
     }
-
-    .features-grid {
+    .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 20px;
-      margin-top: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      width: 100%;
+      text-align: left;
     }
-
     .feature-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 24px;
+      padding: 1.75rem;
     }
-
     .feature-card h3 {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--cyan);
-      margin-bottom: 8px;
+      font-size: 1.15rem;
+      margin-bottom: 0.5rem;
+      color: var(--text);
     }
-
     .feature-card p {
-      font-size: 0.88rem;
-      color: var(--text-muted);
+      font-size: 0.9rem;
+      color: var(--muted);
       line-height: 1.5;
     }
-
     footer {
       border-top: 1px solid var(--border);
-      padding: 28px 20px;
+      padding: 2rem;
       text-align: center;
+      color: var(--muted);
       font-size: 0.85rem;
-      color: var(--text-muted);
-      background: rgba(15, 23, 42, 0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      align-items: center;
     }
-
     footer a {
-      color: var(--cyan);
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    footer a:hover {
+      color: var(--muted);
       text-decoration: underline;
+    }
+    footer a:hover {
+      color: var(--accent);
     }
   </style>
 </head>
 <body>
-
   <header>
-    <a href="index.html" class="brand-wrap">
-      <img src="logo.png" alt="Corp Acuity Logo" class="brand-logo" onerror="this.style.display='none'">
-      <div class="brand-name">CORP<span>ACUITY</span></div>
+    <a href="/" class="brand">
+      <img src="logo.png" alt="Corp Acuity Logo" onerror="this.style.display='none'" />
+      <span>CORP ACUITY</span>
     </a>
-    <nav class="nav-links">
-      <a href="intel.html">Screener</a>
-      <a href="daily_market_intelligence.pdf" target="_blank">Summary Carousel</a>
-      <a href="legal.html">Terms & Legal</a>
-    </nav>
+    <div id="navBadge" class="nav-badge">Beta Platform</div>
   </header>
 
-  <main class="hero-container">
-    <div class="badge-pill mono">
-      <span>●</span> 1,600+ Security Institutional Scan
+  <main>
+    <div class="hero-tag">Systematic Alpha & Exposure Architecture</div>
+    <h1>Institutional Market Intelligence & Quantitative Screener</h1>
+    <p class="subtitle">Strictly governed by 200 EMA breadth and mathematical 2.0R asymmetry floors.</p>
+    <div class="plain-english-explainer">
+      💡 <strong>In plain terms:</strong> We scan 1,600+ liquid US stocks every morning to isolate high-probability momentum setups where the mathematical upside is at least double the risk.
     </div>
 
-    <h1>Systematic Alpha & Quantitative Market Intelligence</h1>
-    <p class="hero-desc">
-      Automated daily market screening filtering out debt hazards, non-growth sectors, and defensive laggards. Strictly governed by 200 EMA breadth and mathematical 2.0R asymmetry floors.
-    </p>
-
-    <div class="hero-actions">
-      <a href="intel.html" class="btn btn-primary">
-        Open today's Screener results
-      </a>
-      <a href="daily_market_intelligence.pdf" target="_blank" class="btn btn-secondary">
-        Open today's summary carousel
-      </a>
+    <div class="cta-group">
+      <a href="intel.html" class="btn btn-primary">Open Today's Screener Results ➔</a>
+      <a href="daily_market_intelligence.pdf" target="_blank" class="btn btn-secondary">Open Today's Summary Carousel (PDF)</a>
     </div>
 
-    <div class="features-grid">
+    <div class="grid">
       <div class="feature-card">
-        <h3>1. Base-Reset Inflections</h3>
-        <p>Breakouts reclaiming their rising 50-day moving average accompanied by curling weekly MACD momentum and institutional volume.</p>
+        <h3>1. Macro Regime Gate</h3>
+        <p>Market breadth governed by 200 EMA structural filters. Sizing scales down dynamically during corrective distribution to keep dry powder protected.</p>
       </div>
       <div class="feature-card">
-        <h3>2. Momentum Bull Flags</h3>
-        <p>High tight consolidations following a &ge;45% advance, compressing tightly above the 21-day EMA within 18 sessions.</p>
+        <h3>2. 2.0R Asymmetry Floor</h3>
+        <p>Zero low-probability trades. Every generated candidate enforces a strict mathematical minimum of 2x upside potential versus tactical risk budget.</p>
       </div>
       <div class="feature-card">
-        <h3>3. Pocket Pivot Squeezes</h3>
-        <p>Inside-base volume explosions launching out of Bollinger/Keltner channel squeezes exceeding 10-day down-session volume.</p>
-      </div>
-      <div class="feature-card">
-        <h3>4. Liquidity Sweeps (U&R)</h3>
-        <p>Institutional undercut-and-rally reversals clearing prior lows before closing back inside structural support shelves.</p>
+        <h3>3. Zacks Rank & Catalyst Tracking</h3>
+        <p>Integrated consensus earnings estimate revisions (#1 Strong Buy / #2 Buy) with verified local tenure and blackout warnings for impending earnings.</p>
       </div>
     </div>
   </main>
 
   <footer>
-    <div>&copy; 2026 Corp Acuity Ltd. Registered in England &amp; Wales (#15050713).</div>
-    <div style="margin-top: 8px;">
-      <a href="legal.html">Terms of Access, Copyright &amp; Regulatory Disclaimers</a>
+    <div>&copy; 2026 Corp Acuity Ltd. Quantitative Market Intelligence. All rights reserved.</div>
+    <div>
+      <a href="legal.html">Legal Disclaimer, Privacy Policy & Terms</a>
     </div>
   </footer>
 
+  <script>
+    // Update badge if unlocked in localStorage
+    if (localStorage.getItem('corpacuity_unlocked') === 'true') {
+      const b = document.getElementById('navBadge');
+      if (b) {
+        b.innerText = "Status: Beta Access Unlocked";
+        b.classList.add("unlocked");
+      }
+    }
+  </script>
 </body>
 </html>
