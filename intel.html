@@ -599,7 +599,7 @@
 
       breadthEl.innerText = (macro.pct_above_200 || 0) + "%";
       expEl.innerText = macro.max_exposure || "30% - 60%";
-      caEl.innerText = `${macro.tnx \vert{}\vert{} 4.25}\% /$${macro.oil || 75.0}`;
+      caEl.innerText = `${macro.tnx || 4.25}% / $${macro.oil || 75.0}`;
     }
 
     function switchCategory(cat) {
@@ -618,4 +618,103 @@
       const rows = (screenerData && screenerData.watchlists && screenerData.watchlists[currentCategory]) ? screenerData.watchlists[currentCategory] : [];
 
       if (!rows || rows.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--muted);">No setups currently met strict mathematical asymmetry and
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--muted);">No setups currently met strict mathematical asymmetry and risk gates. Cash is a valid position.</td></tr>`;
+        overlay.style.display = 'none';
+        return;
+      }
+
+      const unlocked = isUnlocked();
+
+      rows.forEach((r, idx) => {
+        const isLocked = !unlocked && idx > 0;
+        const tr = document.createElement('tr');
+        if (isLocked) tr.className = 'locked-row';
+
+        tr.innerHTML = `
+          <td><span class="ticker-pill">$${r.Ticker}</span></td>
+          <td>$${Number(r.Close).toFixed(2)}</td>
+          <td><strong>$${Number(r.Pivot_Trigger).toFixed(2)}</strong></td>
+          <td style="color:var(--red);">$${Number(r.Stop_Loss).toFixed(2)}</td>
+          <td>${r['Risk_%']}%</td>
+          <td><span class="r-pill">${r.R_Ratio}R</span></td>
+          <td><span class="zacks-pill">${r.Zacks_Rank || 'N/A'}</span></td>
+          <td>${r.Earnings_Risk || 'SAFE (>14d)'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      overlay.style.display = (unlocked || rows.length <= 1) ? 'none' : 'flex';
+      syncNavBadge();
+    }
+
+    function renderFallback() {
+      screenerData = {
+        macro: { regime_status: "AMBER", pct_above_200: 51.8, max_exposure: "30% - 60%", tnx: 4.24, oil: 74.5 },
+        watchlists: {
+          base_resets: [
+            { Ticker: "LITE", Close: 84.50, Pivot_Trigger: 86.20, Stop_Loss: 80.50, 'Risk_%': 6.6, R_Ratio: 3.2, Zacks_Rank: "#1 (New)", Earnings_Risk: "SAFE (>14d)" },
+            { Ticker: "POET", Close: 4.85, Pivot_Trigger: 5.10, Stop_Loss: 4.60, 'Risk_%': 9.8, R_Ratio: 2.8, Zacks_Rank: "#2 (12d)", Earnings_Risk: "SAFE (>14d)" }
+          ]
+        }
+      };
+      renderMacroDashboard(screenerData.macro);
+      renderTable();
+    }
+
+    // Modal & Form Handling
+    function openModal() {
+      document.getElementById('modalFormContent').style.display = 'block';
+      document.getElementById('modalSuccessContent').style.display = 'none';
+      document.getElementById('leadModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('leadModal').style.display = 'none';
+    }
+
+    async function handleLeadSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      const originalText = btn.innerText;
+      btn.disabled = true;
+      btn.innerText = "Unlocking terminal...";
+
+      const payload = {
+        name: document.getElementById('leadName').value,
+        email: document.getElementById('leadEmail').value,
+        location: document.getElementById('leadLocation').value || "Not Specified",
+        timestamp: new Date().toISOString(),
+        source: "Daily Screener Terminal Lead Gate"
+      };
+
+      try {
+        await fetch("https://formspree.io/f/maeqyzoj", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Accept": "application/json" },
+          body: JSON.stringify(payload)
+        });
+      } catch (err) {
+        console.error("Formspree transmission notice:", err);
+      }
+
+      // Show Success State
+      document.getElementById('modalFormContent').style.display = 'none';
+      document.getElementById('modalSuccessContent').style.display = 'block';
+      btn.disabled = false;
+      btn.innerText = originalText;
+    }
+
+    function confirmSuccessAndContinue() {
+      localStorage.setItem('corpacuity_unlocked', 'true');
+      closeModal();
+      renderTable();
+    }
+
+    // Run on startup
+    window.addEventListener('DOMContentLoaded', () => {
+      syncNavBadge();
+      loadTerminalData();
+    });
+  </script>
+</body>
+</html>
