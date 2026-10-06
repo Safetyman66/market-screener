@@ -1,1 +1,2 @@
-
+Ticker,Close,Headroom_%,Ext_10EMA_%,Above_200EMA_%,Vol_Pocket_Ratio,Conviction_Score,Pivot_Trigger,Stop_Loss,Risk_%,R_Ratio,Category,Zacks_Rank,Earnings_Risk
+IDCC,338.19,21.2,1.7,9.1,1.13x,5.0,346.57,331.92,4.23,5.0,Pocket Pivot,#1 (8d),SAFE (23d)
