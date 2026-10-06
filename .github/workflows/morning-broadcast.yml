@@ -1,14 +1,19 @@
 name: Morning Social Broadcast
 
 on:
+  workflow_run:
+    workflows: ["Daily Market Screener & Site Deploy"]
+    types:
+      - completed
   schedule:
-    # 06:14 UTC Monday through Friday (07:14 BST)
+    # Fallback: 06:14 UTC Monday through Friday (07:14 BST)
     - cron: '14 6 * * 1-5'
   workflow_dispatch:
 
 jobs:
   broadcast:
     runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
 
     steps:
       - name: Check out repository
