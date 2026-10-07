@@ -5126,5 +5126,285 @@
     "pivot": 92.03,
     "stop": 86.67,
     "r_ratio": 2.66
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "AEIS",
+    "category": "Base-Reset",
+    "pivot": 309.33,
+    "stop": 295.0,
+    "r_ratio": 6.73
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "AMAT",
+    "category": "Base-Reset",
+    "pivot": 547.25,
+    "stop": 526.52,
+    "r_ratio": 10.38
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "COHR",
+    "category": "Base-Reset",
+    "pivot": 341.76,
+    "stop": 315.43,
+    "r_ratio": 3.9
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "ENS",
+    "category": "Base-Reset",
+    "pivot": 199.14,
+    "stop": 191.61,
+    "r_ratio": 7.03
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "GLW",
+    "category": "Base-Reset",
+    "pivot": 170.63,
+    "stop": 158.44,
+    "r_ratio": 8.48
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "IESC",
+    "category": "Base-Reset",
+    "pivot": 351.0,
+    "stop": 331.44,
+    "r_ratio": 3.49
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "KLAC",
+    "category": "Base-Reset",
+    "pivot": 208.68,
+    "stop": 196.83,
+    "r_ratio": 9.77
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "LRCX",
+    "category": "Base-Reset",
+    "pivot": 352.56,
+    "stop": 330.85,
+    "r_ratio": 5.06
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "MKSI",
+    "category": "Base-Reset",
+    "pivot": 286.38,
+    "stop": 273.6,
+    "r_ratio": 13.21
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "ONTO",
+    "category": "Base-Reset",
+    "pivot": 339.04,
+    "stop": 311.0,
+    "r_ratio": 2.8
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "ST",
+    "category": "Base-Reset",
+    "pivot": 44.17,
+    "stop": 42.52,
+    "r_ratio": 5.98
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "STRL",
+    "category": "Base-Reset",
+    "pivot": 574.9,
+    "stop": 508.0,
+    "r_ratio": 6.74
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "SYNA",
+    "category": "Base-Reset",
+    "pivot": 121.98,
+    "stop": 119.13,
+    "r_ratio": 10.64
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "VIAV",
+    "category": "Base-Reset",
+    "pivot": 48.42,
+    "stop": 45.7,
+    "r_ratio": 4.54
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "VSTS",
+    "category": "Base-Reset",
+    "pivot": 14.51,
+    "stop": 13.67,
+    "r_ratio": 3.7
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "DELL",
+    "category": "Momentum Flag",
+    "pivot": 595.51,
+    "stop": 520.18,
+    "r_ratio": 2.61
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "DOCU",
+    "category": "Momentum Flag",
+    "pivot": 74.07,
+    "stop": 63.92,
+    "r_ratio": 2.15
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "HAE",
+    "category": "Momentum Flag",
+    "pivot": 110.45,
+    "stop": 102.8,
+    "r_ratio": 3.42
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "META",
+    "category": "Momentum Flag",
+    "pivot": 779.82,
+    "stop": 713.19,
+    "r_ratio": 2.86
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "ST",
+    "category": "Pocket Pivot",
+    "pivot": 44.17,
+    "stop": 42.5,
+    "r_ratio": 5.92
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "VRNS",
+    "category": "Pocket Pivot",
+    "pivot": 49.35,
+    "stop": 47.07,
+    "r_ratio": 6.54
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "AVAV",
+    "category": "Liquidity Sweep",
+    "pivot": 145.44,
+    "stop": 137.31,
+    "r_ratio": 34.19
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "BCO",
+    "category": "Liquidity Sweep",
+    "pivot": 104.03,
+    "stop": 98.26,
+    "r_ratio": 5.61
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "GD",
+    "category": "Liquidity Sweep",
+    "pivot": 332.78,
+    "stop": 325.78,
+    "r_ratio": 9.87
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "GE",
+    "category": "Liquidity Sweep",
+    "pivot": 310.85,
+    "stop": 302.48,
+    "r_ratio": 9.48
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "KTOS",
+    "category": "Liquidity Sweep",
+    "pivot": 44.14,
+    "stop": 41.53,
+    "r_ratio": 34.95
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "LYB",
+    "category": "Liquidity Sweep",
+    "pivot": 59.27,
+    "stop": 55.6,
+    "r_ratio": 6.39
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "NOC",
+    "category": "Liquidity Sweep",
+    "pivot": 485.7,
+    "stop": 467.71,
+    "r_ratio": 15.89
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "NSC",
+    "category": "Liquidity Sweep",
+    "pivot": 317.45,
+    "stop": 303.9,
+    "r_ratio": 3.03
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "PPG",
+    "category": "Liquidity Sweep",
+    "pivot": 106.86,
+    "stop": 101.19,
+    "r_ratio": 4.33
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "TMUS",
+    "category": "Liquidity Sweep",
+    "pivot": 166.06,
+    "stop": 160.01,
+    "r_ratio": 9.99
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "VMC",
+    "category": "Liquidity Sweep",
+    "pivot": 249.9,
+    "stop": 235.84,
+    "r_ratio": 5.73
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "VNOM",
+    "category": "Liquidity Sweep",
+    "pivot": 41.85,
+    "stop": 39.57,
+    "r_ratio": 3.54
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "VRSK",
+    "category": "Liquidity Sweep",
+    "pivot": 165.97,
+    "stop": 160.7,
+    "r_ratio": 15.53
+  },
+  {
+    "date": "2026-10-07",
+    "ticker": "WM",
+    "category": "Liquidity Sweep",
+    "pivot": 208.75,
+    "stop": 199.58,
+    "r_ratio": 4.18
   }
 ]
