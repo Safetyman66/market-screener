@@ -1,3 +1,2 @@
 Ticker,Close,Headroom_%,Ext_10EMA_%,Above_200EMA_%,Vol_Pocket_Ratio,Conviction_Score,Pivot_Trigger,Stop_Loss,Risk_%,R_Ratio,Category,Zacks_Rank,Earnings_Risk
-ST,43.92,22.4,3.0,6.7,0.96x,5.92,44.17,42.5,3.78,5.92,Pocket Pivot,#2 (6d),SAFE (20d)
-VRNS,49.08,30.2,2.7,24.3,1.01x,6.54,49.35,47.07,4.62,6.54,Pocket Pivot,#3 (8d),SAFE (20d)
+VSTS,13.94,21.2,0.9,21.2,1.7x,5.68,14.18,13.65,3.74,5.68,Pocket Pivot,#2 (9d),SAFE (42d)

@@ -6148,5 +6148,13 @@
     "sector": "Technology",
     "industry": "Computer Hardware",
     "name": "IonQ, Inc."
+  },
+  "SKYD": {
+    "sector": "Communication Services",
+    "industry": "Movies & Entertainment"
+  },
+  "VYLR": {
+    "sector": "Consumer Staples",
+    "industry": "Agricultural Products & Services"
   }
 }
