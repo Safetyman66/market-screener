@@ -1,7 +1,6 @@
 Ticker,Close,Shelf_Level,Flush_Low,Sweep_Depth_%,Headroom_%,Vol_Ratio,Conviction_Score,Pivot_Trigger,Stop_Loss,Risk_%,R_Ratio,Category,Zacks_Rank,Earnings_Risk
-AVAV,138.86,138.31,134.25,2.94,200.9,1.29x,37.7,141.1,133.58,5.33,37.7,Liquidity Sweep,#3 (1d),SAFE (55d)
-PRGS,37.21,36.88,35.9,2.66,27.1,1.53x,5.46,37.59,35.72,4.97,5.46,Liquidity Sweep,#1 (1d),SAFE (>14d)
-RBA,80.4,79.75,79.07,0.85,47.4,0.96x,13.39,81.56,78.67,3.54,13.39,Liquidity Sweep,#3 (7d),SAFE (32d)
-RPM,98.33,97.46,95.04,2.48,22.6,2.46x,5.28,98.78,94.56,4.27,5.28,Liquidity Sweep,#3 (New),SAFE (91d)
-TKO,178.64,174.58,171.19,1.94,25.5,1.26x,5.27,178.99,170.33,4.84,5.27,Liquidity Sweep,#3 (8d),SAFE (27d)
-VRSK,168.68,163.29,161.51,1.09,45.7,0.82x,8.52,169.81,160.7,5.36,8.52,Liquidity Sweep,#3 (7d),SAFE (28d)
+ENOV,17.43,17.3,16.7,3.47,96.7,1.44x,16.87,17.63,16.62,5.73,16.87,Liquidity Sweep,#3 (1d),SAFE (27d)
+GD,329.9,329.41,322.0,2.25,21.2,1.35x,6.46,331.3,320.39,3.29,6.46,Liquidity Sweep,#2 (2d),SAFE (19d)
+KRMN,31.69,31.66,30.87,2.48,273.6,0.82x,66.4,32.04,30.72,4.12,66.4,Liquidity Sweep,#3 (1d),SAFE (27d)
+NOC,484.48,476.85,471.36,1.15,58.3,1.34x,15.85,486.94,469.0,3.68,15.85,Liquidity Sweep,#3 (7d),⚠️ CAUTION (11d)
+ZBH,88.88,87.54,87.31,0.26,19.0,1.18x,7.68,89.07,86.87,2.47,7.68,Liquidity Sweep,#2 (3d),SAFE (26d)
