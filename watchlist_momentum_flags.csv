@@ -1,3 +1,4 @@
 Ticker,Close,Pole_Gain_%,Flag_Days,Flag_Depth_%,10d_Tightness_%,Vol_DryUp,Conviction_Score,Pivot_Trigger,Stop_Loss,Risk_%,R_Ratio,Category,Zacks_Rank,Earnings_Risk
-DELL,574.55,65.9,14,12.6,11.4,0.63x,2.61,595.51,520.18,12.65,2.61,Momentum Flag,#1 (7d),SAFE (49d)
-META,720.89,48.8,10,8.7,7.5,0.71x,2.79,779.82,711.68,8.74,2.79,Momentum Flag,#3 (10d),SAFE (19d)
+DELL,586.06,65.9,15,12.6,12.6,0.63x,2.61,595.51,520.18,12.65,2.61,Momentum Flag,#1 (8d),SAFE (48d)
+META,718.67,48.8,11,8.7,5.2,0.73x,2.79,779.82,711.68,8.74,2.79,Momentum Flag,#3 (11d),SAFE (18d)
+NSIT,163.61,46.9,16,9.9,6.7,0.74x,2.37,168.5,151.82,9.9,2.37,Momentum Flag,#3 (New),SAFE (19d)
