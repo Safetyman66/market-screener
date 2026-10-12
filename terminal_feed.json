@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-12 09:06 UTC",
+  "generated_at": "2026-10-12 10:37 UTC",
   "macro": {
     "regime_status": "AMBER: ROTATIONAL ACCUMULATION",
     "posture_box": "\u25c6 ROTATIONAL ACCUMULATION: BUY HIGH ASYMMETRY PIVOTS \u25c6",
@@ -15,15 +15,15 @@
     "qqq_above_200": true,
     "tnx": 5.24,
     "tnx_5d_chg": -1.3,
-    "oil": 92.39,
-    "oil_5d_chg": 3.3,
+    "oil": 92.69,
+    "oil_5d_chg": 3.6,
     "pct_above_200": 59.4,
     "pct_below_200": 40.6,
     "momentum_count": 89,
     "sweep_count": 16,
     "warnings": [
       "\u26a1 YIELD SURGE: 10-Yr Yield at 5.24% (-1.3% 5d). Multiple drag active.",
-      "\ud83d\udee2\ufe0f OIL PRICE SPIKE: WTI Crude at $92.39/bbl (+3.3% 5d). Inflation expectations repricing."
+      "\ud83d\udee2\ufe0f OIL PRICE SPIKE: WTI Crude at $92.69/bbl (+3.6% 5d). Inflation expectations repricing."
     ],
     "calendar": [
       "IN 2 DAY(S): CPI INFLATION PRINT (8:30 AM ET): Major pre-market index gap risk. (2026-10-14)",
@@ -84,7 +84,7 @@
         "1Min_Vol_Hurdle": 10876,
         "Execution_Archetype": "BREAKOUT",
         "Category": "Base-Reset",
-        "Zacks_Rank": "#1 (1d)",
+        "Zacks_Rank": "#1 (New)",
         "Earnings_Risk": "SAFE (43d)"
       },
       {
@@ -141,7 +141,7 @@
         "1Min_Vol_Hurdle": 3965,
         "Execution_Archetype": "BREAKOUT",
         "Category": "Base-Reset",
-        "Zacks_Rank": "#1 (1d)",
+        "Zacks_Rank": "#1 (New)",
         "Earnings_Risk": "SAFE (24d)"
       },
       {
@@ -164,6 +164,25 @@
         "Earnings_Risk": "SAFE (22d)"
       },
       {
+        "Ticker": "CVE",
+        "Close": 31.39,
+        "Headroom_%": 8.6,
+        "Above_200_%": 17.9,
+        "Hist_Now": 0.036,
+        "Vol_Ratio": "5.19x",
+        "Conviction_Score": 0.462,
+        "Pivot_Trigger": 32.15,
+        "Stop_Loss": 30.54,
+        "Risk_%": 5.01,
+        "R_Ratio": 2.99,
+        "ADV_20": 8128305,
+        "1Min_Vol_Hurdle": 28449,
+        "Execution_Archetype": "BREAKOUT",
+        "Category": "Base-Reset",
+        "Zacks_Rank": "#1 (New)",
+        "Earnings_Risk": "SAFE (17d)"
+      },
+      {
         "Ticker": "CSCO",
         "Close": 118.39,
         "Headroom_%": 9.3,
@@ -183,25 +202,6 @@
         "Earnings_Risk": "SAFE (31d)"
       },
       {
-        "Ticker": "CVE",
-        "Close": 31.39,
-        "Headroom_%": 8.6,
-        "Above_200_%": 17.9,
-        "Hist_Now": 0.036,
-        "Vol_Ratio": "5.19x",
-        "Conviction_Score": 0.462,
-        "Pivot_Trigger": 32.15,
-        "Stop_Loss": 30.54,
-        "Risk_%": 5.01,
-        "R_Ratio": 2.99,
-        "ADV_20": 8128305,
-        "1Min_Vol_Hurdle": 28449,
-        "Execution_Archetype": "BREAKOUT",
-        "Category": "Base-Reset",
-        "Zacks_Rank": "#1 (1d)",
-        "Earnings_Risk": "SAFE (17d)"
-      },
-      {
         "Ticker": "EMR",
         "Close": 161.83,
         "Headroom_%": 2.4,
@@ -217,7 +217,7 @@
         "1Min_Vol_Hurdle": 9063,
         "Execution_Archetype": "BREAKOUT",
         "Category": "Base-Reset",
-        "Zacks_Rank": "#2 (1d)",
+        "Zacks_Rank": "#2 (New)",
         "Earnings_Risk": "SAFE (23d)"
       },
       {
@@ -236,7 +236,7 @@
         "1Min_Vol_Hurdle": 1987,
         "Execution_Archetype": "BREAKOUT",
         "Category": "Base-Reset",
-        "Zacks_Rank": "#2 (1d)",
+        "Zacks_Rank": "#2 (New)",
         "Earnings_Risk": "SAFE (15d)"
       },
       {
@@ -255,7 +255,7 @@
         "1Min_Vol_Hurdle": 14331,
         "Execution_Archetype": "BREAKOUT",
         "Category": "Base-Reset",
-        "Zacks_Rank": "#2 (1d)",
+        "Zacks_Rank": "#2 (New)",
         "Earnings_Risk": "SAFE (16d)"
       },
       {
@@ -274,7 +274,7 @@
         "1Min_Vol_Hurdle": 72387,
         "Execution_Archetype": "BREAKOUT",
         "Category": "Base-Reset",
-        "Zacks_Rank": "#1 (1d)",
+        "Zacks_Rank": "#1 (New)",
         "Earnings_Risk": "SAFE (>14d)"
       },
       {
@@ -293,7 +293,7 @@
         "1Min_Vol_Hurdle": 2911,
         "Execution_Archetype": "BREAKOUT",
         "Category": "Base-Reset",
-        "Zacks_Rank": "#1 (1d)",
+        "Zacks_Rank": "#1 (New)",
         "Earnings_Risk": "SAFE (24d)"
       },
       {
@@ -312,7 +312,7 @@
         "1Min_Vol_Hurdle": 4160,
         "Execution_Archetype": "BREAKOUT",
         "Category": "Base-Reset",
-        "Zacks_Rank": "#1 (1d)",
+        "Zacks_Rank": "#1 (New)",
         "Earnings_Risk": "SAFE (43d)"
       },
       {
@@ -335,25 +335,6 @@
         "Earnings_Risk": "SAFE (17d)"
       },
       {
-        "Ticker": "LRCX",
-        "Close": 318.84,
-        "Headroom_%": 37.4,
-        "Above_200_%": 15.7,
-        "Hist_Now": -4.811,
-        "Vol_Ratio": "4.43x",
-        "Conviction_Score": 6.615,
-        "Pivot_Trigger": 351.37,
-        "Stop_Loss": 316.01,
-        "Risk_%": 10.06,
-        "R_Ratio": 3.72,
-        "ADV_20": 9109895,
-        "1Min_Vol_Hurdle": 31884,
-        "Execution_Archetype": "BREAKOUT",
-        "Category": "Base-Reset",
-        "Zacks_Rank": "#2 (13d)",
-        "Earnings_Risk": "\u26a0\ufe0f CAUTION (9d)"
-      },
-      {
         "Ticker": "LPG",
         "Close": 57.64,
         "Headroom_%": 4.0,
@@ -373,42 +354,23 @@
         "Earnings_Risk": "SAFE (24d)"
       },
       {
-        "Ticker": "MSM",
-        "Close": 129.51,
-        "Headroom_%": 2.2,
-        "Above_200_%": 18.0,
-        "Hist_Now": -0.575,
-        "Vol_Ratio": "6.04x",
-        "Conviction_Score": 10.37,
-        "Pivot_Trigger": 132.19,
-        "Stop_Loss": 127.51,
-        "Risk_%": 3.54,
-        "R_Ratio": 11.3,
-        "ADV_20": 831620,
-        "1Min_Vol_Hurdle": 2910,
+        "Ticker": "LRCX",
+        "Close": 318.84,
+        "Headroom_%": 37.4,
+        "Above_200_%": 15.7,
+        "Hist_Now": -4.811,
+        "Vol_Ratio": "4.43x",
+        "Conviction_Score": 6.615,
+        "Pivot_Trigger": 351.37,
+        "Stop_Loss": 316.01,
+        "Risk_%": 10.06,
+        "R_Ratio": 3.72,
+        "ADV_20": 9109895,
+        "1Min_Vol_Hurdle": 31884,
         "Execution_Archetype": "BREAKOUT",
         "Category": "Base-Reset",
-        "Zacks_Rank": "#2 (1d)",
-        "Earnings_Risk": "\u26a0\ufe0f CAUTION (10d)"
-      },
-      {
-        "Ticker": "MU",
-        "Close": 1029.0,
-        "Headroom_%": 21.9,
-        "Above_200_%": 37.7,
-        "Hist_Now": -7.519,
-        "Vol_Ratio": "4.78x",
-        "Conviction_Score": 2.14,
-        "Pivot_Trigger": 1089.22,
-        "Stop_Loss": 1011.42,
-        "Risk_%": 7.14,
-        "R_Ratio": 3.07,
-        "ADV_20": 25721585,
-        "1Min_Vol_Hurdle": 90025,
-        "Execution_Archetype": "BREAKOUT",
-        "Category": "Base-Reset",
-        "Zacks_Rank": "#1 (New)",
-        "Earnings_Risk": "SAFE (72d)"
+        "Zacks_Rank": "#2 (13d)",
+        "Earnings_Risk": "\u26a0\ufe0f CAUTION (9d)"
       },
       {
         "Ticker": "MTSI",
@@ -430,6 +392,44 @@
         "Earnings_Risk": "SAFE (24d)"
       },
       {
+        "Ticker": "MU",
+        "Close": 1029.0,
+        "Headroom_%": 21.9,
+        "Above_200_%": 37.7,
+        "Hist_Now": -7.519,
+        "Vol_Ratio": "4.78x",
+        "Conviction_Score": 2.14,
+        "Pivot_Trigger": 1089.22,
+        "Stop_Loss": 1011.42,
+        "Risk_%": 7.14,
+        "R_Ratio": 3.07,
+        "ADV_20": 25721585,
+        "1Min_Vol_Hurdle": 90025,
+        "Execution_Archetype": "BREAKOUT",
+        "Category": "Base-Reset",
+        "Zacks_Rank": "#1 (New)",
+        "Earnings_Risk": "SAFE (72d)"
+      },
+      {
+        "Ticker": "MSM",
+        "Close": 129.51,
+        "Headroom_%": 2.2,
+        "Above_200_%": 18.0,
+        "Hist_Now": -0.575,
+        "Vol_Ratio": "6.04x",
+        "Conviction_Score": 10.37,
+        "Pivot_Trigger": 132.19,
+        "Stop_Loss": 127.51,
+        "Risk_%": 3.54,
+        "R_Ratio": 11.3,
+        "ADV_20": 831620,
+        "1Min_Vol_Hurdle": 2910,
+        "Execution_Archetype": "BREAKOUT",
+        "Category": "Base-Reset",
+        "Zacks_Rank": "#2 (New)",
+        "Earnings_Risk": "\u26a0\ufe0f CAUTION (10d)"
+      },
+      {
         "Ticker": "NTAP",
         "Close": 237.15,
         "Headroom_%": 0.2,
@@ -445,27 +445,8 @@
         "1Min_Vol_Hurdle": 9095,
         "Execution_Archetype": "BREAKOUT",
         "Category": "Base-Reset",
-        "Zacks_Rank": "#1 (1d)",
+        "Zacks_Rank": "#1 (New)",
         "Earnings_Risk": "SAFE (50d)"
-      },
-      {
-        "Ticker": "NTNX",
-        "Close": 74.63,
-        "Headroom_%": 0.0,
-        "Above_200_%": 28.4,
-        "Hist_Now": 1.354,
-        "Vol_Ratio": "4.24x",
-        "Conviction_Score": 1.548,
-        "Pivot_Trigger": 74.66,
-        "Stop_Loss": 72.75,
-        "Risk_%": 2.56,
-        "R_Ratio": 15.62,
-        "ADV_20": 2609115,
-        "1Min_Vol_Hurdle": 9131,
-        "Execution_Archetype": "BREAKOUT",
-        "Category": "Base-Reset",
-        "Zacks_Rank": "#2 (1d)",
-        "Earnings_Risk": "SAFE (44d)"
       },
       {
         "Ticker": "NVDA",
@@ -487,6 +468,25 @@
         "Earnings_Risk": "SAFE (36d)"
       },
       {
+        "Ticker": "NTNX",
+        "Close": 74.63,
+        "Headroom_%": 0.0,
+        "Above_200_%": 28.4,
+        "Hist_Now": 1.354,
+        "Vol_Ratio": "4.24x",
+        "Conviction_Score": 1.548,
+        "Pivot_Trigger": 74.66,
+        "Stop_Loss": 72.75,
+        "Risk_%": 2.56,
+        "R_Ratio": 15.62,
+        "ADV_20": 2609115,
+        "1Min_Vol_Hurdle": 9131,
+        "Execution_Archetype": "BREAKOUT",
+        "Category": "Base-Reset",
+        "Zacks_Rank": "#2 (New)",
+        "Earnings_Risk": "SAFE (44d)"
+      },
+      {
         "Ticker": "PTC",
         "Close": 194.45,
         "Headroom_%": 6.4,
@@ -502,7 +502,7 @@
         "1Min_Vol_Hurdle": 13898,
         "Execution_Archetype": "BREAKOUT",
         "Category": "Base-Reset",
-        "Zacks_Rank": "#2 (1d)",
+        "Zacks_Rank": "#2 (New)",
         "Earnings_Risk": "SAFE (30d)"
       },
       {
@@ -521,7 +521,7 @@
         "1Min_Vol_Hurdle": 2573,
         "Execution_Archetype": "BREAKOUT",
         "Category": "Base-Reset",
-        "Zacks_Rank": "#2 (1d)",
+        "Zacks_Rank": "#2 (New)",
         "Earnings_Risk": "SAFE (22d)"
       },
       {
@@ -540,7 +540,7 @@
         "1Min_Vol_Hurdle": 968,
         "Execution_Archetype": "BREAKOUT",
         "Category": "Base-Reset",
-        "Zacks_Rank": "#2 (1d)",
+        "Zacks_Rank": "#2 (New)",
         "Earnings_Risk": "\u26a0\ufe0f CAUTION (9d)"
       },
       {
@@ -559,7 +559,7 @@
         "1Min_Vol_Hurdle": 8878,
         "Execution_Archetype": "BREAKOUT",
         "Category": "Base-Reset",
-        "Zacks_Rank": "#1 (1d)",
+        "Zacks_Rank": "#1 (New)",
         "Earnings_Risk": "SAFE (>14d)"
       },
       {
@@ -582,25 +582,6 @@
         "Earnings_Risk": "SAFE (15d)"
       },
       {
-        "Ticker": "TALO",
-        "Close": 16.8,
-        "Headroom_%": 11.5,
-        "Above_200_%": 15.7,
-        "Hist_Now": 0.073,
-        "Vol_Ratio": "4.47x",
-        "Conviction_Score": 0.796,
-        "Pivot_Trigger": 17.3,
-        "Stop_Loss": 16.39,
-        "Risk_%": 5.26,
-        "R_Ratio": 2.85,
-        "ADV_20": 2465575,
-        "1Min_Vol_Hurdle": 8629,
-        "Execution_Archetype": "BREAKOUT",
-        "Category": "Base-Reset",
-        "Zacks_Rank": "#1 (13d)",
-        "Earnings_Risk": "SAFE (22d)"
-      },
-      {
         "Ticker": "SYNA",
         "Close": 119.82,
         "Headroom_%": 24.4,
@@ -618,6 +599,25 @@
         "Category": "Base-Reset",
         "Zacks_Rank": "#2 (New)",
         "Earnings_Risk": "SAFE (24d)"
+      },
+      {
+        "Ticker": "TALO",
+        "Close": 16.8,
+        "Headroom_%": 11.5,
+        "Above_200_%": 15.7,
+        "Hist_Now": 0.073,
+        "Vol_Ratio": "4.47x",
+        "Conviction_Score": 0.796,
+        "Pivot_Trigger": 17.3,
+        "Stop_Loss": 16.39,
+        "Risk_%": 5.26,
+        "R_Ratio": 2.85,
+        "ADV_20": 2465575,
+        "1Min_Vol_Hurdle": 8629,
+        "Execution_Archetype": "BREAKOUT",
+        "Category": "Base-Reset",
+        "Zacks_Rank": "#1 (13d)",
+        "Earnings_Risk": "SAFE (22d)"
       },
       {
         "Ticker": "VIAV",
@@ -795,7 +795,7 @@
         "1Min_Vol_Hurdle": 3965,
         "Execution_Archetype": "BREAKOUT",
         "Category": "Pocket Pivot",
-        "Zacks_Rank": "#1 (1d)",
+        "Zacks_Rank": "#1 (New)",
         "Earnings_Risk": "SAFE (24d)"
       },
       {
@@ -856,7 +856,7 @@
         "1Min_Vol_Hurdle": 4784,
         "Execution_Archetype": "MEAN_REVERSION",
         "Category": "Liquidity Sweep",
-        "Zacks_Rank": "#2 (1d)",
+        "Zacks_Rank": "#2 (New)",
         "Earnings_Risk": "SAFE (18d)"
       },
       {
@@ -876,7 +876,7 @@
         "1Min_Vol_Hurdle": 16475,
         "Execution_Archetype": "MEAN_REVERSION",
         "Category": "Liquidity Sweep",
-        "Zacks_Rank": "#2 (1d)",
+        "Zacks_Rank": "#2 (New)",
         "Earnings_Risk": "\u26a0\ufe0f CAUTION (8d)"
       },
       {
@@ -916,7 +916,7 @@
         "1Min_Vol_Hurdle": 9353,
         "Execution_Archetype": "MEAN_REVERSION",
         "Category": "Liquidity Sweep",
-        "Zacks_Rank": "#1 (1d)",
+        "Zacks_Rank": "#1 (New)",
         "Earnings_Risk": "SAFE (17d)"
       },
       {
@@ -936,7 +936,7 @@
         "1Min_Vol_Hurdle": 16101,
         "Execution_Archetype": "MEAN_REVERSION",
         "Category": "Liquidity Sweep",
-        "Zacks_Rank": "#3 (1d)",
+        "Zacks_Rank": "#3 (New)",
         "Earnings_Risk": "SAFE (22d)"
       },
       {

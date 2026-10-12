@@ -76,7 +76,7 @@
     "1Min_Vol_Hurdle": 3965,
     "Execution_Archetype": "BREAKOUT",
     "Category": "Pocket Pivot",
-    "Zacks_Rank": "#1 (1d)",
+    "Zacks_Rank": "#1 (New)",
     "Earnings_Risk": "SAFE (24d)"
   },
   "top_ls": {
@@ -96,7 +96,7 @@
     "1Min_Vol_Hurdle": 16101,
     "Execution_Archetype": "MEAN_REVERSION",
     "Category": "Liquidity Sweep",
-    "Zacks_Rank": "#3 (1d)",
+    "Zacks_Rank": "#3 (New)",
     "Earnings_Risk": "SAFE (22d)"
   }
 }

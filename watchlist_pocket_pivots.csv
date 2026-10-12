@@ -1,4 +1,4 @@
 Ticker,Close,Headroom_%,Ext_10EMA_%,Above_200EMA_%,Vol_Pocket_Ratio,Conviction_Score,Pivot_Trigger,Stop_Loss,Risk_%,R_Ratio,ADV_20,1Min_Vol_Hurdle,Execution_Archetype,Category,Zacks_Rank,Earnings_Risk
 ACHC,29.25,22.5,2.3,11.8,1.01x,5.81,29.45,28.31,3.87,5.81,1564740,5476,BREAKOUT,Pocket Pivot,#2 (New),SAFE (23d)
-CON,37.19,0.3,3.1,30.0,0.98x,7.54,37.29,35.56,4.64,7.54,1133065,3965,BREAKOUT,Pocket Pivot,#1 (1d),SAFE (24d)
+CON,37.19,0.3,3.1,30.0,0.98x,7.54,37.29,35.56,4.64,7.54,1133065,3965,BREAKOUT,Pocket Pivot,#1 (New),SAFE (24d)
 WAT,433.77,4.8,0.3,15.3,1.06x,6.91,437.53,428.03,2.17,6.91,828230,2898,BREAKOUT,Pocket Pivot,#3 (13d),SAFE (22d)
