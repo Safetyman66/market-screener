@@ -1,0 +1,11 @@
+Ticker,Close,Pole_Gain_%,Flag_Days,Flag_Depth_%,10d_Tightness_%,Vol_DryUp,Conviction_Score,Pivot_Trigger,Stop_Loss,Risk_%,R_Ratio,ADV_20,1Min_Vol_Hurdle,Execution_Archetype,Category,Zacks_Rank,Earnings_Risk,Headroom_%,Ext_10EMA_%,Above_200EMA_%,Vol_Pocket_Ratio,Above_200_%,Hist_Now,Vol_Ratio
+SYNA,119.82,,,,,,88.147,121.0,118.3,2.23,10.96,1131460,3960,BREAKOUT,Base-Reset,#2 (New),SAFE (24d),24.4,,,,19.7,-1.803,12.65x
+SNPS,509.99,,,,,,16.499,512.49,495.49,3.32,4.52,2536750,8878,BREAKOUT,Base-Reset,#1 (1d),SAFE (>14d),5.8,,,,14.1,5.301,8.95x
+KEYS,382.75,,,,,,15.777,389.93,369.9,5.14,7.78,1188695,4160,BREAKOUT,Base-Reset,#1 (1d),SAFE (43d),1.9,,,,25.2,0.481,4.35x
+CRVL,77.16,,,,,,12.44,77.53,75.53,2.58,15.5,224315,785,BREAKOUT,Base-Reset,N/A,SAFE (22d),2.9,,,,15.4,1.565,5.58x
+VIAV,45.46,,,,,,10.153,48.19,43.4,9.94,3.31,5779400,20227,BREAKOUT,Base-Reset,#1 (13d),SAFE (16d),32.9,,,,25.0,-0.604,6.85x
+NTAP,237.15,,,,,,9.655,237.7,228.81,3.74,10.7,2598790,9095,BREAKOUT,Base-Reset,#1 (1d),SAFE (50d),0.2,,,,52.2,2.343,6.5x
+FFIV,479.83,,,,,,9.535,482.47,459.14,4.84,8.26,567865,1987,BREAKOUT,Base-Reset,#2 (1d),SAFE (15d),0.6,,,,29.6,1.523,4.59x
+CON,37.19,,,,,,7.54,37.29,35.56,4.64,7.54,1133065,3965,BREAKOUT,Pocket Pivot,#1 (1d),SAFE (24d),0.3,3.1,30.0,0.98x,,,
+WAT,433.77,,,,,,6.91,437.53,428.03,2.17,6.91,828230,2898,BREAKOUT,Pocket Pivot,#3 (13d),SAFE (22d),4.8,0.3,15.3,1.06x,,,
+ACHC,29.25,,,,,,5.81,29.45,28.31,3.87,5.81,1564740,5476,BREAKOUT,Pocket Pivot,#2 (New),SAFE (23d),22.5,2.3,11.8,1.01x,,,
