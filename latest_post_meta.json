@@ -1,6 +1,6 @@
 {
   "pdf_path": "daily_market_intelligence.pdf",
-  "date": "2026-10-12",
+  "date": "2026-10-13",
   "regime_status": "AMBER: ROTATIONAL ACCUMULATION",
   "posture_box": "\u25c6 ROTATIONAL ACCUMULATION: BUY HIGH ASYMMETRY PIVOTS \u25c6",
   "max_exposure": "24% - 48%",
@@ -27,18 +27,18 @@
     "Headroom_%": 6.4,
     "Above_200_%": 29.3,
     "Hist_Now": 5.294,
-    "Vol_Ratio": "23.08x",
-    "Conviction_Score": 250.629,
-    "Pivot_Trigger": 194.84,
+    "Vol_Ratio": "11.54x",
+    "Conviction_Score": 121.591,
+    "Pivot_Trigger": 194.87,
     "Stop_Loss": 193.55,
-    "Risk_%": 0.66,
-    "R_Ratio": 22.73,
-    "ADV_20": 4110465,
-    "1Min_Vol_Hurdle": 14386,
+    "Risk_%": 0.68,
+    "R_Ratio": 22.06,
+    "ADV_20": 4111275,
+    "1Min_Vol_Hurdle": 14389,
     "Execution_Archetype": "BREAKOUT",
     "Category": "Base-Reset",
-    "Zacks_Rank": "#2 (New)",
-    "Earnings_Risk": "SAFE (30d)"
+    "Zacks_Rank": "#2 (1d)",
+    "Earnings_Risk": "SAFE (29d)"
   },
   "top_htf": {
     "Ticker": "WDAY",
@@ -53,11 +53,11 @@
     "Stop_Loss": 181.47,
     "Risk_%": 9.72,
     "R_Ratio": 2.99,
-    "ADV_20": 2311306,
+    "ADV_20": 2311375,
     "1Min_Vol_Hurdle": 8089,
     "Execution_Archetype": "BREAKOUT",
     "Category": "Momentum Flag",
-    "Zacks_Rank": "#3 (13d)",
+    "Zacks_Rank": "#3 (14d)",
     "Earnings_Risk": "SAFE (>14d)"
   },
   "top_pp": {
@@ -66,18 +66,18 @@
     "Headroom_%": 2.3,
     "Ext_10EMA_%": 1.4,
     "Above_200EMA_%": 10.1,
-    "Vol_Pocket_Ratio": "1.06x",
+    "Vol_Pocket_Ratio": "1.07x",
     "Conviction_Score": 10.64,
     "Pivot_Trigger": 126.36,
     "Stop_Loss": 122.2,
     "Risk_%": 3.29,
     "R_Ratio": 10.64,
-    "ADV_20": 974444,
-    "1Min_Vol_Hurdle": 3410,
+    "ADV_20": 974825,
+    "1Min_Vol_Hurdle": 3411,
     "Execution_Archetype": "BREAKOUT",
     "Category": "Pocket Pivot",
     "Zacks_Rank": "#2 (1d)",
-    "Earnings_Risk": "SAFE (16d)"
+    "Earnings_Risk": "SAFE (15d)"
   },
   "top_ls": {
     "Ticker": "LHX",
@@ -92,11 +92,11 @@
     "Stop_Loss": 231.18,
     "Risk_%": 3.02,
     "R_Ratio": 18.95,
-    "ADV_20": 1493238,
+    "ADV_20": 1493260,
     "1Min_Vol_Hurdle": 5226,
     "Execution_Archetype": "MEAN_REVERSION",
     "Category": "Liquidity Sweep",
-    "Zacks_Rank": "#3 (10d)",
-    "Earnings_Risk": "SAFE (17d)"
+    "Zacks_Rank": "#3 (11d)",
+    "Earnings_Risk": "SAFE (16d)"
   }
 }
