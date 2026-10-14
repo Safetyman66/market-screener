@@ -1,3 +1,3 @@
 Ticker,Close,Headroom_%,Ext_10EMA_%,Above_200EMA_%,Vol_Pocket_Ratio,Conviction_Score,Pivot_Trigger,Stop_Loss,Risk_%,R_Ratio,ADV_20,1Min_Vol_Hurdle,Execution_Archetype,Category,Zacks_Rank,Earnings_Risk
-EHC,124.42,2.3,1.4,10.1,1.07x,10.64,126.36,122.2,3.29,10.64,974825,3411,BREAKOUT,Pocket Pivot,#2 (1d),SAFE (15d)
-VSTS,14.25,18.6,2.1,25.0,0.99x,4.84,14.34,13.79,3.84,4.84,1631760,5711,BREAKOUT,Pocket Pivot,#3 (New),SAFE (37d)
+AAPL,341.27,2.0,1.2,14.9,1.01x,8.88,348.15,334.43,3.94,8.88,37465300,131128,BREAKOUT,Pocket Pivot,#3 (2d),SAFE (19d)
+SXT,132.55,4.7,1.3,13.8,1.11x,5.08,134.12,130.17,2.95,5.08,345665,1209,BREAKOUT,Pocket Pivot,#3 (1d),SAFE (16d)

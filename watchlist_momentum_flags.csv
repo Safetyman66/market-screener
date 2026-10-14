@@ -1,5 +1,4 @@
 Ticker,Close,Pole_Gain_%,Flag_Days,Flag_Depth_%,10d_Tightness_%,Vol_DryUp,Conviction_Score,Pivot_Trigger,Stop_Loss,Risk_%,R_Ratio,ADV_20,1Min_Vol_Hurdle,Execution_Archetype,Category,Zacks_Rank,Earnings_Risk
-DELL,576.76,65.9,16,12.6,12.6,0.66x,2.61,595.51,520.18,12.65,2.61,7285095,25497,BREAKOUT,Momentum Flag,#1 (11d),SAFE (45d)
-NSIT,166.1,46.9,17,9.9,8.0,0.67x,2.37,168.5,151.82,9.9,2.37,386600,1353,BREAKOUT,Momentum Flag,#3 (1d),SAFE (16d)
-RNG,78.17,56.0,13,11.7,11.6,0.79x,2.39,81.9,72.29,11.73,2.39,1556420,5447,BREAKOUT,Momentum Flag,#2 (New),⚠️ CAUTION (9d)
-WDAY,188.25,58.1,17,9.7,6.7,0.56x,2.99,201.0,181.47,9.72,2.99,2311375,8089,BREAKOUT,Momentum Flag,#3 (14d),SAFE (>14d)
+DELL,572.47,65.9,17,12.6,12.6,0.66x,2.61,595.51,520.18,12.65,2.61,7071135,24748,BREAKOUT,Momentum Flag,#1 (12d),SAFE (44d)
+RVTY,155.08,47.5,5,11.8,11.8,0.79x,2.02,166.25,146.7,11.76,2.02,2203040,7710,BREAKOUT,Momentum Flag,#2 (1d),SAFE (20d)
+WDAY,186.02,58.1,18,9.7,6.7,0.58x,2.99,201.0,181.47,9.72,2.99,2320725,8122,BREAKOUT,Momentum Flag,#3 (15d),SAFE (>14d)
