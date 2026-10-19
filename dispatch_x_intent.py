@@ -7,6 +7,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 META_FILE = "latest_post_meta.json"
+HELPER_HTML_FILE = "thread_helper.html"
 
 def format_num(val, prefix="", suffix="", decimals=2):
     if val is None:
@@ -35,7 +36,7 @@ def build_thread_payloads():
     exposure = meta.get("max_exposure", "30% - 60%")
     pct_above_200 = meta.get("pct_above_200", 0.0)
 
-    # Concise regime labels to protect the 280-char ceiling
+    # Concise regime labels for strict character compliance
     regime_label = "EXPANSION" if "GREEN" in regime else ("DEFENSIVE" if "RED" in regime else "ACCUMULATION")
 
     setup_slots = [
@@ -54,11 +55,11 @@ def build_thread_payloads():
     focus_tickers = meta.get("focus_tickers", [])
     seen = set()
     cashtags = [f"${t}" for t in focus_tickers if not (t in seen or seen.add(t))]
-    radar_str = " ".join(cashtags) if cashtags else "$SPY $QQQ"
+    radar_str = " ".join(cashtags) if cashtags else "$SPY$QQQ"
 
     thread_posts = []
 
-    # 1. ROOT ANCHOR TWEET (Under 280 chars with emoji weighting)
+    # 1. ROOT ANCHOR TWEET
     if active_setups:
         primary_cand, primary_label = active_setups[0]
         p_ticker = primary_cand.get('Ticker')
@@ -79,7 +80,7 @@ def build_thread_payloads():
             f"• Runway: {earnings}\n\n"
             f"Void if open >2.5% past pivot.\n"
             f"Setups in thread 🧵👇\n\n"
-            f"$SPY $QQQ #FinTwit"
+            f"$SPY$QQQ #FinTwit"
         )
     else:
         t1_text = (
@@ -89,7 +90,7 @@ def build_thread_payloads():
             f"Radar Focus: {radar_str}\n\n"
             f"Rule: Strict 2.0R asymmetry floor.\n"
             f"Setups in thread 🧵👇\n\n"
-            f"$SPY $QQQ #FinTwit"
+            f"$SPY$QQQ #FinTwit"
         )
 
     thread_posts.append({
@@ -99,7 +100,7 @@ def build_thread_payloads():
         "url": f"https://x.com/intent/tweet?text={urllib.parse.quote(t1_text)}"
     })
 
-    # 2. SUBSEQUENT SETUPS (Thread Replies, under 280 chars)
+    # 2. SUBSEQUENT SETUPS
     for i, (cand, label) in enumerate(active_setups[1:3], start=2):
         ticker = cand.get('Ticker')
         pivot = format_num(cand.get('Pivot_Trigger'), prefix="$")
@@ -120,12 +121,12 @@ def build_thread_payloads():
         )
         thread_posts.append({
             "title": f"Tweet {i}: Thread Reply (Setup #{i})",
-            "role": f"Reply directly to Tweet 1 (attach Card {i+1})",
+            "role": f"Reply in thread (attach Card {i+1})",
             "text": reply_text,
             "url": f"https://x.com/intent/tweet?text={urllib.parse.quote(reply_text)}"
         })
 
-    # 3. FINAL THREAD CLOSER (Terminal Gateway Link)
+    # 3. FINAL THREAD CLOSER
     closer_num = len(thread_posts) + 1
     t_close_text = (
         f"Execution Governance & Screener Terminal:\n\n"
@@ -134,12 +135,242 @@ def build_thread_payloads():
     )
     thread_posts.append({
         "title": f"Tweet {closer_num}: Final Thread Reply (Terminal Link)",
-        "role": "Reply to the last tweet in the thread to protect main reach",
+        "role": "Terminal link reply at end of thread",
         "text": t_close_text,
         "url": f"https://x.com/intent/tweet?text={urllib.parse.quote(t_close_text)}"
     })
 
     return thread_posts
+
+def generate_thread_helper_html(thread_posts):
+    card_base = "https://corpacuity.co.uk/x_cards"
+    cards_js = json.dumps([p["text"] for p in thread_posts])
+
+    html_content = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Corp Acuity // X Thread Dispatch Console</title>
+  <style>
+    :root {{
+      --bg: #0b0f19;
+      --card-bg: #161e2e;
+      --border: #1e293b;
+      --accent: #38bdf8;
+      --success: #4ade80;
+      --text-main: #f8fafc;
+      --text-dim: #94a3b8;
+    }}
+    body {{
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      margin: 0;
+      padding: 24px 16px;
+      display: flex;
+      justify-content: center;
+    }}
+    .container {{
+      max-width: 680px;
+      width: 100%;
+    }}
+    .header {{
+      text-align: center;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }}
+    h1 {{
+      font-size: 22px;
+      color: var(--accent);
+      margin: 0 0 8px 0;
+      letter-spacing: 0.5px;
+    }}
+    .instructions {{
+      font-size: 13px;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }}
+    .action-bar {{
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }}
+    .primary-btn {{
+      background: var(--accent);
+      color: #0b0f19;
+      font-weight: bold;
+      padding: 12px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: none;
+      cursor: pointer;
+    }}
+    .card {{
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 18px;
+      position: relative;
+    }}
+    .card-header {{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }}
+    .card-title {{
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--accent);
+      margin: 0;
+    }}
+    .char-badge {{
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 12px;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      color: var(--success);
+      font-family: monospace;
+    }}
+    .text-box {{
+      background: #0a0e17;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      font-family: monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #cbd5e1;
+      white-space: pre-wrap;
+      margin-bottom: 12px;
+    }}
+    .card-actions {{
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }}
+    .copy-btn {{
+      background: #1e293b;
+      color: var(--text-main);
+      border: 1px solid #334155;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.15s ease;
+    }}
+    .copy-btn:hover {{
+      background: #334155;
+      border-color: var(--accent);
+    }}
+    .copied {{
+      background: var(--success) !important;
+      color: #0b0f19 !important;
+      border-color: var(--success) !important;
+    }}
+    .asset-tray {{
+      margin-top: 24px;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 13px;
+    }}
+    .asset-links {{
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }}
+    .asset-link {{
+      color: var(--accent);
+      text-decoration: underline;
+    }}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Corp Acuity // X Thread Dispatcher</h1>
+      <p class="instructions">
+        <strong>Workflow:</strong> Click <em>"Open Composer with Tweet 1"</em>. In X, hit the <strong>(+)</strong> button to add a tweet slot, then simply click <em>"Copy Tweet #"</em> below and paste into each slot.
+      </p>
+      <div class="action-bar">
+        <a href="{thread_posts[0]['url']}" target="_blank" class="primary-btn">
+          🚀 1. Open X Composer with Tweet 1
+        </a>
+      </div>
+    </div>
+
+    <div id="thread-cards"></div>
+
+    <div class="asset-tray">
+      <strong style="color: var(--text-dim);">Visual Card Attachments:</strong>
+      <div class="asset-links">
+        <a class="asset-link" href="{card_base}/card_1.png" target="_blank">Card 1 (Regime)</a>
+        <a class="asset-link" href="{card_base}/card_2.png" target="_blank">Card 2 (Radar)</a>
+        <a class="asset-link" href="{card_base}/card_3.png" target="_blank">Card 3 (Setup 1)</a>
+        <a class="asset-link" href="{card_base}/card_4.png" target="_blank">Card 4 (Setup 2)</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const posts = {cards_js};
+    const titles = {json.dumps([p["title"] for p in thread_posts])};
+    const roles = {json.dumps([p["role"] for p in thread_posts])};
+
+    const container = document.getElementById('thread-cards');
+
+    posts.forEach((text, idx) => {{
+      const card = document.createElement('div');
+      card.className = 'card';
+      const charCount = text.length;
+
+      card.innerHTML = `
+        <div class="card-header">
+          <h2 class="card-title">${{titles[idx]}}</h2>
+          <span class="char-badge">${{charCount}} / 280 chars</span>
+        </div>
+        <div class="text-box" id="text-${{idx}}">${{text}}</div>
+        <div class="card-actions">
+          <button class="copy-btn" onclick="copySlot(${{idx}}, this)">📋 Copy Tweet #${{idx + 1}}</button>
+          <span style="font-size: 11px; color: var(--text-dim);">${{roles[idx]}}</span>
+        </div>
+      `;
+      container.appendChild(card);
+    }});
+
+    function copySlot(idx, btn) {{
+      const text = posts[idx];
+      navigator.clipboard.writeText(text).then(() => {{
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '✓ Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {{
+          btn.innerHTML = originalText;
+          btn.classList.remove('copied');
+        }}, 1800);
+      }});
+    }}
+  </script>
+</body>
+</html>
+"""
+    with open(HELPER_HTML_FILE, "w", encoding="utf-8") as f:
+        f.write(html_content)
+    print(f"[X INTENT] Generated dispatch helper page: {HELPER_HTML_FILE}")
 
 def send_dispatch_email(thread_posts):
     smtp_host = os.getenv("SMTP_HOST", "smtp.gmail.com")
@@ -148,39 +379,16 @@ def send_dispatch_email(thread_posts):
     smtp_pass = os.getenv("SMTP_PASS")
     recipient = os.getenv("ALERT_RECIPIENT", "ajmcneilster@gmail.com")
 
+    helper_url = "https://corpacuity.co.uk/thread_helper.html"
+
     if not smtp_user or not smtp_pass:
-        print("[X INTENT] SMTP credentials not provided locally. Printing generated thread intents:\n")
-        for p in thread_posts:
-            print(f"==================================================")
-            print(f"{p['title']} ({p['role']})")
-            print(f"Length: {len(p['text'])} chars (Max: 280)")
-            print(f"==================================================")
-            print(p['url'])
-            print()
-            print(p['text'])
-            print("\n")
+        print(f"[X INTENT] SMTP credentials not provided locally. Thread helper saved locally to {HELPER_HTML_FILE}")
         return
 
     msg = MIMEMultipart("alternative")
-    msg["Subject"] = "🚀 Today's X Morning Post Ready (1-Click Intent)"
+    msg["Subject"] = "🚀 Today's X Morning Thread Console Ready"
     msg["From"] = f"Corp Acuity Screener <{smtp_user}>"
     msg["To"] = recipient
-
-    card_base = "https://corpacuity.co.uk/x_cards"
-
-    cards_html = ""
-    for idx, item in enumerate(thread_posts, start=1):
-        btn_label = "1. Post Root Anchor Tweet ➔" if idx == 1 else f"{idx}. Pre-fill Thread Reply #{idx} ➔"
-        cards_html += f"""
-        <div style="background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
-          <h3 style="margin: 0 0 6px 0; font-size: 15px; color: #38bdf8;">{item['title']}</h3>
-          <p style="margin: 0 0 12px 0; font-size: 12px; color: #94a3b8;">{item['role']} • <span style="color: #4ade80;">{len(item['text'])} / 280 chars</span></p>
-          <div style="text-align: left; margin-bottom: 12px;">
-            <a href="{item['url']}" target="_blank" style="display: inline-block; background-color: #38bdf8; color: #0b0f19 !important; font-weight: bold; padding: 10px 18px; border-radius: 6px; text-decoration: none; font-size: 14px;">{btn_label}</a>
-          </div>
-          <pre style="background-color: #070a12; padding: 12px; border-radius: 6px; white-space: pre-wrap; font-family: monospace; font-size: 12px; color: #cbd5e1; border: 1px solid #334155; margin: 0;">{item['text']}</pre>
-        </div>
-        """
 
     html_body = f"""
     <!DOCTYPE html>
@@ -188,26 +396,29 @@ def send_dispatch_email(thread_posts):
     <head>
       <style>
         body {{ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #0b0f19; color: #f8fafc; padding: 20px; }}
-        .wrapper {{ background-color: #161e2e; border: 1px solid #1e293b; border-radius: 12px; padding: 24px; max-width: 640px; margin: 0 auto; }}
-        a.img-link {{ color: #38bdf8; text-decoration: underline; margin-right: 12px; font-size: 13px; }}
+        .card {{ background-color: #161e2e; border: 1px solid #1e293b; border-radius: 12px; padding: 24px; max-width: 620px; margin: 0 auto; }}
+        .btn {{ display: inline-block; background-color: #38bdf8; color: #0b0f19 !important; font-weight: bold; padding: 14px 24px; border-radius: 8px; text-decoration: none; font-size: 15px; margin: 15px 0; }}
       </style>
     </head>
     <body>
-      <div class="wrapper">
-        <h2 style="color: #38bdf8; margin-top: 0; font-size: 20px;">Corp Acuity // Morning X Thread Dispatch</h2>
-        <p style="font-size: 13px; color: #94a3b8; margin-bottom: 20px;">
-          Today's scan is rendered. All posts are pre-sized under 280 characters. Post Tweet #1 first, then use the buttons below to reply with your secondary setups.
+      <div class="card">
+        <h2 style="color: #38bdf8; margin-top: 0;">Corp Acuity // Morning Dispatch Console</h2>
+        <p style="font-size: 14px; color: #94a3b8; line-height: 1.5;">
+          Today's scan is rendered and validated under 280 characters. Use the single-click dispatch console to copy and deploy each thread slot into X in under 30 seconds:
         </p>
-        {cards_html}
-        <div style="margin-top: 20px; padding: 12px; background: #0f172a; border-radius: 8px; border: 1px solid #1e293b;">
-          <p style="font-size: 13px; color: #94a3b8; margin: 0 0 8px 0;"><strong>Visual Assets (Download to attach):</strong></p>
-          <p style="margin: 0;">
-            <a class="img-link" href="{card_base}/card_1.png" target="_blank">Card 1 (Regime)</a>
-            <a class="img-link" href="{card_base}/card_2.png" target="_blank">Card 2 (Radar)</a>
-            <a class="img-link" href="{card_base}/card_3.png" target="_blank">Card 3 (Setup 1)</a>
-            <a class="img-link" href="{card_base}/card_4.png" target="_blank">Card 4 (Setup 2)</a>
-          </p>
+
+        <div style="text-align: center; margin: 25px 0;">
+          <a href="{helper_url}" class="btn" target="_blank">🚀 Open Thread Dispatch Console ➔</a>
         </div>
+
+        <p style="font-size: 12px; color: #64748b; line-height: 1.4;">
+          <strong>Quick steps:</strong><br>
+          1. Tap the button above to open the console.<br>
+          2. Click <em>"Open X Composer"</em> (loads Tweet 1 automatically).<br>
+          3. Tap <strong>(+)</strong> in X, then click <em>"Copy Tweet #2"</em> on the console and paste.<br>
+          4. Repeat for #3 and #4, then click <strong>Post all</strong>.
+        </p>
+
         <hr style="border: 0; border-top: 1px solid #1e293b; margin: 24px 0;">
         <p style="font-size: 11px; color: #64748b; margin: 0;">Automated pipeline running via GitHub Actions on corpacuity.co.uk</p>
       </div>
@@ -223,10 +434,11 @@ def send_dispatch_email(thread_posts):
         server.login(smtp_user, smtp_pass)
         server.sendmail(smtp_user, recipient, msg.as_string())
         server.quit()
-        print(f"[X INTENT] Successfully emailed multi-part thread intent to {recipient}")
+        print(f"[X INTENT] Successfully emailed thread dispatch console link to {recipient}")
     except Exception as e:
         print(f"[X INTENT] Failed to send email: {e}")
 
 if __name__ == "__main__":
     thread = build_thread_payloads()
+    generate_thread_helper_html(thread)
     send_dispatch_email(thread)

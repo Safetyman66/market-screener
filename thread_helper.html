@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Corp Acuity // X Thread Dispatch Console</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: #161e2e;
+      --border: #1e293b;
+      --accent: #38bdf8;
+      --success: #4ade80;
+      --text-main: #f8fafc;
+      --text-dim: #94a3b8;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      margin: 0;
+      padding: 24px 16px;
+      display: flex;
+      justify-content: center;
+    }
+    .container {
+      max-width: 680px;
+      width: 100%;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+    h1 {
+      font-size: 22px;
+      color: var(--accent);
+      margin: 0 0 8px 0;
+      letter-spacing: 0.5px;
+    }
+    .instructions {
+      font-size: 13px;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+    .action-bar {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+    .primary-btn {
+      background: var(--accent);
+      color: #0b0f19;
+      font-weight: bold;
+      padding: 12px 20px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: none;
+      cursor: pointer;
+    }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 18px;
+      position: relative;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--accent);
+      margin: 0;
+    }
+    .char-badge {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 12px;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      color: var(--success);
+      font-family: monospace;
+    }
+    .text-box {
+      background: #0a0e17;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      font-family: monospace;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #cbd5e1;
+      white-space: pre-wrap;
+      margin-bottom: 12px;
+    }
+    .card-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .copy-btn {
+      background: #1e293b;
+      color: var(--text-main);
+      border: 1px solid #334155;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.15s ease;
+    }
+    .copy-btn:hover {
+      background: #334155;
+      border-color: var(--accent);
+    }
+    .copied {
+      background: var(--success) !important;
+      color: #0b0f19 !important;
+      border-color: var(--success) !important;
+    }
+    .asset-tray {
+      margin-top: 24px;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      font-size: 13px;
+    }
+    .asset-links {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+    .asset-link {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Corp Acuity // X Thread Dispatcher</h1>
+      <p class="instructions">
+        <strong>Workflow:</strong> Click <em>"Open Composer with Tweet 1"</em>. In X, hit the <strong>(+)</strong> button to add a tweet slot, then simply click <em>"Copy Tweet #"</em> below and paste into each slot.
+      </p>
+      <div class="action-bar">
+        <a href="https://x.com/intent/tweet?text=CORP%20ACUITY%20//%20ASYMMETRY%20SCAN%0A%0ARegime%3A%20ACCUMULATION%20%2830%25%20-%2060%25%29%0ABreadth%3A%2051.1%25%20%3E%20200%20EMA%0A%0AFocus%3A%20%24PTC%20%28Base-Reset%29%0A%E2%80%A2%20Pivot%3A%20%24194.79%0A%E2%80%A2%20Stop%3A%20%24192.76%20%281.04%25%20risk%29%0A%E2%80%A2%20Payoff%3A%2014.42R%0A%E2%80%A2%20Runway%3A%20SAFE%20%2816d%29%0A%0AVoid%20if%20open%20%3E2.5%25%20past%20pivot.%0ASetups%20in%20thread%20%F0%9F%A7%B5%F0%9F%91%87%0A%0A%24SPY%24QQQ%20%23FinTwit" target="_blank" class="primary-btn">
+          🚀 1. Open X Composer with Tweet 1
+        </a>
+      </div>
+    </div>
+
+    <div id="thread-cards"></div>
+
+    <div class="asset-tray">
+      <strong style="color: var(--text-dim);">Visual Card Attachments:</strong>
+      <div class="asset-links">
+        <a class="asset-link" href="https://corpacuity.co.uk/x_cards/card_1.png" target="_blank">Card 1 (Regime)</a>
+        <a class="asset-link" href="https://corpacuity.co.uk/x_cards/card_2.png" target="_blank">Card 2 (Radar)</a>
+        <a class="asset-link" href="https://corpacuity.co.uk/x_cards/card_3.png" target="_blank">Card 3 (Setup 1)</a>
+        <a class="asset-link" href="https://corpacuity.co.uk/x_cards/card_4.png" target="_blank">Card 4 (Setup 2)</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const posts = ["CORP ACUITY // ASYMMETRY SCAN\n\nRegime: ACCUMULATION (30% - 60%)\nBreadth: 51.1% > 200 EMA\n\nFocus: $PTC (Base-Reset)\n\u2022 Pivot: $194.79\n\u2022 Stop: $192.76 (1.04% risk)\n\u2022 Payoff: 14.42R\n\u2022 Runway: SAFE (16d)\n\nVoid if open >2.5% past pivot.\nSetups in thread \ud83e\uddf5\ud83d\udc47\n\n$SPY$QQQ #FinTwit", "Setup #2: $CVI (Momentum Flag)\n\n\u2022 Pivot: $63.51\n\u2022 Stop: $60.11 (5.35% risk)\n\u2022 Payoff: 7.28R\n\u2022 Catalyst: Zacks #1 (New)\n\u2022 Runway: \u26a0\ufe0f CAUTION (9d)\n\nExecution: Standard swing leeway.", "Setup #3: $KLAC (Liquidity Sweep)\n\n\u2022 Pivot: $173.05\n\u2022 Stop: $164.37 (5.02% risk)\n\u2022 Payoff: 15.72R\n\u2022 Catalyst: Zacks #2 (13d)\n\u2022 Runway: \u26a0\ufe0f CAUTION (9d)\n\nExecution: Standard swing leeway.", "Execution Governance & Screener Terminal:\n\nAccess quantitative breakdowns, daily PDF slide deck, and regime exposure directives:\n\n\ud83d\udc49 corpacuity.co.uk/intel.html"];
+    const titles = ["Tweet 1: Root Anchor Post", "Tweet 2: Thread Reply (Setup #2)", "Tweet 3: Thread Reply (Setup #3)", "Tweet 4: Final Thread Reply (Terminal Link)"];
+    const roles = ["Post this as your main tweet (attach Card 1 & Card 2)", "Reply in thread (attach Card 3)", "Reply in thread (attach Card 4)", "Terminal link reply at end of thread"];
+
+    const container = document.getElementById('thread-cards');
+
+    posts.forEach((text, idx) => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      const charCount = text.length;
+
+      card.innerHTML = `
+        <div class="card-header">
+          <h2 class="card-title">${titles[idx]}</h2>
+          <span class="char-badge">${charCount} / 280 chars</span>
+        </div>
+        <div class="text-box" id="text-${idx}">${text}</div>
+        <div class="card-actions">
+          <button class="copy-btn" onclick="copySlot(${idx}, this)">📋 Copy Tweet #${idx + 1}</button>
+          <span style="font-size: 11px; color: var(--text-dim);">${roles[idx]}</span>
+        </div>
+      `;
+      container.appendChild(card);
+    });
+
+    function copySlot(idx, btn) {
+      const text = posts[idx];
+      navigator.clipboard.writeText(text).then(() => {
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '✓ Copied!';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.classList.remove('copied');
+        }, 1800);
+      });
+    }
+  </script>
+</body>
+</html>
