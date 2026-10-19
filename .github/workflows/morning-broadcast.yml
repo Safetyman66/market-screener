@@ -5,9 +5,6 @@ on:
     workflows: ["Daily Market Screener & Site Deploy"]
     types:
       - completed
-  schedule:
-    # Fallback: 06:14 UTC Monday through Friday (07:14 BST)
-    - cron: '14 6 * * 1-5'
   workflow_dispatch:
 
 jobs:

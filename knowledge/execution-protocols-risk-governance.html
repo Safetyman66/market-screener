@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Execution Protocols & Risk Governance // Corp Acuity Research</title>
+  <link rel="icon" type="image/png" href="../logo.png" />
+  <style>
+    :root {
+      --bg: #070a12;
+      --card-bg: #0f172a;
+      --card-inner: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --green: #4ade80;
+      --amber: #fbbf24;
+      --red: #f87171;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); line-height: 1.6; }
+
+    .terminal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 2rem;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 800;
+      font-size: 1.1rem;
+      color: var(--text);
+      letter-spacing: 0.05em;
+    }
+    .kb-nav {
+      display: flex;
+      gap: 0.85rem;
+      font-size: 0.82rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .kb-nav a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .kb-nav a:hover, .kb-nav a.active {
+      color: var(--accent);
+    }
+    .kb-nav .divider {
+      color: var(--border);
+    }
+    .status-badge {
+      background: rgba(74, 222, 128, 0.15);
+      color: var(--green);
+      padding: 0.35rem 0.85rem;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border: 1px solid rgba(74, 222, 128, 0.3);
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 2.5rem auto;
+      padding: 0 1.5rem 5rem;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 3.5vw, 2.6rem);
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+    .meta-tag {
+      color: var(--accent);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1.5rem;
+    }
+
+    .disclaimer-box {
+      background: rgba(248, 113, 113, 0.08);
+      border: 1px solid var(--red);
+      border-left: 4px solid var(--red);
+      border-radius: 8px;
+      padding: 1rem 1.25rem;
+      margin-bottom: 2rem;
+      font-size: 0.85rem;
+      color: #fca5a5;
+      line-height: 1.5;
+    }
+    .disclaimer-box strong { color: #fee2e2; }
+
+    .summary-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-bottom: 2.5rem;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+    .summary-box strong { color: var(--text); }
+
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin: 2rem 0 1rem;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+    }
+    p {
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+      font-size: 0.95rem;
+    }
+
+    .directive-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-bottom: 1.25rem;
+    }
+    .directive-card-title {
+      font-family: monospace;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .badge-blocked { color: var(--red); }
+    .badge-defensive { color: var(--amber); }
+    .badge-opex { color: var(--amber); }
+    .badge-peak { color: var(--accent); }
+    .badge-standard { color: var(--green); }
+
+    .protocol-meta {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 0.75rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+      flex-wrap: wrap;
+    }
+    .protocol-meta span strong { color: var(--text); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0 2rem;
+      font-size: 0.88rem;
+    }
+    th, td {
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--border);
+      text-align: left;
+    }
+    th {
+      background: var(--card-inner);
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    td { background: var(--card-bg); color: var(--muted); }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 0;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <script src="../nav.js"></script>
+
+    <div class="container">
+    <div class="meta-tag">RESEARCH MODULE 07 // SYSTEMATIC EXECUTION FRAMEWORK</div>
+    <h1>Execution Protocols & Risk Governance</h1>
+
+    <div class="disclaimer-box">
+      <strong>⚠️ Regulatory Notice & Research Disclaimer:</strong> The models, parameters, directives, and protocols presented on this website are published solely for systematic quantitative analysis and academic research purposes. Corp Acuity Ltd is not an investment advisor, broker-dealer, or financial intermediary. Nothing within this terminal, research repository, or algorithmic screen constitutes personal financial, legal, or investment advice. Systematic trading involves substantial risk of capital loss. Past statistical tendencies do not guarantee future market behavior.
+    </div>
+
+    <div class="summary-box">
+      <strong>Key Concept:</strong> Systematic screeners often fail not because the underlying technical pattern is flawed, but because traders fail to alter their execution parameters when colliding with institutional market mechanics. The <strong>Execution Protocol</strong> column bridges quantitative screening with structural reality, turning academic research into explicit operational parameters.
+    </div>
+
+    <h2>1. The Priority Ladder of Execution</h2>
+    <p>
+      In a live market environment, structural forces do not carry equal weight. A perfect technical base inflection means nothing if a binary earnings release triggers an unhedged 20% gap overnight. Therefore, the terminal processes setups through a strict <strong>Priority Invalidation Ladder</strong> before assigning an execution protocol:
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Priority</th>
+          <th>Institutional Filter</th>
+          <th>Risk Mechanism</th>
+          <th>Directive Behavior</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>1 (Highest)</strong></td>
+          <td>Binary Event Proximity</td>
+          <td>Discontinuous price gap risk bypassing hard stops</td>
+          <td>Hard Block or Compressed Runway</td>
+        </tr>
+        <tr>
+          <td><strong>2</strong></td>
+          <td>OpEx Expiration & Gamma</td>
+          <td>Synthetic dealer pinning and range compression</td>
+          <td>Anticipate strike pinning; void chase</td>
+        </tr>
+        <tr>
+          <td><strong>3</strong></td>
+          <td>Earnings Revision Drift</td>
+          <td>Institutional consensus re-modeling velocity</td>
+          <td>Tailor R-multiple targets based on revision age</td>
+        </tr>
+        <tr>
+          <td><strong>4</strong></td>
+          <td>Systematic Calendar Flows</td>
+          <td>Passive 401(k) / retirement matching bids</td>
+          <td>Expand baseline swing runway</td>
+        </tr>
+        <tr>
+          <td><strong>5 (Baseline)</strong></td>
+          <td>Technical Price Action</td>
+          <td>Calculated 2.0R asymmetry & pivot levels</td>
+          <td>Standard momentum execution rules</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2>2. Protocol Directory & Operational Mechanics</h2>
+
+    <div class="directive-card">
+      <div class="directive-card-title badge-blocked">BLOCKED: Binary event blackout (&lt;7d). Hard pass; overnight gap risk unhedged.</div>
+      <div class="protocol-meta">
+        <span>Associated Module: <strong>Macro Event & Binary Guardrails</strong></span>
+        <span>Trigger: <strong>Earnings within 0–7 sessions</strong></span>
+      </div>
+      <p>
+        <strong>Operational Mechanism:</strong> Stop-loss orders do not provide protection during earnings gaps because equities auction at discontinuous price levels before market open. Entering swing setups within 7 days introduces uncontrollable negative skew that destroys portfolio asymmetry. The protocol mandates an absolute trading block.
+      </p>
+    </div>
+
+    <div class="directive-card">
+      <div class="directive-card-title badge-defensive">DEFENSIVE RUNWAY: Blackout in &lt;14d. Scale out at +1.5R or exit before day 7.</div>
+      <div class="protocol-meta">
+        <span>Associated Module: <strong>Macro Event & Binary Guardrails</strong></span>
+        <span>Trigger: <strong>Earnings within 8–14 sessions</strong></span>
+      </div>
+      <p>
+        <strong>Operational Mechanism:</strong> Standard swing campaigns require multiple weeks to complete multi-leg expansions. When an upcoming reporting date caps the available holding period to under two weeks, the trade cannot mature. Risk must be managed by taking early partial profits at +1.5R and moving to 100% cash before day 7.
+      </p>
+    </div>
+
+    <div class="directive-card">
+      <div class="directive-card-title badge-opex">OPEX PINNING: Gamma suppression active. Expect range pinning at strike.</div>
+      <div class="protocol-meta">
+        <span>Associated Module: <strong>OpEx & Gamma Dynamics</strong></span>
+        <span>Trigger: <strong>OpEx countdown &le; 3 sessions</strong></span>
+      </div>
+      <p>
+        <strong>Operational Mechanism:</strong> During expiration week, option dealers dynamic delta-hedging dampens realized volatility around strikes with large open interest. Breakouts attempted during this window frequently stall or form false-breakdown traps until options expire and gamma roll-overs resolve.
+      </p>
+    </div>
+
+    <div class="directive-card">
+      <div class="directive-card-title badge-peak">PEAK DIFFUSION: Fresh Rank 1 revision. Full swing leeway to 3.0R+ expansion.</div>
+      <div class="protocol-meta">
+        <span>Associated Module: <strong>Zacks Rank & Revisions</strong></span>
+        <span>Trigger: <strong>Rank #1 with tenure &le; 3 days</strong></span>
+      </div>
+      <p>
+        <strong>Operational Mechanism:</strong> When Wall Street analysts revise earnings projections upward, institutional algorithms and multi-manager funds execute multi-day accumulation programs. A freshly upgraded #1 rank represents the maximum velocity of this Post-Earnings Announcement Drift (PEAD), justifying wider trailing stops to capture 3.0R+ moves.
+      </p>
+    </div>
+
+    <div class="directive-card">
+      <div class="directive-card-title badge-defensive">MATURING DRIFT: Late Rank 2 drift. Trail tactical stop tightly along 10 EMA.</div>
+      <div class="protocol-meta">
+        <span>Associated Module: <strong>Zacks Rank & Revisions</strong></span>
+        <span>Trigger: <strong>Rank #2 with tenure &ge; 14 days</strong></span>
+      </div>
+      <p>
+        <strong>Operational Mechanism:</strong> Revision momentum decays exponentially. By day 14 to 20 following an initial revision cycle, institutional positioning is predominantly complete. Breakouts from late-stage drift carry higher failure rates; profits should be protected aggressively by ratcheting stops along the rising 10-day EMA.
+      </p>
+    </div>
+
+    <div class="directive-card">
+      <div class="directive-card-title badge-peak">TOM INFLOW TAILWIND: Automated allocations active. Standard trailing stop.</div>
+      <div class="protocol-meta">
+        <span>Associated Module: <strong>Turn-of-the-Month (TOM) Effect</strong></span>
+        <span>Trigger: <strong>Sessions between Day 29 and Day 3</strong></span>
+      </div>
+      <p>
+        <strong>Operational Mechanism:</strong> Automated 401(k) contributions, corporate matching, and sovereign pension allocations create an inelastic, price-insensitive bid on broad equities at the turn of each calendar month. Setups launched in this window benefit from structural tailwinds that reduce false-breakdown frequencies.
+      </p>
+    </div>
+
+    <div class="directive-card">
+      <div class="directive-card-title badge-standard">STANDARD RUNWAY: Full swing leeway. Void entry if opened &gt;2.5% past pivot.</div>
+      <div class="protocol-meta">
+        <span>Associated Module: <strong>Execution Discipline & Slippage Rules</strong></span>
+        <span>Trigger: <strong>Clean horizon (&gt;14d to earnings, normal OpEx & Zacks status)</strong></span>
+      </div>
+      <p>
+        <strong>Operational Mechanism:</strong> When no immediate exogenous calendar shocks are present, technical asymmetry rules govern execution. If an asset opens extended beyond 2.5% above the trigger pivot, the entry is automatically voided because the expanded stop distance destroys the required 2.0R asymmetry floor.
+      </p>
+    </div>
+
+    <h2>3. The Golden Rule: Cash as an Active Position</h2>
+    <p>
+      The systematic framework is designed to filter rather than generate volume. In corrective macro regimes (Amber/Red) or during heavy calendar clusters, the algorithm will intentionally output few or zero actionable setups. Maintaining cash during unfavorable structural windows is not an absence of strategy—it is a conscious risk posture designed to preserve capital for high-expectancy environments.
+    </p>
+
+  </div>
+
+  <footer>
+    &copy; 2026 Corp Acuity Ltd. Institutional Market Intelligence & Research Lab.
+  </footer>
+
+</body>
+</html>

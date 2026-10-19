@@ -8,6 +8,8 @@ Architecture:
   - Stage 1: Ultra-lightweight 5-day liquidity scan (Price >= $10, 5D ADDV >= $12M).
   - Stage 2: 15-month historical deep-dive (period='15mo') exclusively on liquid survivors.
   - Pattern Engines: Base-Resets, Momentum Bull Flags (Blue-Sky friendly), Pocket Pivots, Liquidity Sweeps.
+  - Knowledge Base Integration: Synthesizes Zacks tenure, earnings proximity, OpEx gamma,
+    and TOM calendar cycles into operational Execution Protocols for each setup.
   - Multi-Output: Produces standard watchlists, LinkedIn carousel PDF, X cards, terminal JSON,
     and 'breakouts_for_execution.csv' with pre-calculated ADV_20 & 1-minute hurdles.
 """
@@ -72,6 +74,7 @@ EXCLUDED_SECTORS = {
     "Financial Services",
     "Basic Materials",
     "Healthcare",
+    "Health Care",
     "Consumer Discretionary",
 }
 
@@ -284,10 +287,6 @@ def fetch_institutional_universe_and_sectors():
 # STAGE 0: ZERO-NETWORK METADATA PRUNER
 # ---------------------------------------------------------
 def stage_0_prune_by_sector(universe, sector_map):
-  """Filters the raw universe using locally cached Wikipedia metadata.
-
-  Zero network API calls. Prunes roughly 40-50% of the candidate list instantly.
-  """
   survivors = []
   for sym in universe:
     if sym in ["TPL", "EME"]:
@@ -313,10 +312,6 @@ def stage_0_prune_by_sector(universe, sector_map):
 # STAGE 1: LIGHTWEIGHT 5-DAY LIQUIDITY SCANNER
 # ---------------------------------------------------------
 def stage_1_prune_by_liquidity(tickers_pool, chunk_size=100):
-  """Fast batch check downloading only 5 trading days.
-
-  Filters out sub-$10 stocks and equities trading <$12M ADDV before deep 15mo data is pulled.
-  """
   print(
       f"[*] Stage 1: Running fast 5-day liquidity scan across {len(tickers_pool)}"
       " tickers..."
@@ -343,7 +338,6 @@ def stage_1_prune_by_liquidity(tickers_pool, chunk_size=100):
           auto_adjust=True,
           threads=True,
           progress=False,
-          session=GLOBAL_HTTP_SESSION,
           ignore_tz=True,
       )
     except Exception:
@@ -376,7 +370,7 @@ def stage_1_prune_by_liquidity(tickers_pool, chunk_size=100):
             qualified.append(sym)
             batch_passed += 1
         else:
-          qualified.append(sym)  # Insufficient data, do not fail to danger
+          qualified.append(sym)
       except Exception:
         qualified.append(sym)
 
@@ -403,7 +397,6 @@ def resample_daily_to_weekly(daily_df):
       .dropna()
   )
 
-  # Eliminate lookahead bias during mid-week execution before Friday close
   now_utc = datetime.datetime.now(datetime.timezone.utc)
   if now_utc.weekday() < 4 and len(weekly_df) > 1:
     weekly_df = weekly_df.iloc[:-1]
@@ -740,7 +733,7 @@ def profile_zacks_with_local_tenure(tickers):
 
 def evaluate_earnings_proximity(ticker):
   try:
-    tk = yf.Ticker(ticker, session=GLOBAL_HTTP_SESSION)
+    tk = yf.Ticker(ticker)
     cal = tk.calendar
     today = pd.Timestamp.now().tz_localize(None).date()
     earnings_dates = []
@@ -772,6 +765,65 @@ def evaluate_earnings_proximity(ticker):
   except Exception:
     pass
   return "Unknown/TBD"
+
+
+# ---------------------------------------------------------
+# 4.1 KNOWLEDGE BASE CATALYST & EXECUTION DIRECTIVE ENGINES
+# ---------------------------------------------------------
+def determine_structural_catalyst(item, days_to_opx):
+  """Maps quantitative setups to knowledge base institutional catalysts."""
+  day_of_month = datetime.date.today().day
+  zacks = item.get("Zacks_Rank", "")
+  category = item.get("Category", "")
+
+  if day_of_month in [29, 30, 31, 1, 2, 3]:
+    return "Turn-of-the-Month (TOM) Inflow Window"
+  if days_to_opx <= 3:
+    return "Monthly OpEx Gamma Pinning & Flow"
+  if "#1" in zacks or "#2" in zacks:
+    return "Consensus Earnings Revision Momentum"
+
+  if category == "Liquidity Sweep":
+    return "False-Breakdown Support Sweep"
+  elif category == "Pocket Pivot":
+    return "Volume-Surge Squeeze Launch"
+  elif category == "Momentum Flag":
+    return "CAN SLIM Tight Flag Continuation"
+  else:
+    return "Institutional Base-Reset Flow"
+
+
+def generate_kb_execution_protocol(item, days_to_opx):
+  """Synthesizes Knowledge Base research modules into strict, actionable execution rules.
+
+  Incorporates: Binary Events, OpEx Gamma, Zacks Diffusion Decay, and TOM Flows.
+  """
+  earnings = item.get("Earnings_Risk", "")
+  zacks = item.get("Zacks_Rank", "")
+  day_of_month = datetime.date.today().day
+
+  # 1. Binary Event Guardrails (Highest Priority)
+  if "DANGER" in earnings:
+    return "BLOCKED: Binary event blackout (<7d). Hard pass; overnight gap risk unhedged."
+  if "CAUTION" in earnings:
+    return "DEFENSIVE RUNWAY: Blackout in <14d. Scale out at +1.5R or exit before day 7."
+
+  # 2. Options Expiration (OpEx) Gamma Dynamics
+  if days_to_opx <= 2:
+    return "OPEX PINNING: Gamma suppression active. Expect range pinning at strike."
+
+  # 3. Zacks Rank Revision Diffusion Tenure
+  if any(k in zacks for k in ["#1 (New)", "#1 (1d)", "#1 (2d)", "#1 (3d)"]):
+    return "PEAK DIFFUSION: Fresh Rank 1 revision. Full swing leeway to 3.0R+ expansion."
+  elif "#2" in zacks and any(d in zacks for d in ["14d", "15d", "16d", "17d", "18d", "19d", "20d"]):
+    return "MATURING DRIFT: Late Rank 2 drift. Trail tactical stop tightly along 10 EMA."
+
+  # 4. Turn-of-Month (TOM) Inflow Window
+  if day_of_month in [29, 30, 31, 1, 2, 3]:
+    return "TOM INFLOW TAILWIND: Automated allocations active. Standard trailing stop."
+
+  # 5. Default Momentum Protocol
+  return "STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot."
 
 
 # ---------------------------------------------------------
@@ -868,8 +920,11 @@ def check_base_reset(
     return None, f"Error: {type(e).__name__}"
 
 
-def check_htf(ticker, df, c0, high_52w, adv_20_shares):
+def check_htf(ticker, df, c0, daily_ema200, high_52w, adv_20_shares):
   try:
+    if c0 < (0.96 * daily_ema200):
+      return None, "Price below 200 EMA tolerance (< -4%)"
+
     close = df["Close"]
     high = df["High"]
     low = df["Low"]
@@ -1086,6 +1141,9 @@ def check_liquidity_sweep(
     if c0 < 15.0:
       return None, "Price < $15.00 floor (Anti-Penny Gate)"
 
+    if c0 < (0.95 * daily_ema200):
+      return None, "Price below 200 EMA tolerance (< -5%)"
+
     high = df["High"]
     low = df["Low"]
     volume = df["Volume"]
@@ -1236,7 +1294,9 @@ def evaluate_all_setups(ticker, daily_df, spy_1m_perf, sector_map):
     results["base_reset"] = res_br
     results["br_reason"] = r_br
 
-    res_htf, r_htf = check_htf(ticker, daily_df, c0, high_52w, adv_20_shares)
+    res_htf, r_htf = check_htf(
+        ticker, daily_df, c0, daily_ema200, high_52w, adv_20_shares
+    )
     results["htf"] = res_htf
     results["htf_reason"] = r_htf
 
@@ -1905,7 +1965,6 @@ def create_linkedin_carousel_pdf(
 
   c.showPage()
 
-  # ---------------- SLIDES 4 TO 7: THE 4 QUANT SETUP TILES ----------------
   def draw_setup_slide(title, subtitle, candidate, slide_idx):
     draw_base(title, slide_idx, 8)
     c.setFont("Helvetica-Bold", 32)
@@ -2123,14 +2182,12 @@ def run_master_screener():
   total_raw = len(universe)
   print(f"Loaded institutional universe of {total_raw} stocks.")
 
-  # ─── STAGE 0: METADATA PRUNE (ZERO NETWORK REQUESTS) ───
   stage0_candidates = stage_0_prune_by_sector(universe, sector_map)
   print(
       f"[*] Stage 0: Pruned {total_raw - len(stage0_candidates)} non-momentum"
       f" tickers via sector metadata. {len(stage0_candidates)} remain."
   )
 
-  # ─── STAGE 1: RAPID 5-DAY LIQUIDITY SCAN (LIGHTWEIGHT PAYLOAD) ───
   stage1_survivors = stage_1_prune_by_liquidity(
       stage0_candidates, chunk_size=CHUNK_SIZE
   )
@@ -2172,7 +2229,6 @@ def run_master_screener():
   total_above_200 = 0
   total_chunks = (len(stage1_survivors) + CHUNK_SIZE - 1) // CHUNK_SIZE
 
-  # ─── STAGE 2: 15-MONTH HISTORICAL DATA ANALYSIS ───
   for idx in range(0, len(stage1_survivors), CHUNK_SIZE):
     chunk = stage1_survivors[idx : idx + CHUNK_SIZE]
     chunk_idx = (idx // CHUNK_SIZE) + 1
@@ -2188,7 +2244,7 @@ def run_master_screener():
       try:
         batch_data = yf.download(
             tickers=chunk,
-            period="15mo",  # 15-Month historical ingestion
+            period="15mo",
             interval="1d",
             group_by="ticker",
             auto_adjust=True,
@@ -2295,6 +2351,7 @@ def run_master_screener():
   regime, dashboard = analyze_market_regime(
       total_evaluated, total_above_200, category_counts
   )
+  days_to_opx = dashboard.get("days_to_opx", 15)
 
   unique_passed_tickers = list(
       set(
@@ -2328,21 +2385,29 @@ def run_master_screener():
     r["Category"] = "Base-Reset"
     r["Zacks_Rank"] = zacks_map.get(r["Ticker"], "N/A")
     r["Earnings_Risk"] = earnings_map.get(r["Ticker"], "Unknown")
+    r["Structural_Catalyst"] = determine_structural_catalyst(r, days_to_opx)
+    r["Execution_Protocol"] = generate_kb_execution_protocol(r, days_to_opx)
 
   for r in htfs:
     r["Category"] = "Momentum Flag"
     r["Zacks_Rank"] = zacks_map.get(r["Ticker"], "N/A")
     r["Earnings_Risk"] = earnings_map.get(r["Ticker"], "Unknown")
+    r["Structural_Catalyst"] = determine_structural_catalyst(r, days_to_opx)
+    r["Execution_Protocol"] = generate_kb_execution_protocol(r, days_to_opx)
 
   for r in pocket_pivots:
     r["Category"] = "Pocket Pivot"
     r["Zacks_Rank"] = zacks_map.get(r["Ticker"], "N/A")
     r["Earnings_Risk"] = earnings_map.get(r["Ticker"], "Unknown")
+    r["Structural_Catalyst"] = determine_structural_catalyst(r, days_to_opx)
+    r["Execution_Protocol"] = generate_kb_execution_protocol(r, days_to_opx)
 
   for r in liquidity_sweeps:
     r["Category"] = "Liquidity Sweep"
     r["Zacks_Rank"] = zacks_map.get(r["Ticker"], "N/A")
     r["Earnings_Risk"] = earnings_map.get(r["Ticker"], "Unknown")
+    r["Structural_Catalyst"] = determine_structural_catalyst(r, days_to_opx)
+    r["Execution_Protocol"] = generate_kb_execution_protocol(r, days_to_opx)
 
   filtered_base_resets = [
       r
@@ -2366,7 +2431,6 @@ def run_master_screener():
   filtered_pockets = universal_quality_filter(pocket_pivots)
   filtered_sweeps = universal_quality_filter(liquidity_sweeps)
 
-  # ---------------- CSV WATCHLIST EXPORTS ----------------
   pd.DataFrame(filtered_base_resets).to_csv(
       "watchlist_base_resets.csv", index=False
   )
@@ -2380,7 +2444,6 @@ def run_master_screener():
       "watchlist_liquidity_sweeps.csv", index=False
   )
 
-  # ---------------- DEDICATED EXECUTION EXPORT FOR IBKR ----------------
   breakout_pool = filtered_htfs + filtered_pockets + filtered_base_resets
   execution_candidates = [
       r
@@ -2389,19 +2452,39 @@ def run_master_screener():
       and "CAUTION" not in r.get("Earnings_Risk", "")
       and "DANGER" not in r.get("Earnings_Risk", "")
   ]
-  execution_df = (
-      pd.DataFrame(execution_candidates)
-      .sort_values(by="Conviction_Score", ascending=False)
-      .drop_duplicates(subset=["Ticker"])
-      .head(10)
-  )
+  if execution_candidates:
+    execution_df = (
+        pd.DataFrame(execution_candidates)
+        .sort_values(by="Conviction_Score", ascending=False)
+        .drop_duplicates(subset=["Ticker"])
+        .head(10)
+    )
+  else:
+    execution_df = pd.DataFrame(
+        columns=[
+            "Ticker",
+            "Close",
+            "Conviction_Score",
+            "Pivot_Trigger",
+            "Stop_Loss",
+            "Risk_%",
+            "R_Ratio",
+            "ADV_20",
+            "1Min_Vol_Hurdle",
+            "Execution_Archetype",
+            "Category",
+            "Zacks_Rank",
+            "Earnings_Risk",
+            "Structural_Catalyst",
+            "Execution_Protocol",
+        ]
+    )
   execution_df.to_csv(EXECUTION_EXPORT_FILENAME, index=False)
   print(
       f"[EXECUTION ENGINE] Exported top {len(execution_df)} verified breakout"
       f" candidates to {EXECUTION_EXPORT_FILENAME}"
   )
 
-  # ---------------- 5-DAY RUNNER TRACKER ----------------
   all_current_setups = (
       filtered_base_resets
       + filtered_htfs
@@ -2410,7 +2493,6 @@ def run_master_screener():
   )
   top_runner = update_and_evaluate_trailing_runners(all_current_setups)
 
-  # ---------------- TOP PICKS FOR SOCIAL MEDIA ----------------
   top_br = (
       sorted(
           filtered_base_resets,
@@ -2444,7 +2526,6 @@ def run_master_screener():
       else None
   )
 
-  # ---------------- 8-SLIDE LINKEDIN CAROUSEL PDF ----------------
   create_linkedin_carousel_pdf(
       filename=CAROUSEL_PDF_FILENAME,
       regime_status=regime,
@@ -2460,10 +2541,8 @@ def run_master_screener():
       dashboard=dashboard,
   )
 
-  # ---------------- 4 PNG CARDS FOR X ----------------
   export_carousel_cards_for_web(CAROUSEL_PDF_FILENAME)
 
-  # ---------------- WEB TERMINAL FEED (JSON) ----------------
   web_terminal_payload = {
       "generated_at": datetime.datetime.now(datetime.timezone.utc).strftime(
           "%Y-%m-%d %H:%M UTC"
@@ -2481,7 +2560,6 @@ def run_master_screener():
     json.dump(web_terminal_payload, f, indent=2)
   print(f"[TERMINAL] Exported {TERMINAL_FEED_FILENAME}")
 
-  # ---------------- POST METADATA (BROADCAST) ----------------
   focus_tickers = [c["Ticker"] for c in [top_br, top_htf, top_pp, top_ls] if c]
   broadcast_meta = {
       "pdf_path": CAROUSEL_PDF_FILENAME,
@@ -2500,104 +2578,6 @@ def run_master_screener():
   with open(POST_META_FILENAME, "w", encoding="utf-8") as f:
     json.dump(broadcast_meta, f, indent=2)
   print(f"[METADATA] Saved {POST_META_FILENAME}")
-
-  # ---------------- PRINT TERMINAL TABLES ----------------
-  print("\n" + "=" * 148)
-  print(
-      "                    CATEGORY 1: BASE-RESET INFLECTIONS (Above 200 EMA"
-      " >= 0.5%, Headroom >= 16% or ATH, R:R >= 2.5)"
-  )
-  print("=" * 148)
-  if filtered_base_resets:
-    print(
-        pd.DataFrame(filtered_base_resets)
-        .sort_values(by="Conviction_Score", ascending=False)
-        .to_string(index=False)
-    )
-  else:
-    print("No candidates currently meeting Base-Reset quality gates.")
-
-  print("\n" + "=" * 148)
-  print(
-      "                    CATEGORY 2: MOMENTUM BULL FLAGS (CAN SLIM Pole >="
-      " 45.0%, Flag <= 18d, Depth <= 14%, Blue Sky Friendly)"
-  )
-  print("=" * 148)
-  if filtered_htfs:
-    print(
-        pd.DataFrame(filtered_htfs)
-        .sort_values(by="Pole_Gain_%", ascending=False)
-        .to_string(index=False)
-    )
-  else:
-    print("No candidates currently meeting Momentum Flag quality gates.")
-
-  print("\n" + "=" * 148)
-  print(
-      "                    CATEGORY 3: POCKET PIVOT SQUEEZES (Headroom >= 15%"
-      " or ATH, R:R >= 2.0, Safe Earnings)"
-  )
-  print("=" * 148)
-  if filtered_pockets:
-    print(
-        pd.DataFrame(filtered_pockets)
-        .sort_values(by="R_Ratio", ascending=False)
-        .to_string(index=False)
-    )
-  else:
-    print("No candidates currently meeting Pocket Pivot criteria.")
-
-  print("\n" + "=" * 148)
-  print(
-      "                    CATEGORY 4: LIQUIDITY SWEEPS (Price >= $15,"
-      " Non-Retail/Midstream, Mean-Reversion R:R >= 2.5)"
-  )
-  print("=" * 148)
-  if filtered_sweeps:
-    print(
-        pd.DataFrame(filtered_sweeps)
-        .sort_values(by="R_Ratio", ascending=False)
-        .to_string(index=False)
-    )
-  else:
-    print("No candidates currently meeting Liquidity Sweep criteria.")
-  print("=" * 148)
-
-  # ---------------- DIAGNOSTIC FUNNELS ----------------
-  print("\n" + "=" * 95)
-  print(
-      f"                 UNIVERSAL ELIMINATION FUNNEL (Evaluated"
-      f" {total_evaluated} Symbols in Stage 2)"
-  )
-  print("=" * 95)
-  for reason, count in macro_diag.most_common():
-    pct = (count / max(total_evaluated, 1)) * 100
-    print(f"  {reason:<65}: {count:>4} ({pct:>5.1f}%)")
-
-  def print_sub_funnel(name, counter, count_passed):
-    print("\n" + "-" * 95)
-    print(
-        f"  {name} FUNNEL (Active Pool: {total_passed_universal} Liquid Stocks"
-        f" | {count_passed} Passed)"
-    )
-    print("-" * 95)
-    for reason, count in counter.most_common(6):
-      pct = (count / max(total_passed_universal, 1)) * 100
-      print(f"    {reason:<62}: {count:>4} ({pct:>5.1f}%)")
-
-  print_sub_funnel(
-      "CATEGORY 1 (BASE-RESET)", br_diag, len(filtered_base_resets)
-  )
-  print_sub_funnel(
-      "CATEGORY 2 (MOMENTUM BULL FLAG)", htf_diag, len(filtered_htfs)
-  )
-  print_sub_funnel(
-      "CATEGORY 3 (POCKET PIVOT SQUEEZE)", pp_diag, len(filtered_pockets)
-  )
-  print_sub_funnel(
-      "CATEGORY 4 (LIQUIDITY SWEEP)", ls_diag, len(filtered_sweeps)
-  )
-  print("=" * 95 + "\n")
 
 
 if __name__ == "__main__":

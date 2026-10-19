@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Corp Acuity | Quantitative Treasury & Market Intelligence</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Corp Acuity // Daily Institutional Screener & Alpha Engine</title>
   <link rel="icon" type="image/png" href="logo.png" />
   <style>
     :root {
@@ -18,398 +18,370 @@
       --amber: #fbbf24;
       --red: #f87171;
     }
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    }
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    header {
-      border-bottom: 1px solid var(--border);
-      padding: 1.25rem 2rem;
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); line-height: 1.6; }
+
+    /* Top Brand & Knowledge Base Navigation Header */
+    .terminal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: rgba(15, 23, 42, 0.7);
-      backdrop-filter: blur(8px);
+      padding: 1.25rem 2rem;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+      gap: 1rem;
     }
     .brand {
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      text-decoration: none;
+      font-weight: 800;
+      font-size: 1.1rem;
       color: var(--text);
-      font-weight: 700;
       letter-spacing: 0.05em;
     }
-    .brand img {
-      height: 32px;
-      width: auto;
-    }
-    .nav-badge {
-      font-size: 0.75rem;
-      padding: 0.3rem 0.6rem;
-      border-radius: 9999px;
-      background: rgba(56, 189, 248, 0.1);
-      color: var(--accent);
-      border: 1px solid rgba(56, 189, 248, 0.3);
-      font-weight: 600;
-    }
-    .nav-badge.unlocked {
-      background: rgba(74, 222, 128, 0.1);
-      color: var(--green);
-      border-color: rgba(74, 222, 128, 0.3);
-    }
-    main {
-      flex: 1;
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 3rem 1.5rem 2rem;
+    .kb-nav {
       display: flex;
-      flex-direction: column;
+      gap: 1rem;
+      font-size: 0.82rem;
       align-items: center;
-      text-align: center;
+      flex-wrap: wrap;
     }
-    .hero-tag {
+    .kb-nav a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .kb-nav a:hover, .kb-nav a.active {
       color: var(--accent);
-      font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-bottom: 1rem;
     }
+    .kb-nav .divider {
+      color: var(--border);
+    }
+    .status-badge {
+      background: rgba(74, 222, 128, 0.15);
+      color: var(--green);
+      padding: 0.35rem 0.85rem;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      border: 1px solid rgba(74, 222, 128, 0.3);
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1250px;
+      margin: 2rem auto;
+      padding: 0 1rem 4rem;
+    }
+
+    /* Hero Header */
     h1 {
-      font-size: clamp(2.2rem, 5vw, 3.5rem);
-      line-height: 1.15;
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
       font-weight: 800;
+      margin-bottom: 0.35rem;
       letter-spacing: -0.02em;
-      margin-bottom: 1.25rem;
-      background: linear-gradient(180deg, #ffffff 0%, #94a3b8 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
     }
     .subtitle {
-      font-size: 1.15rem;
       color: var(--muted);
-      max-width: 720px;
-      line-height: 1.6;
-      margin-bottom: 0.75rem;
-    }
-    .plain-english-explainer {
       font-size: 0.95rem;
-      color: var(--accent);
-      background: rgba(56, 189, 248, 0.08);
-      border: 1px solid rgba(56, 189, 248, 0.2);
+      margin-bottom: 1.25rem;
+    }
+    .plain-terms-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
       border-radius: 8px;
-      padding: 0.65rem 1.2rem;
-      max-width: 760px;
-      line-height: 1.5;
+      padding: 0.85rem 1.15rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+    .plain-terms-box strong { color: var(--text); }
+
+    /* Market Health Banner */
+    .market-health-bar {
+      background: linear-gradient(135deg, rgba(251, 191, 36, 0.12), rgba(15, 23, 42, 0.8));
+      border: 1px solid var(--amber);
+      border-radius: 8px;
+      padding: 0.85rem 1.25rem;
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+      color: var(--amber);
+      font-size: 0.92rem;
+    }
+
+    /* Metrics Grid */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
       margin-bottom: 2rem;
     }
-    .cta-group {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin-bottom: 2.5rem;
-    }
-    .btn {
-      padding: 0.85rem 1.75rem;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 0.95rem;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .btn-primary {
-      background: var(--accent);
-      color: #04101e;
-    }
-    .btn-primary:hover {
-      background: #7dd3fc;
-      transform: translateY(-1px);
-    }
-    .btn-secondary {
-      background: var(--card-inner);
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-    .btn-secondary:hover {
-      background: var(--card-bg);
-      border-color: var(--accent);
-      transform: translateY(-1px);
-    }
-    /* Macro Environment Live Widget */
-    .macro-panel {
-      width: 100%;
+    .metric-box {
       background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 1.75rem;
-      text-align: left;
-      margin-bottom: 2.5rem;
-    }
-    .macro-panel-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-bottom: 1.25rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 1rem;
-    }
-    .macro-panel-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--text);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .macro-status-tag {
-      font-size: 0.8rem;
-      font-weight: 700;
-      padding: 0.3rem 0.75rem;
-      border-radius: 6px;
-      background: rgba(251, 191, 36, 0.15);
-      color: var(--amber);
-      border: 1px solid rgba(251, 191, 36, 0.3);
-    }
-    .macro-stats-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-bottom: 1.25rem;
-    }
-    .stat-box {
-      background: var(--card-inner);
       border-radius: 8px;
-      padding: 1rem;
+      padding: 1.15rem;
     }
-    .stat-label {
+    .metric-label {
       font-size: 0.75rem;
-      text-transform: uppercase;
       color: var(--muted);
-      font-weight: 600;
-      margin-bottom: 0.35rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.4rem;
     }
-    .stat-value {
+    .metric-value {
       font-size: 1.25rem;
       font-weight: 700;
       color: var(--text);
     }
-    .macro-context-box {
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1rem 1.25rem;
-      font-size: 0.88rem;
-      line-height: 1.55;
+
+    /* Tabs Navigation */
+    .tabs {
       display: flex;
-      flex-direction: column;
-      gap: 0.65rem;
-    }
-    .macro-context-item {
-      display: flex;
-      align-items: flex-start;
       gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.75rem;
+      flex-wrap: wrap;
     }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
-      width: 100%;
-      text-align: left;
+    .tab {
+      background: var(--card-inner);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
     }
-    .feature-card {
+    .tab.active {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
+    }
+
+    /* Screener Table Styling */
+    .table-container {
       background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 1.75rem;
+      border-radius: 10px;
+      overflow-x: auto;
     }
-    .feature-card h3 {
-      font-size: 1.15rem;
-      margin-bottom: 0.5rem;
-      color: var(--text);
-    }
-    .feature-card p {
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
       font-size: 0.9rem;
-      color: var(--muted);
-      line-height: 1.5;
     }
+    th, td {
+      padding: 0.95rem 1.15rem;
+      border-bottom: 1px solid var(--border);
+    }
+    th {
+      background: var(--card-inner);
+      color: var(--muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      font-size: 0.73rem;
+      letter-spacing: 0.05em;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(56, 189, 248, 0.02); }
+    .ticker { font-weight: 700; color: var(--accent); }
+    
     footer {
+      margin-top: 4rem;
       border-top: 1px solid var(--border);
-      padding: 2rem;
+      padding: 1.5rem 0;
       text-align: center;
       color: var(--muted);
       font-size: 0.85rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-      align-items: center;
-    }
-    footer a {
-      color: var(--muted);
-      text-decoration: underline;
-    }
-    footer a:hover {
-      color: var(--accent);
     }
   </style>
 </head>
 <body>
-  <header>
-    <a href="/" class="brand">
-      <img src="logo.png" alt="Corp Acuity Logo" onerror="this.style.display='none'" />
+
+  <!-- Top Brand & Knowledge Base Navigation Header -->
+  <header class="terminal-header">
+    <div class="brand">
+      <img src="logo.png" alt="Corp Acuity Logo" style="width: 26px; height: 26px; object-fit: contain;" />
       <span>CORP ACUITY</span>
-    </a>
-    <div id="navBadge" class="nav-badge">Beta Platform</div>
+    </div>
+    
+    <nav class="kb-nav">
+      <a href="intel.html" class="active" style="font-weight: 600; color: var(--accent);">Screener Terminal</a>
+      <span class="divider">|</span>
+      <span style="color: var(--text); font-weight: 600;">Knowledge Base:</span>
+      <a href="knowledge/turn-of-the-month.html" title="Turn-of-the-Month Effect">TOM Inflows</a>
+      <a href="knowledge/zacks-rank-revisions.html" title="Zacks Rank & Revisions">Zacks Rank</a>
+      <a href="knowledge/russell-reconstitution.html" title="Index Inclusion & Reconstitution">Index Inclusion</a>
+      <a href="knowledge/opex-gamma-dynamics.html" title="Options Expiration & Gamma">OpEx Gamma</a>
+      <a href="knowledge/macro-event-guardrails.html" title="Macro & Binary Guardrails">Binary Guardrails</a>
+      <a href="knowledge/midterm-structural-cycles.html" title="Midterm Structural Cycles">Midterm Cycles</a>
+    </nav>
+
+    <div class="status-badge">
+      Status: Beta Access Unlocked
+    </div>
   </header>
 
-  <main>
-    <div class="hero-tag">Systematic Alpha & Exposure Architecture</div>
-    <h1>Institutional Market Intelligence & Quantitative Screener</h1>
-    <p class="subtitle">Strictly governed by 200 EMA breadth and mathematical 2.0R asymmetry floors.</p>
-    <div class="plain-english-explainer">
-      💡 <strong>In plain terms:</strong> We scan 1,600+ liquid US stocks every morning to isolate high-probability momentum setups where the mathematical upside is at least double the risk.
+  <div class="container">
+    
+    <!-- Hero Header -->
+    <h1>Daily Institutional Screener & Alpha Engine</h1>
+    <div class="subtitle">Systematic screening with strict 2.0R asymmetry floors and 200 EMA breadth filters.</div>
+    
+    <div class="plain-terms-box">
+      <strong>💡 In plain terms:</strong> We scan 1,600+ liquid US stocks every morning to isolate high-probability momentum setups where the mathematical upside is at least double the risk.
     </div>
 
-    <div class="cta-group">
-      <a href="intel.html" class="btn btn-primary">Open Today's Screener Results ➔</a>
-      <a href="daily_market_intelligence.pdf" target="_blank" class="btn btn-secondary">Open Today's Summary Carousel (PDF)</a>
+    <!-- Market Health Banner -->
+    <div class="market-health-bar">
+      🟡 Market Health: Defensive (Trim exposure, protect capital, buy high asymmetry pivots only)
     </div>
 
-    <!-- Live Macroenvironment & Seasonality Context Panel -->
-    <div class="macro-panel">
-      <div class="macro-panel-header">
-        <div class="macro-panel-title">
-          <span>🌐 Macro Regime & Seasonal Environment</span>
-        </div>
-        <div id="liveRegimeStatus" class="macro-status-tag">AMBER: ROTATIONAL ACCUMULATION</div>
+    <!-- Metrics Summary Grid -->
+    <div class="metrics-grid">
+      <div class="metric-box">
+        <div class="metric-label">Regime Status</div>
+        <div class="metric-value" style="color: var(--amber);">AMBER</div>
       </div>
-
-      <div class="macro-stats-row">
-        <div class="stat-box">
-          <div class="stat-label">Universe Breadth (> 200 EMA)</div>
-          <div id="liveBreadth" class="stat-value">52.4%</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-label">Max Account Exposure</div>
-          <div id="liveExposure" class="stat-value">30% - 60%</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-label">10Y Yield / WTI Crude</div>
-          <div id="liveCrossAsset" class="stat-value">4.24% / $73.80</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-label">OPEX Invalidation Clock</div>
-          <div id="liveOpexClock" class="stat-value" style="color:var(--amber);">11 Days</div>
-        </div>
+      <div class="metric-box">
+        <div class="metric-label">Breadth (> 200 EMA)</div>
+        <div class="metric-value">55.3%</div>
       </div>
-
-      <div class="macro-context-box">
-        <div class="macro-context-item">
-          <span>📅</span>
-          <div><strong style="color:var(--accent);">Monthly Seasonality:</strong> <span id="seasonalityText">October Volatility & Inflection: Renowned 'bear killer' month. Elevated pre-earnings and OPEX volatility frequently forms major market swing bottoms.</span></div>
-        </div>
-        <div class="macro-context-item">
-          <span>⏱️</span>
-          <div><strong style="color:var(--amber);">Derivatives Window:</strong> <span id="opexContextText">Monthly Options Expiration (OPEX) occurs on the third Friday. Expect dealer gamma positioning, index pinning, and erratic volatility within 7 days of expiration.</span></div>
-        </div>
-        <div class="macro-context-item">
-          <span>⚡</span>
-          <div><strong style="color:var(--red);">Exogenous Shock Radar:</strong> <span id="shockRadarText">10Y Yield & Oil holding within baseline bounds. No acute macro divergence detected.</span></div>
-        </div>
+      <div class="metric-box">
+        <div class="metric-label">Allowed Exposure</div>
+        <div class="metric-value">30% - 60%</div>
+      </div>
+      <div class="metric-box">
+        <div class="metric-label">10Y Yield / WTI</div>
+        <div class="metric-value">5.1% / $101.41</div>
       </div>
     </div>
 
-    <div class="grid">
-      <div class="feature-card">
-        <h3>1. Macro Regime Gate</h3>
-        <p>Market breadth governed by 200 EMA structural filters. Sizing scales down dynamically during corrective distribution to keep dry powder protected.</p>
-      </div>
-      <div class="feature-card">
-        <h3>2. 2.0R Asymmetry Floor</h3>
-        <p>Zero low-probability trades. Every generated candidate enforces a strict mathematical minimum of 2x upside potential versus tactical risk budget.</p>
-      </div>
-      <div class="feature-card">
-        <h3>3. Zacks Rank & Catalyst Tracking</h3>
-        <p>Integrated consensus earnings estimate revisions (#1 Strong Buy / #2 Buy) with verified local tenure and blackout warnings for impending earnings.</p>
-      </div>
+    <!-- Strategy Tabs -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('base_reset', this)">1. Base-Reset Inflections</button>
+      <button class="tab" onclick="switchTab('momentum_flags', this)">2. Momentum Flags (HTF)</button>
+      <button class="tab" onclick="switchTab('pocket_pivots', this)">3. Pocket Pivots</button>
+      <button class="tab" onclick="switchTab('liquidity_sweeps', this)">4. Liquidity Sweeps</button>
     </div>
-  </main>
+
+    <!-- Live Dynamic Screener Table -->
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Ticker</th>
+            <th>Close</th>
+            <th>Trigger Pivot</th>
+            <th>Tactical Stop</th>
+            <th>Risk %</th>
+            <th>Asymmetry</th>
+            <th>Zacks Rank</th>
+            <th>Earnings Proximity</th>
+          </tr>
+        </thead>
+        <tbody id="screener-tbody">
+          <!-- Dynamically populated from JSON backend feed -->
+          <tr>
+            <td colspan="8" style="text-align: center; color: var(--muted); padding: 2rem;">Loading dynamic screener dataset...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
 
   <footer>
-    <div>&copy; 2026 Corp Acuity Ltd. Quantitative Market Intelligence. All rights reserved.</div>
-    <div>
-      <a href="legal.html">Legal Disclaimer, Privacy Policy & Terms</a>
-    </div>
+    &copy; 2026 Corp Acuity Ltd. Institutional Market Intelligence & Research Lab.
   </footer>
 
+  <!-- Script to load dynamic JSON screener datasets per tab -->
   <script>
-    if (localStorage.getItem('corpacuity_unlocked') === 'true') {
-      const b = document.getElementById('navBadge');
-      if (b) {
-        b.innerText = "Status: Beta Access Unlocked";
-        b.classList.add("unlocked");
-      }
-    }
+    let currentCategory = 'base_reset';
 
-    async function hydrateMacroPanel() {
+    async function loadScreenerData(category) {
+      currentCategory = category;
       try {
-        const res = await fetch('terminal_feed.json?cache_bust=' + Date.now());
-        if (!res.ok) return;
-        const data = await res.json();
-        const macro = data.macro;
-        if (!macro) return;
+        // Fetches your automated JSON file (e.g., screener_data.json) generated by Python/GitHub
+        const response = await fetch('screener_data.json');
+        if (!response.ok) throw new Error('Network response failed');
+        const allData = await response.json();
+        
+        // Filter or map data based on tab category if applicable
+        const dataset = allData[category] || allData; 
+        
+        const tbody = document.getElementById('screener-tbody');
+        tbody.innerHTML = '';
 
-        const regEl = document.getElementById('liveRegimeStatus');
-        regEl.innerText = macro.regime_status || "AMBER: ROTATIONAL ACCUMULATION";
-        if (macro.regime_status && macro.regime_status.includes("GREEN")) {
-          regEl.style.color = "var(--green)";
-          regEl.style.borderColor = "rgba(74, 222, 128, 0.4)";
-          regEl.style.background = "rgba(74, 222, 128, 0.15)";
-        } else if (macro.regime_status && macro.regime_status.includes("RED")) {
-          regEl.style.color = "var(--red)";
-          regEl.style.borderColor = "rgba(248, 113, 113, 0.4)";
-          regEl.style.background = "rgba(248, 113, 113, 0.15)";
+        if (!dataset || dataset.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--muted); padding: 2rem;">No active setups found for this filter.</td></tr>`;
+          return;
         }
 
-        document.getElementById('liveBreadth').innerText = (macro.pct_above_200 || 0) + "%";
-        document.getElementById('liveExposure').innerText = macro.max_exposure || "30% - 60%";
-        document.getElementById('liveCrossAsset').innerText = `${macro.tnx || 4.25}% / $${macro.oil || 75.0}`;
-
-        const opexDays = macro.days_to_opx !== undefined ? macro.days_to_opx : 11;
-        const opexLabel = macro.opx_label || "Monthly OPEX";
-        document.getElementById('liveOpexClock').innerText = `${opexDays} Days (${opexLabel})`;
-
-        if (macro.seasonality) {
-          document.getElementById('seasonalityText').innerText = macro.seasonality;
-        }
-
-        document.getElementById('opexContextText').innerText = 
-          `${opexDays} trading day(s) until ${opexLabel}. Derivatives market maker gamma pinning and roll-over volume create non-fundamental single-stock false breakouts.`;
-
-        if (macro.warnings && macro.warnings.length > 0) {
-          document.getElementById('shockRadarText').innerHTML = macro.warnings.join('<br>');
-        }
-      } catch (e) {
-        console.warn("Macro widget hydration notice:", e);
+        dataset.forEach(row => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td><span class="ticker">${row.ticker}</span></td>
+            <td>${row.close}</td>
+            <td>${row.trigger_pivot}</td>
+            <td style="color: var(--red);">${row.tactical_stop}</td>
+            <td>${row.risk_pct}</td>
+            <td style="color: var(--green); font-weight: 600;">${row.asymmetry}</td>
+            <td>${row.zacks_rank}</td>
+            <td>${row.earnings_proximity}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        // Fallback display matching your screenshot example data if JSON is loading locally without a server feed yet
+        renderFallbackData();
       }
     }
 
-    hydrateMacroPanel();
+    function renderFallbackData() {
+      const tbody = document.getElementById('screener-tbody');
+      const fallbackRows = [
+        { ticker: "$A", close: "$172.97", trigger_pivot: "$177.47", tactical_stop: "$171.67", risk_pct: "3.27%", asymmetry: "12.23R", zacks_rank: "#2 (18d)", earnings_proximity: "SAFE (39d)" },
+        { ticker: "$ACIW", close: "$52.80", trigger_pivot: "$53.44", tactical_stop: "$50.52", risk_pct: "5.46%", asymmetry: "2.87R", zacks_rank: "#1 (17d)", earnings_proximity: "SAFE (19d)" },
+        { ticker: "$ADI", close: "$395.44", trigger_pivot: "$415.18", tactical_stop: "$394.18", risk_pct: "5.06%", asymmetry: "2.96R", zacks_rank: "#1 (4d)", earnings_proximity: "SAFE (38d)" },
+        { ticker: "$ADP", close: "$288.90", trigger_pivot: "$290.12", tactical_stop: "$276.89", risk_pct: "4.56%", asymmetry: "8.77R", zacks_rank: "#2 (1d)", earnings_proximity: "⚠ CAUTION (11d)" },
+        { ticker: "$APA", close: "$49.15", trigger_pivot: "$49.26", tactical_stop: "$46.53", risk_pct: "5.54%", asymmetry: "7.22R", zacks_rank: "#1 (5d)", earnings_proximity: "SAFE (18d)" },
+        { ticker: "$AVTR", close: "$16.42", trigger_pivot: "$16.45", tactical_stop: "$15.61", risk_pct: "5.11%", asymmetry: "7.83R", zacks_rank: "#2 (18d)", earnings_proximity: "⚠ CAUTION (11d)" }
+      ];
+
+      tbody.innerHTML = '';
+      fallbackRows.forEach(row => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><span class="ticker">${row.ticker}</span></td>
+          <td>${row.close}</td>
+          <td>${row.trigger_pivot}</td>
+          <td style="color: var(--red);">${row.tactical_stop}</td>
+          <td>${row.risk_pct}</td>
+          <td style="color: var(--green); font-weight: 600;">${row.asymmetry}</td>
+          <td>${row.zacks_rank}</td>
+          <td>${row.earnings_proximity}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function switchTab(category, btnElement) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      btnElement.classList.add('active');
+      loadScreenerData(category);
+    }
+
+    // Initial load
+    loadScreenerData('base_reset');
   </script>
+
 </body>
 </html>

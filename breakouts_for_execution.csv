@@ -1,11 +1,11 @@
-Ticker,Close,Pole_Gain_%,Flag_Days,Flag_Depth_%,10d_Tightness_%,Vol_DryUp,Conviction_Score,Pivot_Trigger,Stop_Loss,Risk_%,R_Ratio,ADV_20,1Min_Vol_Hurdle,Execution_Archetype,Category,Zacks_Rank,Earnings_Risk,Headroom_%,Ext_10EMA_%,Above_200EMA_%,Vol_Pocket_Ratio,Above_200_%,Hist_Now,Vol_Ratio
-SYNA,119.82,,,,,,88.147,121.0,118.3,2.23,10.96,1131460,3960,BREAKOUT,Base-Reset,#2 (New),SAFE (24d),24.4,,,,19.7,-1.803,12.65x
-SNPS,509.99,,,,,,16.499,512.49,495.49,3.32,4.52,2536750,8878,BREAKOUT,Base-Reset,#1 (1d),SAFE (>14d),5.8,,,,14.1,5.301,8.95x
-KEYS,382.75,,,,,,15.777,389.93,369.9,5.14,7.78,1188695,4160,BREAKOUT,Base-Reset,#1 (1d),SAFE (43d),1.9,,,,25.2,0.481,4.35x
-CRVL,77.16,,,,,,12.44,77.53,75.53,2.58,15.5,224315,785,BREAKOUT,Base-Reset,N/A,SAFE (22d),2.9,,,,15.4,1.565,5.58x
-VIAV,45.46,,,,,,10.153,48.19,43.4,9.94,3.31,5779400,20227,BREAKOUT,Base-Reset,#1 (13d),SAFE (16d),32.9,,,,25.0,-0.604,6.85x
-NTAP,237.15,,,,,,9.655,237.7,228.81,3.74,10.7,2598790,9095,BREAKOUT,Base-Reset,#1 (1d),SAFE (50d),0.2,,,,52.2,2.343,6.5x
-FFIV,479.83,,,,,,9.535,482.47,459.14,4.84,8.26,567865,1987,BREAKOUT,Base-Reset,#2 (1d),SAFE (15d),0.6,,,,29.6,1.523,4.59x
-CON,37.19,,,,,,7.54,37.29,35.56,4.64,7.54,1133065,3965,BREAKOUT,Pocket Pivot,#1 (1d),SAFE (24d),0.3,3.1,30.0,0.98x,,,
-WAT,433.77,,,,,,6.91,437.53,428.03,2.17,6.91,828230,2898,BREAKOUT,Pocket Pivot,#3 (13d),SAFE (22d),4.8,0.3,15.3,1.06x,,,
-ACHC,29.25,,,,,,5.81,29.45,28.31,3.87,5.81,1564740,5476,BREAKOUT,Pocket Pivot,#2 (New),SAFE (23d),22.5,2.3,11.8,1.01x,,,
+Ticker,Close,Headroom_%,Above_200_%,Hist_Now,Vol_Ratio,Conviction_Score,Pivot_Trigger,Stop_Loss,Risk_%,R_Ratio,ADV_20,1Min_Vol_Hurdle,Execution_Archetype,Category,Zacks_Rank,Earnings_Risk,Structural_Catalyst,Execution_Protocol
+PTC,193.15,7.1,26.5,6.972,6.9x,86.054,194.79,192.76,1.04,14.42,4244193,14854,BREAKOUT,Base-Reset,#2 (7d),SAFE (16d),Consensus Earnings Revision Momentum,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+COP,144.69,1.4,22.6,1.287,5.07x,13.837,146.69,140.81,4.01,9.98,5821149,20374,BREAKOUT,Base-Reset,#1 (7d),SAFE (17d),Consensus Earnings Revision Momentum,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+EOG,156.87,1.4,16.9,0.371,5.39x,13.073,159.0,150.64,5.26,7.6,2800692,9802,BREAKOUT,Base-Reset,#1 (New),SAFE (17d),Consensus Earnings Revision Momentum,PEAK DIFFUSION: Fresh Rank 1 revision. Full swing leeway to 3.0R+ expansion.
+PCTY,166.25,1.7,21.8,2.645,4.46x,5.876,169.09,159.81,5.49,7.29,599064,2096,BREAKOUT,Base-Reset,#2 (5d),SAFE (17d),Consensus Earnings Revision Momentum,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+PR,24.64,0.8,24.7,0.093,4.87x,5.104,24.82,23.37,5.84,6.85,8532491,29863,BREAKOUT,Base-Reset,#1 (7d),SAFE (16d),Consensus Earnings Revision Momentum,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+CHRD,154.41,1.7,20.2,0.182,4.7x,4.485,154.9,143.32,7.48,5.35,622799,2179,BREAKOUT,Base-Reset,#2 (New),SAFE (15d),Consensus Earnings Revision Momentum,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+APA,49.32,0.5,34.6,0.585,4.52x,4.377,49.55,46.53,6.09,6.57,5152525,18033,BREAKOUT,Base-Reset,#1 (7d),SAFE (16d),Consensus Earnings Revision Momentum,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+CXT,56.15,20.3,14.1,0.342,5.81x,3.57,56.29,52.12,7.41,2.74,529125,1851,BREAKOUT,Base-Reset,#2 (6d),SAFE (16d),Consensus Earnings Revision Momentum,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+CNK,38.81,2.5,21.1,0.074,4.21x,2.966,39.79,38.3,3.74,10.7,1861760,6516,BREAKOUT,Base-Reset,#1 (5d),SAFE (16d),Consensus Earnings Revision Momentum,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+OXY,62.7,6.6,14.9,0.128,5.41x,2.877,63.02,60.28,4.35,3.45,8827930,30897,BREAKOUT,Base-Reset,#2 (New),SAFE (21d),Consensus Earnings Revision Momentum,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.

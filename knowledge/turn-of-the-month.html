@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Turn-of-the-Month Effect | Corp Acuity Knowledge Base</title>
+  <link rel="icon" type="image/png" href="../logo.png" />
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <style>
+    :root {
+      --bg: #070a12;
+      --card-bg: #0f172a;
+      --card-inner: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --green: #4ade80;
+      --amber: #fbbf24;
+      --red: #f87171;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); line-height: 1.7; padding: 2rem 1rem; }
+    .container { max-width: 850px; margin: 0 auto; }
+    h1 { font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 800; margin-bottom: 0.75rem; letter-spacing: -0.02em; }
+    .meta { color: var(--muted); font-size: 0.9rem; margin-bottom: 2.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
+    h2 { font-size: 1.4rem; font-weight: 700; color: var(--text); margin-top: 2.5rem; margin-bottom: 1rem; }
+    p { color: var(--muted); margin-bottom: 1.25rem; font-size: 1.02rem; }
+    strong { color: var(--text); }
+    ul { color: var(--muted); padding-left: 1.5rem; margin-bottom: 1.25rem; }
+    li { margin-bottom: 0.6rem; }
+    .math-block { background: var(--card-inner); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem 1.5rem; margin: 1.5rem 0; overflow-x: auto; text-align: center; }
+    .chart-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin: 2rem 0; }
+    .chart-title { font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
+    .chart-legend { display: flex; gap: 1rem; font-size: 0.75rem; color: var(--muted); }
+    .legend-item { display: flex; align-items: center; gap: 0.35rem; }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+    blockquote { background: var(--card-inner); border-left: 4px solid var(--amber); padding: 1.25rem 1.5rem; border-radius: 0 8px 8px 0; margin: 1.5rem 0; color: var(--text); font-style: italic; }
+    blockquote cite { display: block; margin-top: 0.5rem; font-size: 0.85rem; color: var(--muted); font-style: normal; }
+    .references { font-size: 0.88rem; border-top: 1px solid var(--border); padding-top: 1.5rem; margin-top: 3rem; }
+    .references ol { padding-left: 1.2rem; color: var(--muted); }
+    .references li { margin-bottom: 0.5rem; }
+    footer { margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 1.5rem; text-align: center; color: var(--muted); font-size: 0.85rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <script src="../nav.js"></script>
+
+    <h1>Turn-of-the-Month (TOM) Inflows</h1>
+    <div class="meta">Corp Acuity Research Lab // Structural Calendar Flows & Liquidity Mechanics</div>
+
+    <section>
+      <h2>1. The Mechanics of Institutional Calendar Flows</h2>
+      <p>The Turn-of-the-Month (TOM) effect represents one of the most persistent calendar anomalies in financial markets. Spanning typically from the last trading day of the prior month through the first four trading days of the new month, institutional capital inflows from pension rebalancing, salary allocations, and systematic fund contributions flood equity markets.</p>
+      
+      <p>The abnormal return premium (\(\alpha_{TOM}\)) realized during this window can be modeled relative to baseline daily drift:</p>
+      <div class="math-block">
+        $$E[R_{TOM}] = \delta + \gamma_{flow} \cdot \Psi_{inflow}$$
+      </div>
+      <p>Where \(\Psi_{inflow}</p> represents the structural liquidity injection vector executed by institutional fund managers.</p>
+
+      <h2>2. Empirical Dynamics & Portfolio Surveillance</h2>
+      <p>During TOM windows, high-momentum growth equities and index components experience consistent buying pressure independent of short-term news flow. Recognizing this repetitive liquidity injection allows systematic operators to align swing entries with structural tailwinds.</p>
+
+      <h2>3. The Risk Manager's Perspective</h2>
+      <blockquote>
+        "Calendar anomalies are structural pipelines, not directional certainties. Use TOM inflows to support execution timing, but never substitute liquidity flows for underlying trend health."
+        <cite>— Institutional Risk Management Tenet</cite>
+      </blockquote>
+
+      <div class="references">
+        <h3>Academic References & Empirical Literature</h3>
+        <ol>
+          <li><strong>Ariel, R. A. (1987).</strong> "A Monthly Effect in Stock Returns." <em>Journal of Financial Economics</em>.</li>
+          <li><strong>Lakonishok, J., & Smidt, S. (1988).</strong> "Are Seasonal Anomalies Real? A Ninety-Year Perspective." <em>The Review of Financial Studies</em>.</li>
+        </ol>
+      </div>
+    </section>
+
+    <footer>
+      &copy; 2026 Corp Acuity Ltd. Quantitative Market Intelligence. For educational and research purposes only.
+    </footer>
+  </div>
+</body>
+</html>
