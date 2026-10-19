@@ -7,7 +7,7 @@
   const toRoot = isKnowledgeSubdir ? '../' : './';
   const toKb = isKnowledgeSubdir ? './' : 'knowledge/';
 
-  // 2. Navigation items
+  // 2. Navigation items (now includes Setup Archetypes)
   const navItems = [
     { label: 'TOM Inflows', file: 'turn-of-the-month.html' },
     { label: 'Zacks Rank', file: 'zacks-rank-revisions.html' },
@@ -15,10 +15,11 @@
     { label: 'OpEx Gamma', file: 'opex-gamma-dynamics.html' },
     { label: 'Binary Guardrails', file: 'macro-event-guardrails.html' },
     { label: 'Midterm Cycles', file: 'midterm-structural-cycles.html' },
-    { label: 'Risk Protocols', file: 'execution-protocols-risk-governance.html' }
+    { label: 'Risk Protocols', file: 'execution-protocols-risk-governance.html' },
+    { label: 'Setup Archetypes', file: 'setup-archetypes-mechanics.html' }
   ];
 
-  // 3. Inject styling
+  // 3. Inject styling across all pages
   const style = document.createElement('style');
   style.textContent = `
     .corp-header {
@@ -45,7 +46,7 @@
     }
     .corp-nav {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.45rem;
       font-size: 0.82rem;
       align-items: center;
       flex-wrap: wrap;
@@ -57,6 +58,7 @@
       padding: 0.25rem 0.5rem;
       border-radius: 4px;
       transition: all 0.2s ease;
+      white-space: nowrap;
     }
     .corp-nav a:hover {
       color: var(--accent, #38bdf8);
@@ -76,6 +78,7 @@
       color: var(--text, #f8fafc);
       font-weight: 600;
       margin-right: 0.2rem;
+      white-space: nowrap;
     }
   `;
   document.head.appendChild(style);
@@ -108,7 +111,7 @@
     </nav>
   `;
 
-  // 5. Mount the header
+  // 5. Mount header dynamically
   const headerElem = document.createElement('header');
   headerElem.className = 'corp-header';
   headerElem.innerHTML = headerHtml;
