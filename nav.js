@@ -1,125 +1,84 @@
+// Corp Acuity // Global Dynamic Header Navigation Engine
 (function() {
-  // 1. Detect directory context
-  const isKnowledgeSubdir = window.location.pathname.toLowerCase().includes('/knowledge/') || 
-                            window.location.pathname.toLowerCase().includes('\\knowledge\\');
-  
-  // From root: go into knowledge/. From knowledge/: stay in current folder.
-  const toRoot = isKnowledgeSubdir ? '../' : './';
-  const toKb = isKnowledgeSubdir ? './' : 'knowledge/';
+  const currentPath = window.location.pathname;
+  const isKnowledgeDir = currentPath.includes('/knowledge/');
+  const basePath = isKnowledgeDir ? '../' : '';
+  const knowledgePath = isKnowledgeDir ? '' : 'knowledge/';
 
-  // 2. Navigation items (now includes Setup Archetypes)
-  const navItems = [
-    { label: 'TOM Inflows', file: 'turn-of-the-month.html' },
-    { label: 'Zacks Rank', file: 'zacks-rank-revisions.html' },
-    { label: 'Index Inclusion', file: 'russell-reconstitution.html' },
-    { label: 'OpEx Gamma', file: 'opex-gamma-dynamics.html' },
-    { label: 'Binary Guardrails', file: 'macro-event-guardrails.html' },
-    { label: 'Midterm Cycles', file: 'midterm-structural-cycles.html' },
-    { label: 'Risk Protocols', file: 'execution-protocols-risk-governance.html' },
-    { label: 'Setup Archetypes', file: 'setup-archetypes-mechanics.html' }
-  ];
-
-  // 3. Inject styling across all pages
-  const style = document.createElement('style');
-  style.textContent = `
-    .corp-header {
+  const navHtml = `
+    <header style="
+      background: #090d16;
+      border-bottom: 1px solid #1e293b;
+      padding: 0.85rem 1.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 1rem 1.5rem;
-      background: var(--card-bg, #0f172a);
-      border: 1px solid var(--border, #334155);
-      border-radius: 8px;
-      margin-bottom: 2rem;
       flex-wrap: wrap;
       gap: 1rem;
-    }
-    .corp-brand {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      font-weight: 800;
-      font-size: 0.95rem;
-      color: var(--text, #f8fafc);
-      letter-spacing: 0.05em;
-      white-space: nowrap;
-    }
-    .corp-nav {
-      display: flex;
-      gap: 0.45rem;
-      font-size: 0.82rem;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-    .corp-nav a {
-      color: var(--muted, #94a3b8);
-      text-decoration: none;
-      font-weight: 500;
-      padding: 0.25rem 0.5rem;
-      border-radius: 4px;
-      transition: all 0.2s ease;
-      white-space: nowrap;
-    }
-    .corp-nav a:hover {
-      color: var(--accent, #38bdf8);
-      background: rgba(56, 189, 248, 0.08);
-    }
-    .corp-nav a.active {
-      color: var(--accent, #38bdf8);
-      font-weight: 700;
-      background: rgba(56, 189, 248, 0.14);
-    }
-    .corp-nav .divider {
-      color: var(--border, #334155);
-      user-select: none;
-      margin: 0 0.2rem;
-    }
-    .corp-kb-label {
-      color: var(--text, #f8fafc);
-      font-weight: 600;
-      margin-right: 0.2rem;
-      white-space: nowrap;
-    }
-  `;
-  document.head.appendChild(style);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    ">
+      <div style="display: flex; align-items: center; gap: 0.75rem;">
+        <a href="${basePath}index.html" style="text-decoration: none; display: flex; align-items: center; gap: 0.6rem;">
+          <img src="${basePath}logo.png" alt="Corp Acuity Logo" style="height: 28px; width: auto; border-radius: 4px;" onerror="this.style.display='none'">
+          <span style="font-weight: 800; font-size: 1.05rem; letter-spacing: 0.05em; color: #f8fafc;">
+            CORP ACUITY <span style="color: #38bdf8;">//</span> RESEARCH LAB
+          </span>
+        </a>
+      </div>
 
-  // 4. Determine current active page
-  const cleanPath = window.location.pathname.replace(/\\/g, '/');
-  const currentPage = cleanPath.split('/').pop().toLowerCase() || 'intel.html';
-  const isTerminal = currentPage === 'intel.html' || currentPage === 'index.html';
+      <nav style="display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;">
+        <!-- Core App Navigation -->
+        <a href="${basePath}index.html" style="
+          color: ${currentPath.endsWith('index.html') || currentPath.endsWith('/') ? '#38bdf8' : '#94a3b8'};
+          text-decoration: none;
+          font-size: 0.84rem;
+          font-weight: 600;
+          padding: 0.35rem 0.65rem;
+          border-radius: 4px;
+        ">Deck Carousel</a>
 
-  let navLinksHtml = `
-    <a href="${toRoot}intel.html" class="${isTerminal ? 'active' : ''}" style="${!isTerminal ? 'color: var(--accent, #38bdf8); font-weight: 600;' : ''}">
-      ${isKnowledgeSubdir ? '← Screener Terminal' : 'Screener Terminal'}
-    </a>
-    <span class="divider">|</span>
-    <span class="corp-kb-label">Knowledge Base:</span>
+        <a href="${basePath}intel.html" style="
+          color: ${currentPath.includes('intel.html') ? '#070a12' : '#f8fafc'};
+          background: ${currentPath.includes('intel.html') ? '#38bdf8' : '#1e293b'};
+          text-decoration: none;
+          font-size: 0.84rem;
+          font-weight: 700;
+          padding: 0.35rem 0.75rem;
+          border-radius: 5px;
+          border: 1px solid #334155;
+        ">Screener Terminal</a>
+
+        <a href="${basePath}daily_market_intelligence.pdf" target="_blank" style="
+          color: #94a3b8;
+          text-decoration: none;
+          font-size: 0.84rem;
+          font-weight: 600;
+          padding: 0.35rem 0.65rem;
+          border-radius: 4px;
+          border: 1px dashed #334155;
+        ">Direct PDF ↗</a>
+
+        <!-- Knowledge Base Links -->
+        <span style="color: #475569; margin: 0 0.2rem;">|</span>
+        <span style="font-size: 0.75rem; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Knowledge:</span>
+
+        <a href="${basePath}${knowledgePath}setup-archetypes-mechanics.html" style="color: #94a3b8; text-decoration: none; font-size: 0.82rem; font-weight: 500;">Archetypes</a>
+        <a href="${basePath}${knowledgePath}execution-protocols-risk-governance.html" style="color: #94a3b8; text-decoration: none; font-size: 0.82rem; font-weight: 500;">Risk Protocols</a>
+        <a href="${basePath}${knowledgePath}turn-of-the-month.html" style="color: #94a3b8; text-decoration: none; font-size: 0.82rem; font-weight: 500;">TOM Inflows</a>
+        <a href="${basePath}${knowledgePath}opex-gamma-dynamics.html" style="color: #94a3b8; text-decoration: none; font-size: 0.82rem; font-weight: 500;">OpEx Gamma</a>
+        <a href="${basePath}${knowledgePath}macro-event-guardrails.html" style="color: #94a3b8; text-decoration: none; font-size: 0.82rem; font-weight: 500;">Binary Guardrails</a>
+        <a href="${basePath}${knowledgePath}midterm-structural-cycles.html" style="color: #94a3b8; text-decoration: none; font-size: 0.82rem; font-weight: 500;">Midterm Cycles</a>
+        <a href="${basePath}${knowledgePath}zacks-rank-revisions.html" style="color: #94a3b8; text-decoration: none; font-size: 0.82rem; font-weight: 500;">Zacks Rank</a>
+        <a href="${basePath}${knowledgePath}russell-reconstitution.html" style="color: #94a3b8; text-decoration: none; font-size: 0.82rem; font-weight: 500;">Index Inclusion</a>
+      </nav>
+    </header>
   `;
 
-  navItems.forEach(item => {
-    const isActive = currentPage === item.file.toLowerCase();
-    navLinksHtml += `<a href="${toKb}${item.file}" class="${isActive ? 'active' : ''}">${item.label}</a>`;
+  document.addEventListener('DOMContentLoaded', function() {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = navHtml.trim();
+    document.body.insertAdjacentElement('afterbegin', tempDiv.firstElementChild);
   });
-
-  const headerHtml = `
-    <div class="corp-brand">
-      <img src="${toRoot}logo.png" alt="Corp Acuity Logo" style="width: 22px; height: 22px; object-fit: contain;" />
-      <span>CORP ACUITY // RESEARCH LAB</span>
-    </div>
-    <nav class="corp-nav">
-      ${navLinksHtml}
-    </nav>
-  `;
-
-  // 5. Mount header dynamically
-  const headerElem = document.createElement('header');
-  headerElem.className = 'corp-header';
-  headerElem.innerHTML = headerHtml;
-
-  const target = document.querySelector('.container') || document.body.firstChild;
-  if (target && target.parentNode) {
-    target.parentNode.insertBefore(headerElem, target);
-  } else {
-    document.body.prepend(headerElem);
-  }
 })();
