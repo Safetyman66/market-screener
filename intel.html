@@ -191,7 +191,6 @@
     tr:hover td { background: rgba(56, 189, 248, 0.02); }
     .ticker { font-weight: 700; color: var(--accent); }
 
-    /* Directive inline links inside cells */
     .protocol-link {
       color: var(--accent);
       text-decoration: none;
@@ -306,22 +305,22 @@
     var tabArchetypeConfig = {
       'base_resets': {
         text: '<strong>Base-Reset Inflections:</strong> Multi-week volatility contraction absorbing overhead supply prior to breakout continuation.',
-        url: 'knowledge/archetypes-mechanics.html#base-resets',
+        url: 'knowledge/setup-archetypes-mechanics.html#base-resets',
         label: 'Explore Base-Reset Mechanics &rarr;'
       },
       'momentum_flags': {
         text: '<strong>Momentum Flags (HTF):</strong> Shallow, tight high-volume advance consolidations drifting on tapering volume.',
-        url: 'knowledge/archetypes-mechanics.html#momentum-flags',
+        url: 'knowledge/setup-archetypes-mechanics.html#momentum-flags',
         label: 'Explore Flag Archetypes &rarr;'
       },
       'pocket_pivots': {
         text: '<strong>Pocket Pivots:</strong> Stealth institutional accumulation inside the base where volume exceeds the 10-day down peak.',
-        url: 'knowledge/archetypes-mechanics.html#pocket-pivots',
+        url: 'knowledge/setup-archetypes-mechanics.html#pocket-pivots',
         label: 'Explore Pocket Pivot Rules &rarr;'
       },
       'liquidity_sweeps': {
         text: '<strong>Liquidity Sweeps:</strong> Engineered stop-runs beneath key support that are swiftly rejected and reclaimed.',
-        url: 'knowledge/archetypes-mechanics.html#liquidity-sweeps',
+        url: 'knowledge/setup-archetypes-mechanics.html#liquidity-sweeps',
         label: 'Explore Sweep Mechanics &rarr;'
       }
     };
@@ -336,7 +335,6 @@
         btnElement.classList.add('active');
       }
 
-      // Update dynamic Archetype banner and KB deep link
       var bannerText = document.getElementById('archetype-explainer-text');
       var bannerLink = document.getElementById('archetype-explainer-link');
       if (bannerText && bannerLink && tabArchetypeConfig[category]) {
@@ -401,7 +399,7 @@
       <span id="archetype-explainer-text">
         <strong>Base-Reset Inflections:</strong> Multi-week volatility contraction absorbing overhead supply prior to breakout continuation.
       </span>
-      <a id="archetype-explainer-link" href="knowledge/archetypes-mechanics.html#base-resets">
+      <a id="archetype-explainer-link" href="knowledge/setup-archetypes-mechanics.html#base-resets">
         Explore Base-Reset Mechanics &rarr;
       </a>
     </div>
@@ -436,7 +434,7 @@
             <th>Zacks Rank</th>
             <th>
               <a href="knowledge/execution-protocols-risk-governance.html" class="header-kb-link" title="Click to review complete Institutional Risk Governance Directives">
-                Execution Protocol (KB Directive) ↗
+                Execution Protocol (KB Directive) &rarr;
               </a>
             </th>
             <th>Earnings Proximity</th>
@@ -460,7 +458,6 @@
   </footer>
 
   <script>
-    // --- GATING / LEAD CAPTURE CONTROLLER ---
     function isTerminalUnlocked() {
       var urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('auth') === 'unlocked' || urlParams.get('email')) {
@@ -504,7 +501,6 @@
         btn.innerText = 'Verifying access...';
       }
 
-      // Dispatch confirmation email to subscriber via EmailJS
       try {
         await emailjs.send("service_7ftmqeu", "template_3njnkmf", {
           user_name: leadName || 'Subscriber',
@@ -515,7 +511,6 @@
         console.error("[EMAIL] EmailJS dispatch notice:", err);
       }
 
-      // Unlock and persist state permanently in localStorage
       localStorage.setItem('ca_terminal_unlocked', 'true');
       localStorage.setItem('ca_lead_email', leadEmail);
       if (leadName) localStorage.setItem('ca_lead_name', leadName);
@@ -523,10 +518,9 @@
       checkGateState();
     }
 
-    // --- EXECUTION DIRECTIVE LINK PARSER ---
     function formatExecutionDirective(text) {
       if (!text) {
-        return 'STANDARD RUNWAY: Full swing leeway. <a href="knowledge/archetypes-mechanics.html" class="protocol-link">[Mechanics &rarr;]</a>';
+        return 'STANDARD RUNWAY: Full swing leeway. <a href="knowledge/setup-archetypes-mechanics.html" class="protocol-link">[Mechanics &rarr;]</a>';
       }
 
       var upper = text.toUpperCase();
@@ -545,7 +539,7 @@
       } else if (upper.indexOf('ZACKS') !== -1 || upper.indexOf('REVISION') !== -1) {
         linkHtml = ' <a href="knowledge/zacks-rank-revisions.html" class="protocol-link">[Revisions Alpha &rarr;]</a>';
       } else if (upper.indexOf('RUNWAY') !== -1 || upper.indexOf('PIVOT') !== -1 || upper.indexOf('ENTRY') !== -1) {
-        linkHtml = ' <a href="knowledge/archetypes-mechanics.html" class="protocol-link">[Setup Archetypes &rarr;]</a>';
+        linkHtml = ' <a href="knowledge/setup-archetypes-mechanics.html" class="protocol-link">[Setup Archetypes &rarr;]</a>';
       } else {
         linkHtml = ' <a href="knowledge/execution-protocols-risk-governance.html" class="protocol-link">[Risk Governance &rarr;]</a>';
       }
@@ -553,7 +547,6 @@
       return text + linkHtml;
     }
 
-    // --- TABLE RENDER LOGIC ---
     window.renderCurrentTable = function(category) {
       var tbody = document.getElementById('screener-tbody');
       if (!tbody) return;
@@ -630,10 +623,8 @@
       if (postEl && macro.posture_box) postEl.innerText = '🟡 Market Health: ' + macro.posture_box;
     }
 
-    // Check gate state on boot
     checkGateState();
 
-    // Fetch Live Terminal Data
     fetch('terminal_feed.json?t=' + Date.now())
       .then(function(res) {
         if (!res.ok) {
