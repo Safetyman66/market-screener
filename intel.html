@@ -5,6 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Corp Acuity // Daily Institutional Screener & Alpha Engine</title>
   <link rel="icon" type="image/png" href="logo.png" />
+
+  <!-- EmailJS SDK & Initialization -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>
+    (function(){
+      emailjs.init({
+        publicKey: "4UwWioU7Are22Ah_O",
+      });
+    })();
+  </script>
+
   <style>
     :root {
       --bg: #070a12;
@@ -141,7 +152,7 @@
     tr:hover td { background: rgba(56, 189, 248, 0.02); }
     .ticker { font-weight: 700; color: var(--accent); }
 
-    /* --- Lead Capture & Gate Overlay Styles --- */
+    /* Lead Gate Overlay */
     .gated-blur {
       filter: blur(6px);
       user-select: none;
@@ -153,7 +164,7 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(7, 10, 18, 0.75);
+      background: rgba(7, 10, 18, 0.78);
       backdrop-filter: blur(4px);
       display: flex;
       justify-content: center;
@@ -216,6 +227,10 @@
     .gate-btn:hover {
       opacity: 0.9;
     }
+    .gate-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
     .gate-footer-note {
       font-size: 0.75rem;
       color: var(--muted);
@@ -254,7 +269,7 @@
 <body>
 
   <!-- Dynamic Global Nav Header (Injected by nav.js) -->
-  <script src="nav.js"></script>
+  <script src="nav.js?v=3"></script>
 
   <div class="container">
     
@@ -298,15 +313,16 @@
     <!-- Table Container with Gate Overlay -->
     <div class="table-container" id="terminal-table-wrapper">
       
-      <!-- Gate Overlay Card (Hidden once unlocked) -->
+      <!-- Gate Overlay Card -->
       <div class="gate-overlay" id="lead-gate-modal">
         <div class="gate-card">
           <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔒</div>
           <h3>Unlock Institutional Terminal Access</h3>
-          <p>Gain unconstrained daily access to verified 2.0R asymmetry setups, consensus revisions, and dynamic risk execution protocols.</p>
+          <p>Gain unconstrained access to verified 2.0R asymmetry setups, consensus revisions, and dynamic execution protocols.</p>
           <form class="gate-form" onsubmit="handleLeadSubmit(event)">
-            <input type="email" id="lead-email-input" class="gate-input" placeholder="Enter institutional email address..." required />
-            <button type="submit" class="gate-btn">Unlock Live Alpha Engine</button>
+            <input type="text" id="lead-name-input" class="gate-input" placeholder="Your name or institution..." required />
+            <input type="email" id="lead-email-input" class="gate-input" placeholder="Work / institutional email address..." required />
+            <button type="submit" id="gate-submit-btn" class="gate-btn">Unlock Live Alpha Engine</button>
           </form>
           <div class="gate-footer-note">Free instant access. Zero spam. Unsubscribe anytime.</div>
         </div>
@@ -343,6 +359,15 @@
   <script>
     // --- GATING / LEAD CAPTURE CONTROLLER ---
     function isTerminalUnlocked() {
+      // 1. Direct URL token bypass for subscriber links (e.g. ?auth=unlocked)
+      var urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('auth') === 'unlocked' || urlParams.get('email')) {
+        localStorage.setItem('ca_terminal_unlocked', 'true');
+        if (urlParams.get('email')) {
+          localStorage.setItem('ca_lead_email', urlParams.get('email'));
+        }
+        return true;
+      }
       return localStorage.getItem('ca_terminal_unlocked') === 'true';
     }
 
@@ -358,23 +383,41 @@
       }
     }
 
-    function handleLeadSubmit(e) {
+    async function handleLeadSubmit(e) {
       e.preventDefault();
+      var nameInput = document.getElementById('lead-name-input');
       var emailInput = document.getElementById('lead-email-input');
-      var email = emailInput ? emailInput.value.trim() : '';
-      if (!email || !email.includes('@')) {
-        alert('Please provide a valid email address.');
+      var btn = document.getElementById('gate-submit-btn');
+
+      var leadName = nameInput ? nameInput.value.trim() : '';
+      var leadEmail = emailInput ? emailInput.value.trim() : '';
+
+      if (!leadEmail || !leadEmail.includes('@')) {
+        alert('Please enter a valid email address.');
         return;
       }
 
-      // Store lead persistence locally
+      if (btn) {
+        btn.disabled = true;
+        btn.innerText = 'Verifying access...';
+      }
+
+      // Dispatch confirmation email to subscriber via EmailJS
+      try {
+        await emailjs.send("service_7ftmqeu", "template_3njnkmf", {
+          user_name: leadName || 'Subscriber',
+          user_email: leadEmail,
+        });
+        console.log("[EMAIL] Confirmation sent successfully.");
+      } catch (err) {
+        console.error("[EMAIL] EmailJS dispatch notice:", err);
+      }
+
+      // Unlock and persist state permanently in localStorage
       localStorage.setItem('ca_terminal_unlocked', 'true');
-      localStorage.setItem('ca_lead_email', email);
+      localStorage.setItem('ca_lead_email', leadEmail);
+      if (leadName) localStorage.setItem('ca_lead_name', leadName);
 
-      // (Optional) Hook for webhook/Formspree/API dispatch if configured
-      console.log('[LEAD CAPTURED]:', email);
-
-      // Reveal table immediately
       checkGateState();
     }
 
@@ -455,7 +498,7 @@
       if (postEl && macro.posture_box) postEl.innerText = '🟡 Market Health: ' + macro.posture_box;
     }
 
-    // Initialize Gate State
+    // Check gate state on boot
     checkGateState();
 
     // Fetch Live Terminal Data
