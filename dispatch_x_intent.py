@@ -23,23 +23,6 @@ def clean_zacks(rank_val):
     rank_str = str(rank_val).strip()
     return rank_str if rank_str.startswith("#") else f"#{rank_str}"
 
-def format_setup_block(cand, category_name):
-    ticker = cand.get('Ticker', 'TICKER')
-    pivot = format_num(cand.get('Pivot_Trigger'), prefix="$")
-    stop = format_num(cand.get('Stop_Loss'), prefix="$")
-    risk = format_num(cand.get('Risk_%'), suffix="%")
-    asymmetry = format_num(cand.get('R_Ratio'), suffix="R")
-    zacks = clean_zacks(cand.get('Zacks_Rank'))
-    earnings = cand.get('Earnings_Risk', 'SAFE')
-
-    return (
-        f"• Pivot Trigger: {pivot}\n"
-        f"• Tactical Stop: {stop} ({risk} risk)\n"
-        f"• Modeled Asymmetry: {asymmetry}\n"
-        f"• Catalyst: Zacks {zacks}\n"
-        f"• Event Risk: {earnings}"
-    )
-
 def build_thread_payloads():
     if not os.path.exists(META_FILE):
         print(f"[X INTENT] {META_FILE} not found.")
@@ -54,10 +37,9 @@ def build_thread_payloads():
 
     regime_label = "EXPANSION BULL" if "GREEN" in regime else ("CORRECTION / DEFENSIVE" if "RED" in regime else "ROTATIONAL ACCUMULATION")
 
-    # Gather available setups across categories
     setup_slots = [
-        ('top_br', 'Base-Reset Inflection'),
-        ('top_htf', 'High-Tight Flag'),
+        ('top_br', 'Base-Reset'),
+        ('top_htf', 'Momentum Flag'),
         ('top_pp', 'Pocket Pivot'),
         ('top_ls', 'Liquidity Sweep')
     ]
@@ -75,32 +57,40 @@ def build_thread_payloads():
 
     thread_posts = []
 
-    # 1. ANCHOR TWEET (Root Tweet)
+    # 1. ANCHOR TWEET (Under 280 characters for standard tier)
     if active_setups:
         primary_cand, primary_label = active_setups[0]
         p_ticker = primary_cand.get('Ticker')
-        p_block = format_setup_block(primary_cand, primary_label)
+        pivot = format_num(primary_cand.get('Pivot_Trigger'), prefix="$")
+        stop = format_num(primary_cand.get('Stop_Loss'), prefix="$")
+        risk = format_num(primary_cand.get('Risk_%'), suffix="%")
+        asymmetry = format_num(primary_cand.get('R_Ratio'), suffix="R")
+        earnings = primary_cand.get('Earnings_Risk', 'SAFE')
 
         t1_text = (
             f"CORP ACUITY // ASYMMETRY SCAN\n\n"
-            f"Regime: {regime_label} (Exposure: {exposure})\n"
+            f"Regime: {regime_label} ({exposure})\n"
             f"Breadth: {pct_above_200}% > 200 EMA\n\n"
-            f"Top Asymmetric Setup: ${p_ticker} ({primary_label})\n"
-            f"{p_block}\n\n"
-            f"Rule: Void entry if opened >2.5% past pivot.\n"
-            f"Secondary setups in thread 🧵👇\n\n"
-            f"$SPY $QQQ #FinTwit #Trading"
+            f"Focus: ${p_ticker} ({primary_label})\n"
+            f"• Pivot: {pivot}\n"
+            f"• Stop: {stop} ({risk} risk)\n"
+            f"• Payoff: {asymmetry}\n"
+            f"• Runway: {earnings}\n\n"
+            f"Rule: Void if open >2.5% past pivot.\n"
+            f"Setups in thread 🧵👇\n\n"
+            f"$SPY $QQQ #FinTwit"
         )
     else:
         t1_text = (
             f"CORP ACUITY // ASYMMETRY SCAN\n\n"
-            f"Regime: {regime_label} (Exposure: {exposure})\n"
+            f"Regime: {regime_label} ({exposure})\n"
             f"Breadth: {pct_above_200}% > 200 EMA\n\n"
             f"Radar Focus: {radar_str}\n\n"
-            f"Rule: Strict 2.0R asymmetry floor across all candidates.\n"
-            f"Secondary setups in thread 🧵👇\n\n"
-            f"#FinTwit #Trading"
+            f"Rule: Strict 2.0R asymmetry floor.\n"
+            f"Setups in thread 🧵👇\n\n"
+            f"$SPY $QQQ #FinTwit"
         )
+
     thread_posts.append({
         "title": "Tweet 1: Root Anchor Post",
         "role": "Post this as your main tweet (attach Card 1 & Card 2)",
@@ -108,16 +98,24 @@ def build_thread_payloads():
         "url": f"https://x.com/intent/tweet?text={urllib.parse.quote(t1_text)}"
     })
 
-    # 2. SUBSEQUENT SETUPS (Thread Replies)
+    # 2. SUBSEQUENT SETUPS (Thread Replies, under 280 characters)
     for i, (cand, label) in enumerate(active_setups[1:3], start=2):
         ticker = cand.get('Ticker')
-        block = format_setup_block(cand, label)
-        proto = cand.get('Execution_Protocol', 'STANDARD RUNWAY: Full swing leeway.')
+        pivot = format_num(cand.get('Pivot_Trigger'), prefix="$")
+        stop = format_num(cand.get('Stop_Loss'), prefix="$")
+        risk = format_num(cand.get('Risk_%'), suffix="%")
+        asymmetry = format_num(cand.get('R_Ratio'), suffix="R")
+        zacks = clean_zacks(cand.get('Zacks_Rank'))
+        earnings = cand.get('Earnings_Risk', 'SAFE')
 
         reply_text = (
             f"Setup #{i}: ${ticker} ({label})\n\n"
-            f"{block}\n\n"
-            f"Directive: {proto}"
+            f"• Pivot: {pivot}\n"
+            f"• Stop: {stop} ({risk} risk)\n"
+            f"• Payoff: {asymmetry}\n"
+            f"• Catalyst: Zacks {zacks}\n"
+            f"• Runway: {earnings}\n\n"
+            f"Execution: Standard swing leeway."
         )
         thread_posts.append({
             "title": f"Tweet {i}: Thread Reply (Setup #{i})",
@@ -126,11 +124,11 @@ def build_thread_payloads():
             "url": f"https://x.com/intent/tweet?text={urllib.parse.quote(reply_text)}"
         })
 
-    # 3. FINAL THREAD CLOSER (CTA + Link)
+    # 3. FINAL THREAD CLOSER (Terminal Gateway Link)
     closer_num = len(thread_posts) + 1
     t_close_text = (
-        f"Execution Governance & Complete Terminal Blotter:\n\n"
-        f"Full quantitative breakdowns, interactive PDF carousel, and dynamic risk directives:\n\n"
+        f"Execution Governance & Screener Terminal:\n\n"
+        f"Access quantitative breakdowns, daily PDF slide deck, and regime exposure directives:\n\n"
         f"👉 corpacuity.co.uk/intel.html"
     )
     thread_posts.append({
@@ -150,12 +148,16 @@ def send_dispatch_email(thread_posts):
     recipient = os.getenv("ALERT_RECIPIENT", "ajmcneilster@gmail.com")
 
     if not smtp_user or not smtp_pass:
-        print("[X INTENT] SMTP credentials not provided. Printing thread intents to log:\n")
+        print("[X INTENT] SMTP credentials not provided locally. Printing generated thread intents:\n")
         for p in thread_posts:
-            print(f"--- {p['title']} ---")
+            print(f"==================================================")
+            print(f"{p['title']} ({p['role']})")
+            print(f"Length: {len(p['text'])} chars (Max: 280)")
+            print(f"==================================================")
             print(p['url'])
-            print(p['text'])
             print()
+            print(p['text'])
+            print("\n")
         return
 
     msg = MIMEMultipart("alternative")
@@ -165,14 +167,13 @@ def send_dispatch_email(thread_posts):
 
     card_base = "https://corpacuity.co.uk/x_cards"
 
-    # Build HTML blocks for each tweet in the thread
     cards_html = ""
     for idx, item in enumerate(thread_posts, start=1):
         btn_label = "1. Post Root Anchor Tweet ➔" if idx == 1 else f"{idx}. Pre-fill Thread Reply #{idx} ➔"
         cards_html += f"""
         <div style="background: #0f172a; border: 1px solid #1e293b; border-radius: 8px; padding: 16px; margin-bottom: 20px;">
           <h3 style="margin: 0 0 6px 0; font-size: 15px; color: #38bdf8;">{item['title']}</h3>
-          <p style="margin: 0 0 12px 0; font-size: 12px; color: #94a3b8;">{item['role']}</p>
+          <p style="margin: 0 0 12px 0; font-size: 12px; color: #94a3b8;">{item['role']} • <span style="color: #4ade80;">{len(item['text'])} / 280 chars</span></p>
           <div style="text-align: left; margin-bottom: 12px;">
             <a href="{item['url']}" target="_blank" style="display: inline-block; background-color: #38bdf8; color: #0b0f19 !important; font-weight: bold; padding: 10px 18px; border-radius: 6px; text-decoration: none; font-size: 14px;">{btn_label}</a>
           </div>
@@ -194,11 +195,9 @@ def send_dispatch_email(thread_posts):
       <div class="wrapper">
         <h2 style="color: #38bdf8; margin-top: 0; font-size: 20px;">Corp Acuity // Morning X Thread Dispatch</h2>
         <p style="font-size: 13px; color: #94a3b8; margin-bottom: 20px;">
-          Today's scan is rendered. Post Tweet #1 first, then use the subsequent buttons to reply to your own tweet as a high-retention thread.
+          Today's scan is rendered. All posts are pre-sized under 280 characters. Post Tweet #1 first, then use the buttons below to reply with your secondary setups.
         </p>
-
         {cards_html}
-
         <div style="margin-top: 20px; padding: 12px; background: #0f172a; border-radius: 8px; border: 1px solid #1e293b;">
           <p style="font-size: 13px; color: #94a3b8; margin: 0 0 8px 0;"><strong>Visual Assets (Download to attach):</strong></p>
           <p style="margin: 0;">
@@ -208,7 +207,6 @@ def send_dispatch_email(thread_posts):
             <a class="img-link" href="{card_base}/card_4.png" target="_blank">Card 4 (Setup 2)</a>
           </p>
         </div>
-
         <hr style="border: 0; border-top: 1px solid #1e293b; margin: 24px 0;">
         <p style="font-size: 11px; color: #64748b; margin: 0;">Automated pipeline running via GitHub Actions on corpacuity.co.uk</p>
       </div>
