@@ -25,6 +25,7 @@
       max-width: 1400px;
       margin: 1.5rem auto 2rem;
       padding: 0 1rem 4rem;
+      position: relative;
     }
 
     h1 {
@@ -116,6 +117,7 @@
       border: 1px solid var(--border);
       border-radius: 10px;
       overflow-x: auto;
+      position: relative;
     }
     table {
       width: 100%;
@@ -138,6 +140,87 @@
     tr:last-child td { border-bottom: none; }
     tr:hover td { background: rgba(56, 189, 248, 0.02); }
     .ticker { font-weight: 700; color: var(--accent); }
+
+    /* --- Lead Capture & Gate Overlay Styles --- */
+    .gated-blur {
+      filter: blur(6px);
+      user-select: none;
+      pointer-events: none;
+    }
+    .gate-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(7, 10, 18, 0.75);
+      backdrop-filter: blur(4px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      border-radius: 10px;
+      padding: 1.5rem;
+    }
+    .gate-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2.25rem 2rem;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    }
+    .gate-card h3 {
+      font-size: 1.35rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+    .gate-card p {
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+    .gate-form {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .gate-input {
+      background: var(--card-inner);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.85rem 1rem;
+      border-radius: 6px;
+      font-size: 0.92rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .gate-input:focus {
+      border-color: var(--accent);
+    }
+    .gate-btn {
+      background: var(--accent);
+      color: var(--bg);
+      font-weight: 700;
+      padding: 0.85rem;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.92rem;
+      transition: opacity 0.2s;
+    }
+    .gate-btn:hover {
+      opacity: 0.9;
+    }
+    .gate-footer-note {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.75rem;
+    }
     
     footer {
       margin-top: 4rem;
@@ -212,8 +295,24 @@
       <button class="tab" onclick="window.switchTab('liquidity_sweeps', this)">4. Liquidity Sweeps</button>
     </div>
 
-    <div class="table-container">
-      <table>
+    <!-- Table Container with Gate Overlay -->
+    <div class="table-container" id="terminal-table-wrapper">
+      
+      <!-- Gate Overlay Card (Hidden once unlocked) -->
+      <div class="gate-overlay" id="lead-gate-modal">
+        <div class="gate-card">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem;">🔒</div>
+          <h3>Unlock Institutional Terminal Access</h3>
+          <p>Gain unconstrained daily access to verified 2.0R asymmetry setups, consensus revisions, and dynamic risk execution protocols.</p>
+          <form class="gate-form" onsubmit="handleLeadSubmit(event)">
+            <input type="email" id="lead-email-input" class="gate-input" placeholder="Enter institutional email address..." required />
+            <button type="submit" class="gate-btn">Unlock Live Alpha Engine</button>
+          </form>
+          <div class="gate-footer-note">Free instant access. Zero spam. Unsubscribe anytime.</div>
+        </div>
+      </div>
+
+      <table id="screener-table-content" class="gated-blur">
         <thead>
           <tr>
             <th>Ticker</th>
@@ -242,6 +341,44 @@
   </footer>
 
   <script>
+    // --- GATING / LEAD CAPTURE CONTROLLER ---
+    function isTerminalUnlocked() {
+      return localStorage.getItem('ca_terminal_unlocked') === 'true';
+    }
+
+    function checkGateState() {
+      var modal = document.getElementById('lead-gate-modal');
+      var table = document.getElementById('screener-table-content');
+      if (isTerminalUnlocked()) {
+        if (modal) modal.style.display = 'none';
+        if (table) table.classList.remove('gated-blur');
+      } else {
+        if (modal) modal.style.display = 'flex';
+        if (table) table.classList.add('gated-blur');
+      }
+    }
+
+    function handleLeadSubmit(e) {
+      e.preventDefault();
+      var emailInput = document.getElementById('lead-email-input');
+      var email = emailInput ? emailInput.value.trim() : '';
+      if (!email || !email.includes('@')) {
+        alert('Please provide a valid email address.');
+        return;
+      }
+
+      // Store lead persistence locally
+      localStorage.setItem('ca_terminal_unlocked', 'true');
+      localStorage.setItem('ca_lead_email', email);
+
+      // (Optional) Hook for webhook/Formspree/API dispatch if configured
+      console.log('[LEAD CAPTURED]:', email);
+
+      // Reveal table immediately
+      checkGateState();
+    }
+
+    // --- TABLE RENDER LOGIC ---
     window.renderCurrentTable = function(category) {
       var tbody = document.getElementById('screener-tbody');
       if (!tbody) return;
@@ -318,6 +455,10 @@
       if (postEl && macro.posture_box) postEl.innerText = '🟡 Market Health: ' + macro.posture_box;
     }
 
+    // Initialize Gate State
+    checkGateState();
+
+    // Fetch Live Terminal Data
     fetch('terminal_feed.json?t=' + Date.now())
       .then(function(res) {
         if (!res.ok) {
