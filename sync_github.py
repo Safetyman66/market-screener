@@ -2,8 +2,8 @@
 """
 Corp Acuity // Resilient GitHub Synchronisation Engine
 Automates conflict-free sync between local workspace and remote repository.
-Favors local execution artifacts and code over stale remote workflow outputs.
 Enforces UTF-8 stream decoding to prevent Windows charmap exceptions.
+Allows GitHub Actions / Pages CI workflows to build on code updates.
 """
 
 import subprocess
@@ -34,15 +34,15 @@ def sync_repository(commit_msg="Auto-sync market intelligence, code, and knowled
     run_git(["config", "--local", "user.name", "github-actions[bot]"], check=False)
     run_git(["config", "--local", "user.email", "github-actions[bot]@users.noreply.github.com"], check=False)
 
-    # 2. Stage all current local work (code, templates, feeds)
+    # 2. Stage all local assets, code, and feeds
     print("[*] Staging all local assets and scanner data...")
     run_git(["add", "-A"])
 
-    # 3. Commit locally first so your work is never lost or tangled in stash
+    # 3. Commit locally (without [skip ci] so Pages triggers automatically)
     has_changes = subprocess.run(["git", "diff", "--cached", "--quiet"]).returncode != 0
     if has_changes:
         print(f"[*] Committing local updates: '{commit_msg}'")
-        run_git(["commit", "-m", f"{commit_msg} [skip ci]"])
+        run_git(["commit", "-m", commit_msg])
     else:
         print("[+] Working tree is already clean. Proceeding to fetch...")
 
@@ -51,7 +51,6 @@ def sync_repository(commit_msg="Auto-sync market intelligence, code, and knowled
     run_git(["fetch", "origin", "main"])
 
     # 5. Pull & Merge with automated local conflict preference (-X ours)
-    # If GitHub Actions wrote a new terminal_feed.json, your local version will silently win.
     print("[*] Merging remote branch (favoring local artifacts on any conflict)...")
     merge_out, code = run_git(["merge", "origin/main", "-X", "ours", "--no-edit"], check=False)
 
@@ -59,14 +58,14 @@ def sync_repository(commit_msg="Auto-sync market intelligence, code, and knowled
         print("[!] Merge encountered unmerged binary assets. Forcing local resolution...")
         run_git(["checkout", "--ours", "."], check=False)
         run_git(["add", "-A"])
-        run_git(["commit", "-m", "Auto-resolve merge artifacts favoring local workspace [skip ci]"], check=False)
+        run_git(["commit", "-m", f"Resolve merge artifacts favoring local workspace: {commit_msg}"], check=False)
 
     # 6. Push cleanly to main
-    print("[*] Pushing fully reconciled state to origin/main...")
+    print("[*] Pushing state to origin/main...")
     push_out, push_code = run_git(["push", "origin", "main"], check=False)
     
     if push_code != 0:
-        print("[!] Standard push rejected. Retrying with safe fast-forward re-sync...")
+        print("[!] Standard push rejected. Retrying with safe re-sync...")
         run_git(["pull", "--rebase", "-X", "theirs", "origin", "main"], check=False)
         run_git(["push", "origin", "main"])
 
