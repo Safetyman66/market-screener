@@ -6,6 +6,12 @@
   <title>Corp Acuity // Institutional Research & Market Intelligence</title>
   <link rel="icon" type="image/png" href="logo.png" />
 
+  <!-- PDF.js library for rendering slides directly -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  </script>
+
   <style>
     :root {
       --bg: #070a12;
@@ -93,6 +99,79 @@
     }
     .plain-terms-box strong { color: var(--text); }
 
+    /* PDF Carousel Container */
+    .carousel-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+    .carousel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .carousel-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .carousel-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .carousel-btn {
+      background: var(--card-inner);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.4rem 0.85rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .carousel-btn:hover:not(:disabled) {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .carousel-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .page-indicator {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+    .carousel-viewer {
+      background: #020617;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 480px;
+      overflow: hidden;
+      position: relative;
+    }
+    #pdf-canvas {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+    .viewer-loading {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
     .grid-section {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -157,7 +236,7 @@
       
       <div class="header-actions">
         <a href="daily_market_intelligence.pdf" target="_blank" class="pdf-link-btn">
-          View PDF Carousel &rarr;
+          Direct PDF Download &rarr;
         </a>
         <span class="beta-badge">Beta Access</span>
       </div>
@@ -165,6 +244,22 @@
 
     <div class="plain-terms-box">
       <strong>💡 In plain terms:</strong> We scan 1,600+ liquid US equities every morning to isolate high-probability momentum setups where the mathematical upside is at least double the risk.
+    </div>
+
+    <!-- Active PDF Carousel / Slide Deck Viewer -->
+    <div class="carousel-section">
+      <div class="carousel-header">
+        <div class="carousel-title">📊 Daily Chart Package & Market Posture Deck</div>
+        <div class="carousel-controls">
+          <button id="prev-page" class="carousel-btn" onclick="onPrevPage()" disabled>&larr; Previous</button>
+          <span class="page-indicator">Slide <span id="page-num">1</span> of <span id="page-count">--</span></span>
+          <button id="next-page" class="carousel-btn" onclick="onNextPage()" disabled>Next &rarr;</button>
+        </div>
+      </div>
+      <div class="carousel-viewer" id="viewer-container">
+        <div id="viewer-status" class="viewer-loading">Loading market deck slides...</div>
+        <canvas id="pdf-canvas" style="display: none;"></canvas>
+      </div>
     </div>
 
     <div class="grid-section">
@@ -178,18 +273,18 @@
 
       <div class="card">
         <div>
-          <h3>Daily Slide Deck / PDF Carousel</h3>
-          <p>Download or review the full daily chart package, catalyst matrices, and macro posture breakdown in PDF format.</p>
-        </div>
-        <a href="daily_market_intelligence.pdf" target="_blank" class="card-link">Open PDF Carousel &rarr;</a>
-      </div>
-
-      <div class="card">
-        <div>
           <h3>Institutional Knowledge Base</h3>
           <p>Explore the full quantitative library of structural mechanics, gamma regimes, and systematic risk governance directives.</p>
         </div>
         <a href="knowledge/execution-protocols-risk-governance.html" class="card-link">Read Execution Protocols &rarr;</a>
+      </div>
+
+      <div class="card">
+        <div>
+          <h3>Setup Archetypes & Mechanics</h3>
+          <p>Detailed breakdown of pivot validation, volume exhaustion, cheat entries, and high-tight flag consolidations.</p>
+        </div>
+        <a href="knowledge/setup-archetypes-mechanics.html" class="card-link">Read Archetype Guide &rarr;</a>
       </div>
     </div>
 
@@ -198,6 +293,82 @@
   <footer>
     &copy; 2026 Corp Acuity Ltd. Institutional Market Intelligence & Research Lab.
   </footer>
+
+  <script>
+    var pdfDoc = null,
+        pageNum = 1,
+        pageRendering = false,
+        pageNumPending = null,
+        scale = 1.6,
+        canvas = document.getElementById('pdf-canvas'),
+        ctx = canvas ? canvas.getContext('2d') : null;
+
+    function renderPage(num) {
+      pageRendering = true;
+      pdfDoc.getPage(num).then(function(page) {
+        var viewport = page.getViewport({ scale: scale });
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        var renderContext = {
+          canvasContext: ctx,
+          viewport: viewport
+        };
+        var renderTask = page.render(renderContext);
+
+        renderTask.promise.then(function() {
+          pageRendering = false;
+          if (pageNumPending !== null) {
+            renderPage(pageNumPending);
+            pageNumPending = null;
+          }
+        });
+      });
+
+      document.getElementById('page-num').textContent = num;
+      document.getElementById('prev-page').disabled = (num <= 1);
+      document.getElementById('next-page').disabled = (num >= pdfDoc.numPages);
+    }
+
+    function queueRenderPage(num) {
+      if (pageRendering) {
+        pageNumPending = num;
+      } else {
+        renderPage(num);
+      }
+    }
+
+    function onPrevPage() {
+      if (pageNum <= 1) return;
+      pageNum--;
+      queueRenderPage(pageNum);
+    }
+
+    function onNextPage() {
+      if (pageNum >= pdfDoc.numPages) return;
+      pageNum++;
+      queueRenderPage(pageNum);
+    }
+
+    // Load PDF Document
+    var url = 'daily_market_intelligence.pdf?t=' + Date.now();
+    pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
+      pdfDoc = pdfDoc_;
+      document.getElementById('page-count').textContent = pdfDoc.numPages;
+      
+      var statusEl = document.getElementById('viewer-status');
+      if (statusEl) statusEl.style.display = 'none';
+      if (canvas) canvas.style.display = 'block';
+
+      renderPage(pageNum);
+    }).catch(function(error) {
+      console.error('PDF.js Error:', error);
+      var statusEl = document.getElementById('viewer-status');
+      if (statusEl) {
+        statusEl.innerHTML = 'PDF Preview unavailable. <a href="daily_market_intelligence.pdf" target="_blank" style="color: var(--accent);">Click here to download/view the PDF directly &rarr;</a>';
+      }
+    });
+  </script>
 
 </body>
 </html>
