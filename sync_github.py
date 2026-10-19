@@ -3,6 +3,7 @@
 Corp Acuity // Resilient GitHub Synchronisation Engine
 Automates conflict-free sync between local workspace and remote repository.
 Favors local execution artifacts and code over stale remote workflow outputs.
+Enforces UTF-8 stream decoding to prevent Windows charmap exceptions.
 """
 
 import subprocess
@@ -14,14 +15,17 @@ def run_git(args, check=True):
             ["git"] + args,
             check=check,
             text=True,
+            encoding="utf-8",
+            errors="replace",
             capture_output=True
         )
         return res.stdout.strip(), res.returncode
     except subprocess.CalledProcessError as e:
-        print(f"[!] Warning: Git command 'git {' '.join(args)}' returned error:\n{e.stderr.strip()}")
+        err_msg = e.stderr.strip() if e.stderr else "Unknown Git error"
+        print(f"[!] Warning: Git command 'git {' '.join(args)}' returned error:\n{err_msg}")
         if check:
             sys.exit(1)
-        return e.stderr.strip(), e.returncode
+        return err_msg, e.returncode
 
 def sync_repository(commit_msg="Auto-sync market intelligence, code, and knowledge base"):
     print("[*] Initialising Resilient Git Sync...")
