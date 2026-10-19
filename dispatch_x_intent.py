@@ -35,7 +35,8 @@ def build_thread_payloads():
     exposure = meta.get("max_exposure", "30% - 60%")
     pct_above_200 = meta.get("pct_above_200", 0.0)
 
-    regime_label = "EXPANSION BULL" if "GREEN" in regime else ("CORRECTION / DEFENSIVE" if "RED" in regime else "ROTATIONAL ACCUMULATION")
+    # Concise regime labels to protect the 280-char ceiling
+    regime_label = "EXPANSION" if "GREEN" in regime else ("DEFENSIVE" if "RED" in regime else "ACCUMULATION")
 
     setup_slots = [
         ('top_br', 'Base-Reset'),
@@ -57,7 +58,7 @@ def build_thread_payloads():
 
     thread_posts = []
 
-    # 1. ANCHOR TWEET (Under 280 characters for standard tier)
+    # 1. ROOT ANCHOR TWEET (Under 280 chars with emoji weighting)
     if active_setups:
         primary_cand, primary_label = active_setups[0]
         p_ticker = primary_cand.get('Ticker')
@@ -76,7 +77,7 @@ def build_thread_payloads():
             f"• Stop: {stop} ({risk} risk)\n"
             f"• Payoff: {asymmetry}\n"
             f"• Runway: {earnings}\n\n"
-            f"Rule: Void if open >2.5% past pivot.\n"
+            f"Void if open >2.5% past pivot.\n"
             f"Setups in thread 🧵👇\n\n"
             f"$SPY $QQQ #FinTwit"
         )
@@ -98,7 +99,7 @@ def build_thread_payloads():
         "url": f"https://x.com/intent/tweet?text={urllib.parse.quote(t1_text)}"
     })
 
-    # 2. SUBSEQUENT SETUPS (Thread Replies, under 280 characters)
+    # 2. SUBSEQUENT SETUPS (Thread Replies, under 280 chars)
     for i, (cand, label) in enumerate(active_setups[1:3], start=2):
         ticker = cand.get('Ticker')
         pivot = format_num(cand.get('Pivot_Trigger'), prefix="$")
