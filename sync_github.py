@@ -1,66 +1,73 @@
 #!/usr/bin/env python3
 """
-GitHub Repository Synchronisation Utility
-Automates git status check, stashing local changes, pull (with rebase), 
-pop stash, staging all modified/new files, commit, and push.
+Corp Acuity // Resilient GitHub Synchronisation Engine
+Automates conflict-free sync between local workspace and remote repository.
+Favors local execution artifacts and code over stale remote workflow outputs.
 """
 
 import subprocess
 import sys
 
-def run_git_command(args):
+def run_git(args, check=True):
     try:
-        result = subprocess.run(
+        res = subprocess.run(
             ["git"] + args,
-            check=True,
+            check=check,
             text=True,
             capture_output=True
         )
-        return result.stdout.strip()
+        return res.stdout.strip(), res.returncode
     except subprocess.CalledProcessError as e:
-        print(f"[ERROR] Git command 'git {' '.join(args)}' failed: {e.stderr.strip()}")
-        sys.exit(1)
+        print(f"[!] Warning: Git command 'git {' '.join(args)}' returned error:\n{e.stderr.strip()}")
+        if check:
+            sys.exit(1)
+        return e.stderr.strip(), e.returncode
 
-def synchronise_repository(commit_message="Auto-sync market intelligence, code, and knowledge base"):
-    print("[*] Checking git repository status...")
+def sync_repository(commit_msg="Auto-sync market intelligence, code, and knowledge base"):
+    print("[*] Initialising Resilient Git Sync...")
+
+    # 1. Ensure local identity is configured
+    run_git(["config", "--local", "user.name", "github-actions[bot]"], check=False)
+    run_git(["config", "--local", "user.email", "github-actions[bot]@users.noreply.github.com"], check=False)
+
+    # 2. Stage all current local work (code, templates, feeds)
+    print("[*] Staging all local assets and scanner data...")
+    run_git(["add", "-A"])
+
+    # 3. Commit locally first so your work is never lost or tangled in stash
+    has_changes = subprocess.run(["git", "diff", "--cached", "--quiet"]).returncode != 0
+    if has_changes:
+        print(f"[*] Committing local updates: '{commit_msg}'")
+        run_git(["commit", "-m", f"{commit_msg} [skip ci]"])
+    else:
+        print("[+] Working tree is already clean. Proceeding to fetch...")
+
+    # 4. Fetch the remote tracking branch
+    print("[*] Fetching updates from remote origin...")
+    run_git(["fetch", "origin", "main"])
+
+    # 5. Pull & Merge with automated local conflict preference (-X ours)
+    # If GitHub Actions wrote a new terminal_feed.json, your local version will silently win.
+    print("[*] Merging remote branch (favoring local artifacts on any conflict)...")
+    merge_out, code = run_git(["merge", "origin/main", "-X", "ours", "--no-edit"], check=False)
+
+    if code != 0:
+        print("[!] Merge encountered unmerged binary assets. Forcing local resolution...")
+        run_git(["checkout", "--ours", "."], check=False)
+        run_git(["add", "-A"])
+        run_git(["commit", "-m", "Auto-resolve merge artifacts favoring local workspace [skip ci]"], check=False)
+
+    # 6. Push cleanly to main
+    print("[*] Pushing fully reconciled state to origin/main...")
+    push_out, push_code = run_git(["push", "origin", "main"], check=False)
     
-    # Configure user identity locally
-    run_git_command(["config", "--local", "user.name", "github-actions[bot]"])
-    run_git_command(["config", "--local", "user.email", "github-actions[bot]@users.noreply.github.com"])
+    if push_code != 0:
+        print("[!] Standard push rejected. Retrying with safe fast-forward re-sync...")
+        run_git(["pull", "--rebase", "-X", "theirs", "origin", "main"], check=False)
+        run_git(["push", "origin", "main"])
 
-    # Stash any local changes first to prevent pull blockages
-    print("[*] Stashing any local changes...")
-    stash_result = run_git_command(["stash"])
-    has_stashed = "No local changes to save" not in stash_result
-
-    print("[*] Pulling latest remote changes (rebase mode)...")
-    run_git_command(["pull", "--rebase", "origin", "main"])
-
-    if has_stashed:
-        print("[*] Restoring stashed local changes...")
-        try:
-            run_git_command(["stash", "pop"])
-        except Exception:
-            print("[!] Note: Stash pop had merge conflicts or applied cleanly. Please check status if needed.")
-
-    # Stage ALL modified, added, and deleted files (code, templates, KB articles, datasets)
-    print("[*] Staging all repository changes (code, KB articles, data feeds)...")
-    run_git_command(["add", "-A"])
-
-    # Check if there are actually staged changes to commit
-    staged_check = subprocess.run(["git", "diff", "--cached", "--quiet"], capture_output=True)
-    if staged_check.returncode == 0:
-        print("[+] No staged changes to commit. Working tree sync complete.")
-        return
-
-    print(f"[*] Committing changes with message: '{commit_message}'")
-    run_git_command(["commit", "-m", f"{commit_message} [skip ci]"])
-
-    print("[*] Pushing synchronised updates to remote origin...")
-    run_git_command(["push", "origin", "main"])
-
-    print("[+] GitHub repository synchronisation completed successfully.")
+    print("[+] Sync complete! All local code, KB articles, and live feeds are live on GitHub.")
 
 if __name__ == "__main__":
-    msg = sys.argv[1] if len(sys.argv) > 1 else "Deploy Risk Protocols module, nav.js engine, and scanner updates"
-    synchronise_repository(msg)
+    msg = sys.argv[1] if len(sys.argv) > 1 else "Auto-sync market intelligence, code, and knowledge base"
+    sync_repository(msg)
