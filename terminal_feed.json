@@ -573,6 +573,27 @@
         "Execution_Protocol": "STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot."
       },
       {
+        "Ticker": "DOCU",
+        "Close": 76.66,
+        "Headroom_%": 2.8,
+        "Above_200_%": 28.3,
+        "Hist_Now": 1.935,
+        "Vol_Ratio": "2.26x",
+        "Conviction_Score": 0.141,
+        "Pivot_Trigger": 78.8,
+        "Stop_Loss": 73.79,
+        "Risk_%": 6.36,
+        "R_Ratio": 6.29,
+        "ADV_20": 2721200,
+        "1Min_Vol_Hurdle": 9524,
+        "Execution_Archetype": "BREAKOUT",
+        "Category": "Base-Reset",
+        "Zacks_Rank": "#2 (New)",
+        "Earnings_Risk": "SAFE (44d)",
+        "Structural_Catalyst": "Consensus Earnings Revision Momentum",
+        "Execution_Protocol": "STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot."
+      },
+      {
         "Ticker": "EOG",
         "Close": 156.02,
         "Headroom_%": 2.4,
