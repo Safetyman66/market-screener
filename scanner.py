@@ -2431,59 +2431,37 @@ def run_master_screener():
   filtered_pockets = universal_quality_filter(pocket_pivots)
   filtered_sweeps = universal_quality_filter(liquidity_sweeps)
 
-  pd.DataFrame(filtered_base_resets).to_csv(
-      "watchlist_base_resets.csv", index=False
-  )
-  pd.DataFrame(filtered_htfs).to_csv(
-      "watchlist_momentum_flags.csv", index=False
-  )
-  pd.DataFrame(filtered_pockets).to_csv(
-      "watchlist_pocket_pivots.csv", index=False
-  )
-  pd.DataFrame(filtered_sweeps).to_csv(
-      "watchlist_liquidity_sweeps.csv", index=False
-  )
+  # ====================================================================================================================
+  # WATCHLIST EXPORTS (CSVs)
+  # ====================================================================================================================
+  pd.DataFrame(filtered_base_resets).to_csv("watchlist_base_resets.csv", index=False)
+  pd.DataFrame(filtered_htfs).to_csv("watchlist_momentum_flags.csv", index=False)
+  pd.DataFrame(filtered_pockets).to_csv("watchlist_pocket_pivots.csv", index=False)
+  pd.DataFrame(filtered_sweeps).to_csv("watchlist_liquidity_sweeps.csv", index=False)
 
   breakout_pool = filtered_htfs + filtered_pockets + filtered_base_resets
-  execution_candidates = [
-      r
-      for r in breakout_pool
-      if r.get("Execution_Archetype") == "BREAKOUT"
-      and "CAUTION" not in r.get("Earnings_Risk", "")
-      and "DANGER" not in r.get("Earnings_Risk", "")
-  ]
-  if execution_candidates:
-    execution_df = (
-        pd.DataFrame(execution_candidates)
-        .sort_values(by="Conviction_Score", ascending=False)
-        .drop_duplicates(subset=["Ticker"])
-        .head(10)
-    )
-  else:
-    execution_df = pd.DataFrame(
-        columns=[
-            "Ticker",
-            "Close",
-            "Conviction_Score",
-            "Pivot_Trigger",
-            "Stop_Loss",
-            "Risk_%",
-            "R_Ratio",
-            "ADV_20",
-            "1Min_Vol_Hurdle",
-            "Execution_Archetype",
-            "Category",
-            "Zacks_Rank",
-            "Earnings_Risk",
-            "Structural_Catalyst",
-            "Execution_Protocol",
-        ]
-    )
+
+  # Format execution export dataframe
+  execution_candidates = sorted(
+      breakout_pool,
+      key=lambda x: x.get("Conviction_Score", 0),
+      reverse=True,
+  )[:10]
+
+  execution_df = pd.DataFrame(execution_candidates)
+  if not execution_df.empty:
+      export_cols = [
+          c for c in [
+              "Ticker", "Close", "Headroom_%", "Above_200_%", "Hist_Now", "Vol_Ratio",
+              "Conviction_Score", "Pivot_Trigger", "Stop_Loss", "Risk_%", "R_Ratio",
+              "ADV_20", "1Min_Vol_Hurdle", "Execution_Archetype", "Category",
+              "Zacks_Rank", "Earnings_Risk", "Structural_Catalyst", "Execution_Protocol"
+          ] if c in execution_df.columns
+      ]
+      execution_df = execution_df[export_cols]
+
   execution_df.to_csv(EXECUTION_EXPORT_FILENAME, index=False)
-  print(
-      f"[EXECUTION ENGINE] Exported top {len(execution_df)} verified breakout"
-      f" candidates to {EXECUTION_EXPORT_FILENAME}"
-  )
+  print(f"[EXECUTION ENGINE] Exported top {len(execution_df)} verified breakout candidates to {EXECUTION_EXPORT_FILENAME}")
 
   all_current_setups = (
       filtered_base_resets
@@ -2493,38 +2471,91 @@ def run_master_screener():
   )
   top_runner = update_and_evaluate_trailing_runners(all_current_setups)
 
+  # ====================================================================================================================
+  # TERMINAL DISPLAY: CATEGORY TABLES 1 - 4
+  # ====================================================================================================================
+  terminal_categories = [
+      ("CATEGORY 1: BASE-RESET INFLECTIONS (Above 200 EMA >= 0.5%, Headroom >= 16% or ATH, R:R >= 2.5)", filtered_base_resets),
+      ("CATEGORY 2: MOMENTUM BULL FLAGS (CAN SLIM Pole >= 45.0%, Flag <= 18d, Depth <= 14%, Blue Sky Friendly)", filtered_htfs),
+      ("CATEGORY 3: POCKET PIVOT SQUEEZES (Headroom >= 15% or ATH, R:R >= 2.0, Safe Earnings)", filtered_pockets),
+      ("CATEGORY 4: LIQUIDITY SWEEPS (Price >= $15, Non-Retail/Midstream, Mean-Reversion R:R >= 2.5)", filtered_sweeps),
+  ]
+
+  for title, pool in terminal_categories:
+      print("\n" + "=" * 148)
+      print(f"                    {title}")
+      print("=" * 148)
+      if pool:
+          df_disp = pd.DataFrame(pool)
+          disp_cols = [
+              c for c in [
+                  "Ticker", "Close", "Headroom_%", "Above_200_%", "Shelf_Level", "Flush_Low",
+                  "Ext_10EMA_%", "Above_200EMA_%", "Vol_Ratio", "Vol_Pocket_Ratio", "Conviction_Score",
+                  "Pivot_Trigger", "Stop_Loss", "Risk_%", "R_Ratio", "ADV_20", "1Min_Vol_Hurdle",
+                  "Execution_Archetype", "Category", "Zacks_Rank", "Earnings_Risk"
+              ] if c in df_disp.columns
+          ]
+          print(df_disp[disp_cols].to_string(index=False))
+      else:
+          print("No candidates currently meeting quality gates.")
+
+  # ====================================================================================================================
+  # TERMINAL DISPLAY: UNIVERSAL ELIMINATION FUNNEL (If tracked in main scan loop)
+  # ====================================================================================================================
+  if "funnel_stats" in locals() and funnel_stats:
+      print("\n" + "=" * 95)
+      print(f"                 UNIVERSAL ELIMINATION FUNNEL (Evaluated {funnel_stats.get('total_stage2', 0)} Symbols in Stage 2)")
+      print("=" * 95)
+      for stage_name, count in funnel_stats.get("stages", {}).items():
+          pct = (count / funnel_stats.get('total_stage2', 1)) * 100
+          print(f"  {stage_name:<65}: {count:>4} ({pct:>5.1f}%)")
+      print("=" * 95)
+
+  # ====================================================================================================================
+  # OPTIMAL SETUP SLOT ASSIGNMENT & SMART FALLBACK
+  # ====================================================================================================================
   top_br = (
-      sorted(
-          filtered_base_resets,
-          key=lambda x: x.get("Conviction_Score", 0),
-          reverse=True,
-      )[0]
-      if filtered_base_resets
-      else None
+      sorted(filtered_base_resets, key=lambda x: x.get("Conviction_Score", 0), reverse=True)[0]
+      if filtered_base_resets else None
   )
   top_htf = (
-      sorted(
-          filtered_htfs,
-          key=lambda x: x.get("Conviction_Score", 0),
-          reverse=True,
-      )[0]
-      if filtered_htfs
-      else None
+      sorted(filtered_htfs, key=lambda x: x.get("Conviction_Score", 0), reverse=True)[0]
+      if filtered_htfs else None
   )
   top_pp = (
-      sorted(filtered_pockets, key=lambda x: x.get("R_Ratio", 0), reverse=True)[
-          0
-      ]
-      if filtered_pockets
-      else None
+      sorted(filtered_pockets, key=lambda x: x.get("R_Ratio", 0), reverse=True)[0]
+      if filtered_pockets else None
   )
   top_ls = (
-      sorted(filtered_sweeps, key=lambda x: x.get("R_Ratio", 0), reverse=True)[
-          0
-      ]
-      if filtered_sweeps
-      else None
+      sorted(filtered_sweeps, key=lambda x: x.get("R_Ratio", 0), reverse=True)[0]
+      if filtered_sweeps else None
   )
+
+  # Fallback backfill pool from top verified breakouts
+  assigned = {c["Ticker"] for c in [top_br, top_htf, top_pp, top_ls] if c}
+  backfill_pool = [c for c in execution_candidates if c.get("Ticker") not in assigned]
+
+  if not top_br and backfill_pool:
+      top_br = backfill_pool.pop(0)
+      assigned.add(top_br["Ticker"])
+
+  if not top_htf and backfill_pool:
+      top_htf = backfill_pool.pop(0)
+      assigned.add(top_htf["Ticker"])
+
+  if not top_pp and backfill_pool:
+      top_pp = backfill_pool.pop(0)
+      assigned.add(top_pp["Ticker"])
+
+  if not top_ls and backfill_pool:
+      top_ls = backfill_pool.pop(0)
+      assigned.add(top_ls["Ticker"])
+
+  print("\n=== OPTIMAL SETUP SLOTS IDENTIFIED ===")
+  print(f"Slot 1 (Base-Reset / Primary): {top_br.get('Ticker') if top_br else 'None'} ({top_br.get('R_Ratio', 'N/A')}R)")
+  print(f"Slot 2 (HTF / Secondary):      {top_htf.get('Ticker') if top_htf else 'None'} ({top_htf.get('R_Ratio', 'N/A')}R)")
+  print(f"Slot 3 (Pocket / Secondary):   {top_pp.get('Ticker') if top_pp else 'None'} ({top_pp.get('R_Ratio', 'N/A')}R)")
+  print(f"Slot 4 (Sweep / Secondary):    {top_ls.get('Ticker') if top_ls else 'None'} ({top_ls.get('R_Ratio', 'N/A')}R)\n")
 
   create_linkedin_carousel_pdf(
       filename=CAROUSEL_PDF_FILENAME,
