@@ -1,11 +1,11 @@
 Ticker,Close,Headroom_%,Above_200_%,Hist_Now,Vol_Ratio,Conviction_Score,Pivot_Trigger,Stop_Loss,Risk_%,R_Ratio,ADV_20,1Min_Vol_Hurdle,Execution_Archetype,Category,Zacks_Rank,Earnings_Risk,Structural_Catalyst,Execution_Protocol
-TJX,146.73,15.5,0.6,-0.623,2.52x,15.155,148.57,145.4,2.13,7.28,7562802,26469,BREAKOUT,Base-Reset,#2 (1d),Unknown/TBD,ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
-CAH,255.49,0.9,17.3,0.284,2.34x,10.899,256.35,249.54,2.66,15.04,1723635,6032,BREAKOUT,Base-Reset,#2 (7d),Unknown/TBD,ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
-ISRG,434.87,38.9,1.4,9.51,2.23x,10.242,437.98,425.51,2.85,13.64,1893384,6626,BREAKOUT,Base-Reset,#2 (1d),Unknown/TBD,ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
-IFF,91.47,0.6,17.1,0.28,3.3x,10.073,92.02,89.73,2.49,16.06,1819122,6366,BREAKOUT,Base-Reset,#2 (New),Unknown/TBD,ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
-ELV,437.5,0.1,17.1,-0.159,3.45x,9.841,438.0,425.0,2.97,13.47,1198063,4193,BREAKOUT,Base-Reset,#2 (8d),Unknown/TBD,ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
-EBAY,120.97,3.0,17.2,0.097,2.7x,8.125,124.59,119.2,4.33,9.24,3490268,12215,BREAKOUT,Base-Reset,#2 (1d),Unknown/TBD,ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
-COP,144.34,1.9,22.1,1.287,2.54x,7.801,147.15,142.24,3.34,11.98,5592073,19572,BREAKOUT,Base-Reset,#1 (8d),Unknown/TBD,ZACKS #1 STRONG BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
-EOG,156.02,2.4,16.1,0.371,2.69x,7.217,159.71,152.53,4.5,8.89,2745968,9610,BREAKOUT,Base-Reset,#2 (New),Unknown/TBD,ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
-XOM,175.77,2.6,17.8,1.508,2.22x,7.015,180.26,174.91,2.97,13.47,11040012,38640,BREAKOUT,Base-Reset,#1 (New),Unknown/TBD,ZACKS #1 STRONG BUY,PEAK DIFFUSION: Fresh Rank 1 revision. Full swing leeway to 3.0R+ expansion.
-CVX,222.75,2.0,18.4,1.909,2.45x,4.75,227.16,220.41,2.97,13.47,7188092,25158,BREAKOUT,Base-Reset,#1 (7d),Unknown/TBD,ZACKS #1 STRONG BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+TJX,146.84,15.4,0.6,-0.623,2.52x,15.067,148.57,145.4,2.13,7.23,7565919,26480,BREAKOUT,Base-Reset,#2 (New),Unknown/TBD,ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+CAH,255.81,0.7,17.4,0.284,2.34x,10.899,256.35,249.54,2.66,15.04,1725253,6038,BREAKOUT,Base-Reset,#2 (7d),Unknown/TBD,ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+ISRG,435.7,38.6,1.6,9.51,2.23x,10.172,437.98,425.51,2.85,13.54,1894649,6631,BREAKOUT,Base-Reset,#2 (New),Unknown/TBD,ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+IFF,91.57,0.5,17.2,0.28,3.3x,10.073,92.02,89.73,2.49,16.06,1820360,6371,BREAKOUT,Base-Reset,#2 (New),Unknown/TBD,ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+ELV,438.14,0.1,17.3,-0.159,3.45x,9.326,438.67,425.0,3.12,12.82,1199240,4197,BREAKOUT,Base-Reset,#2 (8d),Unknown/TBD,ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+COP,144.38,1.9,22.1,1.287,2.54x,7.801,147.15,142.24,3.34,11.98,5594505,19580,BREAKOUT,Base-Reset,#1 (8d),Unknown/TBD,ZACKS #1 STRONG BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+EOG,155.85,2.5,16.0,0.371,2.69x,7.217,159.71,152.53,4.5,8.89,2747544,9616,BREAKOUT,Base-Reset,#2 (New),Unknown/TBD,ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+XOM,175.82,2.5,17.8,1.508,2.22x,7.015,180.26,174.91,2.97,13.47,11053840,38688,BREAKOUT,Base-Reset,#1 (New),Unknown/TBD,ZACKS #1 STRONG BUY,PEAK DIFFUSION: Fresh Rank 1 revision. Full swing leeway to 3.0R+ expansion.
+CVX,222.97,1.9,18.5,1.909,2.45x,4.75,227.16,220.41,2.97,13.47,7194429,25180,BREAKOUT,Base-Reset,#1 (7d),Unknown/TBD,ZACKS #1 STRONG BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+GHC,1229.68,2.5,9.3,-0.793,1.8x,4.475,1233.45,1196.15,3.02,13.25,25427,88,BREAKOUT,Base-Reset,N/A,Unknown/TBD,TECHNICAL MOMENTUM,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
