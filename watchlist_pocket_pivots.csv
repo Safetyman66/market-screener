@@ -1,4 +1,4 @@
 Ticker,Close,Headroom_%,Ext_10EMA_%,Above_200EMA_%,Vol_Pocket_Ratio,Conviction_Score,Pivot_Trigger,Stop_Loss,Risk_%,R_Ratio,ADV_20,1Min_Vol_Hurdle,Execution_Archetype,Category,Zacks_Rank,Earnings_Risk,Structural_Catalyst,Execution_Protocol
-CRC,54.38,30.5,1.5,0.6,1.02x,9.96,54.99,53.31,3.06,9.96,814910,2852,BREAKOUT,Pocket Pivot,#3 (1d),⚠️ CAUTION (13d),Volume-Surge Squeeze Launch,DEFENSIVE RUNWAY: Blackout in <14d. Scale out at +1.5R or exit before day 7.
+CRC,54.38,30.5,1.5,0.6,1.02x,9.96,54.99,53.31,3.06,9.96,814910,2852,BREAKOUT,Pocket Pivot,#3 (New),⚠️ CAUTION (13d),Volume-Surge Squeeze Launch,DEFENSIVE RUNWAY: Blackout in <14d. Scale out at +1.5R or exit before day 7.
 RAMP,38.21,0.3,1.4,10.7,4.7x,14.89,38.34,37.44,2.35,14.89,1467475,5136,BREAKOUT,Pocket Pivot,#3 (21d),SAFE (15d),Volume-Surge Squeeze Launch,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
 VSTS,14.22,18.8,1.0,23.3,0.99x,5.59,14.24,13.76,3.37,5.59,1444655,5056,BREAKOUT,Pocket Pivot,#3 (7d),SAFE (30d),Volume-Surge Squeeze Launch,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
