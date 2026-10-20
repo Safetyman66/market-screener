@@ -1,2 +1,2 @@
 Ticker,Close,Pole_Gain_%,Flag_Days,Flag_Depth_%,10d_Tightness_%,Vol_DryUp,Conviction_Score,Pivot_Trigger,Stop_Loss,Risk_%,R_Ratio,ADV_20,1Min_Vol_Hurdle,Execution_Archetype,Category,Zacks_Rank,Earnings_Risk,Structural_Catalyst,Execution_Protocol
-CVI,61.33,77.9,3,5.4,12.4,0.62x,7.28,63.51,60.11,5.35,7.28,855915,2995,BREAKOUT,Momentum Flag,#1 (New),⚠️ CAUTION (9d),Consensus Earnings Revision Momentum,DEFENSIVE RUNWAY: Blackout in <14d. Scale out at +1.5R or exit before day 7.
+CVI,59.89,77.9,3,7.4,12.4,0.74x,5.23,63.51,58.78,7.45,5.23,887100,3104,BREAKOUT,Momentum Flag,#1 (1d),⚠️ CAUTION (8d),Consensus Earnings Revision Momentum,DEFENSIVE RUNWAY: Blackout in <14d. Scale out at +1.5R or exit before day 7.
