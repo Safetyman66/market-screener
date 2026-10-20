@@ -14,17 +14,42 @@ import yfinance as yf
 
 SECTOR_CACHE_FILE = "sector_cache.json"
 
+
+BANNED_HEALTHCARE_KEYWORDS = {
+    "biotechnology",
+    "biopharmaceutical",
+    "clinical trials",
+    "drug discovery",
+    "therapeutics",
+    "pharmaceuticals",
+}
+
+ALLOWED_HEALTHCARE_SUBINDUSTRIES = {
+    "medical devices",
+    "medical instruments",
+    "diagnostics & research",
+    "healthcare plans",
+    "medical care facilities",
+    "health information services",
+    "medical distribution",
+}
+
 EXCLUDED_SECTORS = {
-    "Real Estate",
-    "Utilities",
-    "Consumer Defensive",
-    "Consumer Staples",
     "Financials",
     "Financial Services",
-    "Basic Materials",
-    "Healthcare",
-    "Health Care",
-    "Consumer Discretionary",
+    "Real Estate",
+    "Utilities",
+    "Consumer Staples",
+    "Consumer Defensive",
+}
+
+BANNED_HEALTHCARE_KEYWORDS = {
+    "biotechnology",
+    "biopharmaceutical",
+    "pharmaceutical",
+    "clinical trials",
+    "drug discovery",
+    "therapeutics",
 }
 
 BANNED_INDUSTRY_KEYWORDS = [
@@ -124,22 +149,29 @@ def fetch_institutional_universe_and_sectors():
 
 
 def stage_0_prune_by_sector(universe, sector_map):
+  """Filters universe by excluding defensive/financial sectors and binary biotech/pharma stocks."""
   survivors = []
-  pruned_count = 0
-  for sym in universe:
-    info = sector_map.get(sym, {})
-    sec = info.get("sector", "")
-    ind = info.get("industry", "").lower()
+  for ticker in universe:
+    meta = sector_map.get(ticker, {})
+    if isinstance(meta, dict):
+      sec = meta.get("sector", "") or ""
+      ind = meta.get("industry", "") or ""
+    else:
+      sec = str(meta)
+      ind = ""
 
+    # Sector exclusion gate
     if sec in EXCLUDED_SECTORS:
-      pruned_count += 1
       continue
 
-    if any(b in ind for b in BANNED_INDUSTRY_KEYWORDS):
-      pruned_count += 1
-      continue
+    # Binary healthcare gate: exclude clinical drug developers, keep medical devices & equipment
+    if "health" in sec.lower():
+      ind_lower = ind.lower()
+      if any(banned in ind_lower for banned in BANNED_HEALTHCARE_KEYWORDS):
+        continue
 
-    survivors.append(sym)
+    survivors.append(ticker)
+
   return survivors
 
 
@@ -187,3 +219,12 @@ def stage_1_prune_by_liquidity(tickers_pool, chunk_size=100):
     time.sleep(0.5)
 
   return sorted(list(set(qualified)))
+
+def is_binary_healthcare(industry_str):
+    if not industry_str:
+        return False
+    ind_lower = industry_str.lower()
+    for kw in BANNED_HEALTHCARE_KEYWORDS:
+        if kw in ind_lower:
+            return True
+    return False

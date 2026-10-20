@@ -156,8 +156,8 @@
     "industry": "Technology Hardware, Storage & Peripherals"
   },
   "AMAT": {
-    "sector": "Technology",
-    "industry": "Semiconductor Equipment"
+    "sector": "Information Technology",
+    "industry": "Semiconductor Materials & Equipment"
   },
   "APP": {
     "sector": "Communication Services",
@@ -269,7 +269,7 @@
   },
   "BE": {
     "sector": "Industrials",
-    "industry": "Electrical Equipment"
+    "industry": "Electrical Components & Equipment"
   },
   "BNY": {
     "sector": "Financials",
@@ -412,8 +412,8 @@
     "industry": "Household Products"
   },
   "CIEN": {
-    "sector": "Technology",
-    "industry": "Networking"
+    "sector": "Information Technology",
+    "industry": "Communications Equipment"
   },
   "CI": {
     "sector": "Health Care",
@@ -460,8 +460,8 @@
     "industry": "IT Consulting & Other Services"
   },
   "COHR": {
-    "sector": "Technology",
-    "industry": "Semiconductors"
+    "sector": "Information Technology",
+    "industry": "Electronic Components"
   },
   "COIN": {
     "sector": "Financials",
@@ -669,7 +669,7 @@
   },
   "EME": {
     "sector": "Industrials",
-    "industry": "Engineering & Construction"
+    "industry": "Construction & Engineering"
   },
   "EMR": {
     "sector": "Industrials",
@@ -1112,8 +1112,8 @@
     "industry": "Asset Management & Custody Banks"
   },
   "KLAC": {
-    "sector": "Technology",
-    "industry": "Semiconductor Equipment"
+    "sector": "Information Technology",
+    "industry": "Semiconductor Materials & Equipment"
   },
   "KHC": {
     "sector": "Consumer Staples",
@@ -1132,8 +1132,8 @@
     "industry": "Health Care Services"
   },
   "LRCX": {
-    "sector": "Technology",
-    "industry": "Semiconductor Equipment"
+    "sector": "Information Technology",
+    "industry": "Semiconductor Materials & Equipment"
   },
   "LVS": {
     "sector": "Consumer Discretionary",
@@ -1180,8 +1180,8 @@
     "industry": "Apparel, Accessories & Luxury Goods"
   },
   "LITE": {
-    "sector": "Technology",
-    "industry": "Communications"
+    "sector": "Information Technology",
+    "industry": "Communications Equipment"
   },
   "LYB": {
     "sector": "Materials",
@@ -1280,7 +1280,7 @@
     "industry": "Packaged Foods & Meats"
   },
   "MPWR": {
-    "sector": "Technology",
+    "sector": "Information Technology",
     "industry": "Semiconductors"
   },
   "MNST": {
@@ -1648,7 +1648,7 @@
     "industry": "Retail REITs"
   },
   "SWKS": {
-    "sector": "Technology",
+    "sector": "Information Technology",
     "industry": "Semiconductors"
   },
   "SJM": {
@@ -1960,8 +1960,8 @@
     "industry": "Health Care Supplies"
   },
   "WDC": {
-    "sector": "Technology",
-    "industry": "Computer Hardware/Storage"
+    "sector": "Information Technology",
+    "industry": "Technology Hardware, Storage & Peripherals"
   },
   "WY": {
     "sector": "Real Estate",
@@ -2108,8 +2108,8 @@
     "industry": "Construction & Engineering"
   },
   "APPF": {
-    "sector": "Technology",
-    "industry": "Software"
+    "sector": "Information Technology",
+    "industry": "Application Software"
   },
   "AR": {
     "sector": "Energy",
@@ -2400,8 +2400,8 @@
     "industry": "Office REITs"
   },
   "CVLT": {
-    "sector": "Technology",
-    "industry": "Software"
+    "sector": "Information Technology",
+    "industry": "Systems Software"
   },
   "CW": {
     "sector": "Industrials",
@@ -2440,8 +2440,8 @@
     "industry": "Application Software"
   },
   "DOCN": {
-    "sector": "Technology",
-    "industry": "Software"
+    "sector": "Information Technology",
+    "industry": "Internet Services & Infrastructure"
   },
   "DOCS": {
     "sector": "Health Care",
@@ -2460,8 +2460,8 @@
     "industry": "Oil & Gas Storage & Transportation"
   },
   "DUOL": {
-    "sector": "Technology",
-    "industry": "Software"
+    "sector": "Consumer Discretionary",
+    "industry": "Education Services"
   },
   "DY": {
     "sector": "Industrials",
@@ -2592,8 +2592,8 @@
     "industry": "Industrial Machinery & Supplies & Components"
   },
   "FN": {
-    "sector": "Technology",
-    "industry": "Semiconductors"
+    "sector": "Information Technology",
+    "industry": "Electronic Manufacturing Services"
   },
   "FNB": {
     "sector": "Financials",
@@ -2940,7 +2940,7 @@
     "industry": "Hotels, Resorts & Cruise Lines"
   },
   "MTSI": {
-    "sector": "Technology",
+    "sector": "Information Technology",
     "industry": "Semiconductors"
   },
   "MTZ": {
@@ -3012,8 +3012,8 @@
     "industry": "Broadcasting"
   },
   "NXT": {
-    "sector": "Technology",
-    "industry": "Solar/Energy"
+    "sector": "Industrials",
+    "industry": "Electrical Components & Equipment"
   },
   "NYT": {
     "sector": "Communication Services",
@@ -3056,8 +3056,8 @@
     "industry": "Regional Banks"
   },
   "ONTO": {
-    "sector": "Technology",
-    "industry": "Semiconductor Equipment"
+    "sector": "Information Technology",
+    "industry": "Semiconductor Materials & Equipment"
   },
   "OPCH": {
     "sector": "Health Care",
@@ -3204,7 +3204,7 @@
     "industry": "Property & Casualty Insurance"
   },
   "RMBS": {
-    "sector": "Technology",
+    "sector": "Information Technology",
     "industry": "Semiconductors"
   },
   "RNR": {
@@ -3296,7 +3296,7 @@
     "industry": "Broadcasting"
   },
   "SITM": {
-    "sector": "Technology",
+    "sector": "Information Technology",
     "industry": "Semiconductors"
   },
   "SLAB": {
@@ -3376,7 +3376,7 @@
     "industry": "Gas Utilities"
   },
   "SYNA": {
-    "sector": "Technology",
+    "sector": "Information Technology",
     "industry": "Semiconductors"
   },
   "TCBI": {
@@ -3436,8 +3436,8 @@
     "industry": "Construction & Engineering"
   },
   "TTMI": {
-    "sector": "Technology",
-    "industry": "Electronic Components"
+    "sector": "Information Technology",
+    "industry": "Electronic Manufacturing Services"
   },
   "TWLO": {
     "sector": "Information Technology",
@@ -3496,12 +3496,12 @@
     "industry": "Apparel, Accessories & Luxury Goods"
   },
   "VIAV": {
-    "sector": "Technology",
-    "industry": "Networking"
+    "sector": "Information Technology",
+    "industry": "Communications Equipment"
   },
   "VICR": {
-    "sector": "Technology",
-    "industry": "Semiconductors"
+    "sector": "Industrials",
+    "industry": "Electrical Components & Equipment"
   },
   "VLY": {
     "sector": "Financials",
@@ -4444,8 +4444,8 @@
     "industry": "Fertilizers & Agricultural Chemicals"
   },
   "FORM": {
-    "sector": "Technology",
-    "industry": "Semiconductor Equipment"
+    "sector": "Information Technology",
+    "industry": "Semiconductor Materials & Equipment"
   },
   "FOXF": {
     "sector": "Consumer Discretionary",

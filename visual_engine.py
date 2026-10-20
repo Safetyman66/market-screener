@@ -1,5 +1,5 @@
 import os
-import fitz
+import pymupdf as fitz
 from reportlab.lib.colors import HexColor
 from reportlab.pdfgen import canvas
 
