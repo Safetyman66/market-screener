@@ -1,3 +1,5 @@
 Ticker,Close,Shelf_Level,Flush_Low,Sweep_Depth_%,Headroom_%,Vol_Ratio,Conviction_Score,Pivot_Trigger,Stop_Loss,Risk_%,R_Ratio,ADV_20,1Min_Vol_Hurdle,Execution_Archetype,Category,Zacks_Rank,Earnings_Risk,Structural_Catalyst,Execution_Protocol
-LFUS,381.67,378.6,371.86,1.78,30.9,1.0x,6.98,387.15,370.0,4.43,6.98,174330,610,MEAN_REVERSION,Liquidity Sweep,#3 (21d),Unknown/TBD,TECHNICAL MOMENTUM,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
-SW,41.4,40.35,40.23,0.3,24.4,1.7x,5.78,41.8,40.03,4.23,5.78,4040388,14141,MEAN_REVERSION,Liquidity Sweep,#3 (New),Unknown/TBD,TECHNICAL MOMENTUM,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+BWA,58.57,58.1,56.76,2.31,34.2,1.26x,9.45,58.6,56.48,3.62,9.45,2617225,9160,MEAN_REVERSION,Liquidity Sweep,#3 (22d),Unknown/TBD,TECHNICAL MOMENTUM,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+LFUS,383.63,378.6,371.86,1.78,30.2,0.99x,6.82,387.15,370.0,4.43,6.82,180705,632,MEAN_REVERSION,Liquidity Sweep,#3 (22d),Unknown/TBD,TECHNICAL MOMENTUM,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+SW,41.19,40.35,40.0,0.87,25.1,1.67x,5.25,41.8,39.8,4.78,5.25,4238675,14835,MEAN_REVERSION,Liquidity Sweep,#3 (1d),Unknown/TBD,TECHNICAL MOMENTUM,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+ST,42.0,40.25,39.77,1.19,28.0,1.04x,4.73,42.06,39.57,5.92,4.73,1158785,4055,MEAN_REVERSION,Liquidity Sweep,#3 (2d),Unknown/TBD,TECHNICAL MOMENTUM,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
