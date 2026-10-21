@@ -1,4 +1,4 @@
-name: Morning Social Broadcast
+﻿name: Morning Social Broadcast
 
 on:
   workflow_run:
@@ -25,7 +25,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests reportlab yfinance pandas numpy pymupdf
+          pip install requests reportlab yfinance pandas numpy pymupdf matplotlib
 
       # Step 1: LinkedIn Document Carousel Post & Engagement First Comment
       - name: Publish to LinkedIn

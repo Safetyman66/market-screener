@@ -141,7 +141,7 @@ def publish_to_linkedin(pdf_path, meta):
             print(f"[SUCCESS] Post successfully published to LinkedIn! Post URN: {post_id}")
 
             if post_id != "Unknown":
-                print("[+] Dispatching automated first comment with terminal link...")
+                print(f"[+] Dispatching automated first comment to {post_id}...")
                 comment_headers = {
                     "Authorization": f"Bearer {token}",
                     "Content-Type": "application/json",
@@ -152,16 +152,18 @@ def publish_to_linkedin(pdf_path, meta):
                     "actor": author_urn,
                     "object": post_id,
                     "message": {
-                        "text": "Full Daily Intelligence Package & Active Watchlist:\n- Complete screened candidate watchlist (CSV export)\n- Intraday alert trigger pivots & invalidation stop levels\n- Full Macro Regime Dashboard & Sector Breadth matrix\n\nAccess today''s dataset & subscribe for daily morning alerts: https://corpacuity.co.uk"
+                        "text": "Full Daily Intelligence Package & Active Watchlist:\n- Complete screened candidate watchlist (CSV export)\n- Intraday alert trigger pivots & invalidation stop levels\n- Full Macro Regime Dashboard & Sector Breadth matrix\n\nAccess today\'s dataset & subscribe for daily morning alerts: https://corpacuity.co.uk"
                     }
                 }
-                time.sleep(1)
-                requests.post(
-                    f"https://api.linkedin.com/rest/socialActions/{post_id}/comments",
-                    headers=comment_headers,
-                    json=comment_payload,
-                    timeout=10
-                )
+                time.sleep(2)
+                import urllib.parse
+                encoded_post_id = urllib.parse.quote(post_id, safe='')
+                c_url = f"https://api.linkedin.com/rest/socialActions/{encoded_post_id}/comments"
+                c_res = requests.post(c_url, headers=comment_headers, json=comment_payload, timeout=10)
+                if c_res.status_code in (200, 201):
+                    print("[+] First comment successfully dispatched to LinkedIn!")
+                else:
+                    print(f"[!] Warning on first comment dispatch: {c_res.status_code} - {c_res.text}")
         else:
             print(f"[!] LinkedIn post creation failed: {post_res.status_code} - {post_res.text}")
 
