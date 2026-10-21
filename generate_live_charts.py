@@ -189,10 +189,10 @@ def generate_all():
         meta = json.load(f)
 
     slots = [
-        ('top_br', 'Base-Reset', 'anatomy_base_reset.png'),
-        ('top_htf', 'Momentum Flag', 'anatomy_momentum_flag.png'),
-        ('top_pp', 'Pocket Pivot', 'anatomy_pocket_pivot.png'),
-        ('top_ls', 'Liquidity Sweep', 'anatomy_liquidity_sweep.png')
+        ('top_br', 'Base-Reset', 'carousel_br.png'),
+        ('top_htf', 'Momentum Flag', 'carousel_htf.png'),
+        ('top_pp', 'Pocket Pivot', 'carousel_pp.png'),
+        ('top_ls', 'Liquidity Sweep', 'carousel_ls.png')
     ]
 
     for key, label, fname in slots:
