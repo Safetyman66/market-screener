@@ -41,9 +41,9 @@ def build_post_copy(meta, forced_archetype=None):
     else:
         if runner_gain >= 10.0 and random.random() < 0.40:
             archetype = "EMPIRICAL_AUDIT"
-        elif "RED" in regime or breadth < 45.0:
+        elif "RED" in str(regime) or breadth < 45.0:
             archetype = "CAPITAL_PRESERVATION"
-        elif "GREEN" in regime and breadth > 60.0:
+        elif "GREEN" in str(regime) and breadth > 60.0:
             archetype = "MOMENTUM_EXPANSION"
         else:
             archetype = "ROTATIONAL_COMPRESSION"
@@ -78,10 +78,10 @@ def build_post_copy(meta, forced_archetype=None):
         hook = random.choice(lead_hooks)
         theme_body = (
             f"Examining the empirical execution geometry of the ${runner_ticker} screened setup:\n\n"
-            f"• Model Entry Pivot: ${runner.get('entry_pivot', 51.77):.2f}\n"
-            f"• Invalidation Floor: ${runner.get('stop_loss', 47.31):.2f} (Defined Risk Box: ${(runner.get('entry_pivot', 51.77) - runner.get('stop_loss', 47.31)):.2f})\n"
-            f"• 5-Day Measured High: ${runner.get('peak_high', 57.87):.2f} (+{runner_gain:.1f}% peak right-tail expansion)\n"
-            f"• Empirical Return: {runner_r}R on capital at initial invalidation\n\n"
+            f"- Model Entry Pivot: ${runner.get('entry_pivot', 51.77):.2f}\n"
+            f"- Invalidation Floor: ${runner.get('stop_loss', 47.31):.2f} (Defined Risk Box: ${(runner.get('entry_pivot', 51.77) - runner.get('stop_loss', 47.31)):.2f})\n"
+            f"- 5-Day Measured High: ${runner.get('peak_high', 57.87):.2f} (+{runner_gain:.1f}% peak right-tail expansion)\n"
+            f"- Empirical Return: {runner_r}R on capital at initial invalidation\n\n"
             f"When risk is defined prior to trade commitment, the math does the heavy lifting.\n\n"
             f"Swipe through today's 8-page briefing deck for:\n"
             f"- Full Audited 5-Day Performance Metrics & Case Study Breakdown\n"
@@ -92,14 +92,17 @@ def build_post_copy(meta, forced_archetype=None):
         tags = "#TradingAlpha #EmpiricalAudit #RiskReward #QuantitativeTrading #PortfolioManagement"
 
     elif archetype == "CAPITAL_PRESERVATION":
+        defensive_exposure = "0% - 20%" if ("RED" in str(regime) or breadth < 45.0) else exposure
+        defensive_regime = "RED: CAPITAL PRESERVATION" if ("RED" in str(regime) or breadth < 45.0) else regime
+
         lead_hooks = [
             f"Preserving dry powder during market degradation is an active quantitative position.\n\nUniverse breadth has compressed to {breadth:.1f}% > 200 EMA, triggering model capital preservation rules.",
-            f"Macro Regime Posture: {regime} (Defensive Exposure Model: {exposure}).\n\nForcing risk into a negative-drift tape degrades compounding. Systematic models step aside when mathematical gates fail.",
+            f"Macro Regime Posture: {defensive_regime} (Defensive Exposure Model: {defensive_exposure}).\n\nForcing risk into a negative-drift tape degrades compounding. Systematic models step aside when mathematical gates fail.",
             f"Cross-Asset Stress Check: 10Y Yield holding at {tnx}%, universe breadth suppressed at {breadth:.1f}%.\n\nWhen systematic hurdle rates are not satisfied, cash is the highest-yielding asset."
         ]
         hook = random.choice(lead_hooks)
         theme_body = (
-            f"Our algorithmic rules throttle portfolio exposure down to {exposure} to guard capital against drawdown:\n\n"
+            f"Our algorithmic rules throttle portfolio exposure down to {defensive_exposure} to guard capital against drawdown:\n\n"
             f"1. Breadth Invalidation: Sub-45% universe breadth restricts fresh long commitments.\n"
             f"2. Zero-Hurdle Filtering: If no candidate achieves >= 2.0R asymmetry with low overhead supply, no setups are logged.\n"
             f"3. Strict Liquidity Gates: Pruning names where institutional participation has dried up.\n\n"
@@ -174,7 +177,6 @@ if __name__ == "__main__":
     if "--preview" in sys.argv:
         preview_all_archetypes()
     else:
-        # Default behavior: generate and print the naturally routed post
         meta_path = "latest_post_meta.json"
         if os.path.exists(meta_path):
             with open(meta_path, "r", encoding="utf-8") as f:

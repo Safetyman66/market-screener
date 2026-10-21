@@ -24,7 +24,7 @@
       justify-content: center;
     }
     .container {
-      max-width: 680px;
+      max-width: 720px;
       width: 100%;
     }
     .header {
@@ -71,7 +71,6 @@
       border-radius: 10px;
       padding: 18px;
       margin-bottom: 18px;
-      position: relative;
     }
     .card-header {
       display: flex;
@@ -104,84 +103,92 @@
       line-height: 1.5;
       color: #cbd5e1;
       white-space: pre-wrap;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
+    }
+    .media-preview-box {
+      display: flex;
+      gap: 14px;
+      background: #0a0e17;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+    .media-thumb {
+      width: 140px;
+      height: 78px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+    }
+    .media-info {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
     .card-actions {
       display: flex;
-      justify-content: space-between;
+      gap: 10px;
       align-items: center;
+      flex-wrap: wrap;
     }
-    .copy-btn {
+    .action-btn {
       background: #1e293b;
       color: var(--text-main);
       border: 1px solid #334155;
-      padding: 8px 16px;
+      padding: 8px 14px;
       border-radius: 6px;
       font-size: 13px;
       cursor: pointer;
       font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       transition: all 0.15s ease;
     }
-    .copy-btn:hover {
+    .action-btn:hover {
       background: #334155;
       border-color: var(--accent);
+    }
+    .btn-image {
+      border-color: #0284c7;
+      color: var(--accent);
     }
     .copied {
       background: var(--success) !important;
       color: #0b0f19 !important;
       border-color: var(--success) !important;
     }
-    .asset-tray {
-      margin-top: 24px;
-      background: #0f172a;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 16px;
-      font-size: 13px;
-    }
-    .asset-links {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 8px;
-    }
-    .asset-link {
-      color: var(--accent);
-      text-decoration: underline;
-    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1>Corp Acuity // X Thread Dispatcher</h1>
+      <h1>Corp Acuity // X Thread Dispatch Console</h1>
       <p class="instructions">
-        <strong>Workflow:</strong> Click <em>"Open Composer with Tweet 1"</em>. In X, hit the <strong>(+)</strong> button to add a tweet slot, then simply click <em>"Copy Tweet #"</em> below and paste into each slot.
+        <strong>Fast Flow:</strong><br>
+        1. Click <em>"Open X Composer"</em> (loads Tweet 1 text).<br>
+        2. Click <strong>"📋 Copy Card Image"</strong>, click into the tweet on X, and press <strong>Ctrl+V</strong> to attach the image.<br>
+        3. Add slot <strong>(+)</strong> in X, copy next text & image, paste, and repeat.
       </p>
       <div class="action-bar">
-        <a href="https://x.com/intent/tweet?text=CORP%20ACUITY%20//%20ASYMMETRY%20SCAN%0A%0ARegime%3A%20ACCUMULATION%20%2830%25%20-%2060%25%29%0ABreadth%3A%2052.9%25%20%3E%20200%20EMA%0A%0AFocus%3A%20%24TJX%20%28Base-Reset%29%0A%E2%80%A2%20Pivot%3A%20%24148.57%0A%E2%80%A2%20Stop%3A%20%24145.40%20%282.13%25%20risk%29%0A%E2%80%A2%20Payoff%3A%207.23R%0A%E2%80%A2%20Runway%3A%20Unknown/TBD%0A%0AVoid%20if%20open%20%3E2.5%25%20past%20pivot.%0ASetups%20in%20thread%20%F0%9F%A7%B5%F0%9F%91%87%0A%0A%24SPY%24QQQ%20%23FinTwit" target="_blank" class="primary-btn">
+        <a href="https://x.com/intent/tweet?text=CORP%20ACUITY%20//%20ASYMMETRY%20SCAN%0A%0ARotational%20accumulation%20active%20%2853.1%25%20%3E%20200%20EMA%29.%0AFocus%3A%20%24TJX%20%28Base-Reset%29%0AHigh%20asymmetry%20base-reset%20coiling%20with%207.18R%20structural%20upside.%0A%E2%80%A2%20Pivot%3A%20%24148.57%20%7C%20Stop%3A%20%24145.40%20%282.13%25%20risk%29%0A%0AInvalid%20if%20open%20%3E2.5%25%20over%20pivot.%0ASetups%20in%20thread%20%F0%9F%A7%B5%F0%9F%91%87%0A%0A%24TJX" target="_blank" class="primary-btn">
           🚀 1. Open X Composer with Tweet 1
         </a>
       </div>
     </div>
 
     <div id="thread-cards"></div>
-
-    <div class="asset-tray">
-      <strong style="color: var(--text-dim);">Visual Card Attachments:</strong>
-      <div class="asset-links">
-        <a class="asset-link" href="https://corpacuity.co.uk/x_cards/card_1.png" target="_blank">Card 1 (Regime)</a>
-        <a class="asset-link" href="https://corpacuity.co.uk/x_cards/card_2.png" target="_blank">Card 2 (Radar)</a>
-        <a class="asset-link" href="https://corpacuity.co.uk/x_cards/card_3.png" target="_blank">Card 3 (Setup 1)</a>
-        <a class="asset-link" href="https://corpacuity.co.uk/x_cards/card_4.png" target="_blank">Card 4 (Setup 2)</a>
-      </div>
-    </div>
   </div>
 
   <script>
-    const posts = ["CORP ACUITY // ASYMMETRY SCAN\n\nRegime: ACCUMULATION (30% - 60%)\nBreadth: 52.9% > 200 EMA\n\nFocus: $TJX (Base-Reset)\n\u2022 Pivot: $148.57\n\u2022 Stop: $145.40 (2.13% risk)\n\u2022 Payoff: 7.23R\n\u2022 Runway: Unknown/TBD\n\nVoid if open >2.5% past pivot.\nSetups in thread \ud83e\uddf5\ud83d\udc47\n\n$SPY$QQQ #FinTwit", "Setup #2: $RVTY (Momentum Flag)\n\n\u2022 Pivot: $166.25\n\u2022 Stop: $146.70 (11.76% risk)\n\u2022 Payoff: 2.02R\n\u2022 Catalyst: Zacks #3 (New)\n\u2022 Runway: Unknown/TBD\n\nExecution: Standard swing leeway.", "Setup #3: $CAH (Pocket Pivot)\n\n\u2022 Pivot: $256.35\n\u2022 Stop: $249.54 (2.66% risk)\n\u2022 Payoff: 15.04R\n\u2022 Catalyst: Zacks #2 (7d)\n\u2022 Runway: Unknown/TBD\n\nExecution: Standard swing leeway.", "Execution Governance & Screener Terminal:\n\nAccess quantitative breakdowns, daily PDF slide deck, and regime exposure directives:\n\n\ud83d\udc49 corpacuity.co.uk/intel.html"];
+    const posts = ["CORP ACUITY // ASYMMETRY SCAN\n\nRotational accumulation active (53.1% > 200 EMA).\nFocus: $TJX (Base-Reset)\nHigh asymmetry base-reset coiling with 7.18R structural upside.\n\u2022 Pivot: $148.57 | Stop: $145.40 (2.13% risk)\n\nInvalid if open >2.5% over pivot.\nSetups in thread \ud83e\uddf5\ud83d\udc47\n\n$TJX", "Setup #2: $WST (Momentum Flag)\n\nMomentum Flag coiling after advance, targeting 7.92R asymmetry.\n\n\u2022 Pivot: $389.75\n\u2022 Stop: $372.52 (4.42% risk)\n\u2022 Payoff: 7.92R\n\u2022 Catalyst: Zacks #2 (22d)\n\nExecution: Standard swing leeway.", "Setup #3: $TMO (Pocket Pivot)\n\nPocket pivot continuation offering 9.04R reward-to-risk ratio.\n\n\u2022 Pivot: $693.37\n\u2022 Stop: $666.55 (3.87% risk)\n\u2022 Payoff: 9.04R\n\u2022 Catalyst: Zacks #2 (5d)\n\nExecution: Standard swing leeway.", "Execution Governance & Screener Terminal:\n\nAccess quantitative breakdowns, daily PDF slide deck, and regime exposure directives:\n\n\ud83d\udc49 corpacuity.co.uk/intel.html\n\nAre you leaning into momentum flags or waiting for base-reset confirmations?"];
     const titles = ["Tweet 1: Root Anchor Post", "Tweet 2: Thread Reply (Setup #2)", "Tweet 3: Thread Reply (Setup #3)", "Tweet 4: Final Thread Reply (Terminal Link)"];
-    const roles = ["Post this as your main tweet (attach Card 1 & Card 2)", "Reply in thread (attach Card 3)", "Reply in thread (attach Card 4)", "Terminal link reply at end of thread"];
+    const roles = ["Main tweet (Card: Base-Reset Anatomy)", "Reply (Card: Momentum Flag Anatomy)", "Reply (Card: Pocket Pivot Anatomy)", "Terminal link reply at end of thread (no media)"];
+    const assets = ["assets/cards/anatomy_base_reset.png", "assets/cards/anatomy_momentum_flag.png", "assets/cards/anatomy_pocket_pivot.png", "None"];
+    const labels = ["Base-Reset Anatomy", "Momentum Flag Anatomy", "Pocket Pivot Anatomy", "None"];
 
     const container = document.getElementById('thread-cards');
 
@@ -189,32 +196,74 @@
       const card = document.createElement('div');
       card.className = 'card';
       const charCount = text.length;
+      const assetPath = assets[idx];
+      const assetLabel = labels[idx];
+
+      let mediaHtml = '';
+      if (assetPath !== "None") {
+        mediaHtml = `
+          <div class="media-preview-box">
+            <img class="media-thumb" src="${assetPath}" alt="${assetLabel}" />
+            <div class="media-info">
+              <strong style="font-size: 13px; color: var(--accent);">${assetLabel}</strong>
+              <span style="font-size: 11px; color: var(--text-dim);">${assetPath}</span>
+              <div>
+                <button class="action-btn btn-image" onclick="copyCardImage('${assetPath}', this)">
+                  🖼️ Copy Card Image (Ctrl+V into X)
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }
 
       card.innerHTML = `
         <div class="card-header">
           <h2 class="card-title">${titles[idx]}</h2>
           <span class="char-badge">${charCount} / 280 chars</span>
         </div>
+        ${mediaHtml}
         <div class="text-box" id="text-${idx}">${text}</div>
         <div class="card-actions">
-          <button class="copy-btn" onclick="copySlot(${idx}, this)">📋 Copy Tweet #${idx + 1}</button>
-          <span style="font-size: 11px; color: var(--text-dim);">${roles[idx]}</span>
+          <button class="action-btn" onclick="copySlotText(${idx}, this)">📋 Copy Tweet #${idx + 1} Text</button>
+          <span style="font-size: 11px; color: var(--text-dim); margin-left: auto;">${roles[idx]}</span>
         </div>
       `;
       container.appendChild(card);
     });
 
-    function copySlot(idx, btn) {
+    function copySlotText(idx, btn) {
       const text = posts[idx];
       navigator.clipboard.writeText(text).then(() => {
         const originalText = btn.innerHTML;
-        btn.innerHTML = '✓ Copied!';
+        btn.innerHTML = '✓ Text Copied!';
         btn.classList.add('copied');
         setTimeout(() => {
           btn.innerHTML = originalText;
           btn.classList.remove('copied');
         }, 1800);
       });
+    }
+
+    async function copyCardImage(imgPath, btn) {
+      const originalText = btn.innerHTML;
+      try {
+        const response = await fetch(imgPath);
+        const blob = await response.blob();
+        await navigator.clipboard.write([
+          new ClipboardItem({ [blob.type]: blob })
+        ]);
+        btn.innerHTML = '✓ Image Copied! Press Ctrl+V in X';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+          btn.classList.remove('copied');
+        }, 2200);
+      } catch (err) {
+        console.error('Clipboard image error:', err);
+        btn.innerHTML = '⚠️ Open image in tab';
+        window.open(imgPath, '_blank');
+      }
     }
   </script>
 </body>
