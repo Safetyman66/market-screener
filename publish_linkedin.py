@@ -15,7 +15,7 @@ def escape_linkedin_text(text):
     """
     LinkedIn Posts API parses commentary with Little Text Format.
     Unescaped parentheses, brackets, or angle brackets cause silent truncation.
-    Reserved characters: \ | { } @ [ ] ( ) < > * _ ~
+    Reserved characters: \\ | { } @ [ ] ( ) < > * _ ~
     """
     # 1. Escape literal backslashes first
     text = text.replace("\\", "\\\\")
@@ -152,7 +152,7 @@ def publish_to_linkedin(pdf_path, meta):
                     "actor": author_urn,
                     "object": post_id,
                     "message": {
-                        "text": "Access the full quantitative terminal, raw CSV downloads, and nightly screener datasets: https://corpacuity.co.uk"
+                        "text": "Full Daily Intelligence Package & Active Watchlist:\n- Complete screened candidate watchlist (CSV export)\n- Intraday alert trigger pivots & invalidation stop levels\n- Full Macro Regime Dashboard & Sector Breadth matrix\n\nAccess today''s dataset & subscribe for daily morning alerts: https://corpacuity.co.uk"
                     }
                 }
                 time.sleep(1)

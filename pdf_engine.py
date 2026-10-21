@@ -432,8 +432,15 @@ def create_linkedin_carousel_pdf(
         chart_w, chart_h = w - 120, 500
         chart_x, chart_y = 60, h - 735
 
-        if os.path.exists(chart_path):
-            c.drawImage(chart_path, chart_x, chart_y, width=chart_w, height=chart_h, preserveAspectRatio=True)
+        # Check root or assets/cards/ subfolder
+        resolved_chart = chart_path
+        if not os.path.exists(resolved_chart):
+            alt_path = os.path.join("assets", "cards", chart_path)
+            if os.path.exists(alt_path):
+                resolved_chart = alt_path
+
+        if os.path.exists(resolved_chart):
+            c.drawImage(resolved_chart, chart_x, chart_y, width=chart_w, height=chart_h, preserveAspectRatio=True)
             c.setStrokeColor(card_border)
             c.setLineWidth(1.5)
             c.rect(chart_x, chart_y, chart_w, chart_h, stroke=True, fill=False)
@@ -505,55 +512,78 @@ def create_linkedin_carousel_pdf(
     )
 
     # =========================================================================
-    # SLIDE 8: GOVERNANCE & METHODOLOGY
+    # SLIDE 8: TERMINAL ACCESS & CONVERSION ENGINE
     # =========================================================================
-    draw_base("FRAMEWORK GOVERNANCE", 8, 8)
+    draw_base("DAILY TERMINAL ACCESS", 8, 8)
 
     c.setFont("Helvetica-Bold", 32)
     c.setFillColor(accent_cyan)
-    c.drawString(60, h - 120, "SYSTEMATIC RISK GOVERNANCE")
+    c.drawString(60, h - 120, "DAILY MARKET INTELLIGENCE TERMINAL")
 
+    # Card 1: Core Mathematical Execution Disciplines
     c.setFillColor(card_bg)
-    c.roundRect(60, h - 910, w - 120, 750, 20, fill=True, stroke=False)
-
-    rules = [
-        ("RULE 1: PURSUIT BOUNDARY (+2.5% CEILING)",
-         "If equity gaps or opens >2.5% beyond the pivot trigger, the asymmetry profile is violated and setup is void."),
-        ("RULE 2: STRICT INVALIDATION DISCIPLINE",
-         "The stop level represents an absolute mechanical exit floor. Position closure is non-discretionary."),
-        ("RULE 3: REGIME-COUPLED EXPOSURE SIZING",
-         "Model allocations dynamically throttle back during rotational Amber or defensive Red macro regimes."),
-        ("RULE 4: CATALYST / EARNINGS BLACKOUT",
-         "Fresh swing positions are excluded within 14 calendar days of scheduled corporate earnings announcements.")
-    ]
-
-    y_pos = h - 195
-    for r_title, r_desc in rules:
-        c.setFont("Helvetica-Bold", 20)
-        c.setFillColor(accent_amber)
-        c.drawString(100, y_pos, r_title)
-        draw_wrapped_text(c, r_desc, 100, y_pos - 28, w - 200, "Helvetica", 15, 22, text_white, max_lines=2)
-        y_pos -= 95
-
-    # Terminal Access Card
-    box_top = y_pos - 15
-    c.setFillColor(card_inner)
-    c.roundRect(100, box_top - 170, w - 200, 170, 14, fill=True, stroke=False)
-
-    c.setFont("Helvetica-Bold", 20)
-    c.setFillColor(accent_cyan)
-    c.drawString(130, box_top - 40, "Quantitative Research & Full Screener Terminal:")
-
-    c.setFont("Helvetica-Bold", 36)
-    c.setFillColor(accent_green)
-    c.drawString(130, box_top - 90, "corpacuity.co.uk")
-
-    c.setFont("Helvetica", 15)
-    c.setFillColor(text_muted)
-    c.drawString(130, box_top - 135, "Daily market intelligence, algorithmic CSV datasets & institutional research.")
+    c.roundRect(60, h - 340, w - 120, 200, 16, fill=True, stroke=False)
 
     c.setFont("Helvetica-Bold", 17)
+    c.setFillColor(accent_amber)
+    c.drawString(90, h - 165, "1. PURSUIT BOUNDARY (+2.5% CEILING)")
+    c.setFont("Helvetica", 14)
+    c.setFillColor(text_muted)
+    c.drawString(90, h - 190, "If equity opens >2.5% beyond trigger, geometry is compromised and setup is void.")
+
+    c.setFont("Helvetica-Bold", 17)
+    c.setFillColor(accent_amber)
+    c.drawString(90, h - 235, "2. MECHANICAL INVALIDATION FLOOR")
+    c.setFont("Helvetica", 14)
+    c.setFillColor(text_muted)
+    c.drawString(90, h - 260, "Stops represent non-negotiable exit points. Sizing throttles to macro regime health.")
+
+    # Card 2: What Is Unlocked on the Web Terminal
+    c.setFillColor(card_bg)
+    c.roundRect(60, h - 640, w - 120, 275, 16, fill=True, stroke=False)
+
+    c.setFont("Helvetica-Bold", 20)
+    c.setFillColor(text_white)
+    c.drawString(90, h - 380, "UNLOCKED ON THE LIVE TERMINAL TODAY:")
+
+    features = [
+        ("Complete Screened Watchlist", "All qualified setups exceeding >= 2.0R across US equities"),
+        ("Live Trigger Pivots & Hard Stops", "Pre-calculated trade location and invalidation floors"),
+        ("Raw CSV Dataset Downloads", "Export full universe metrics for systematic portfolio modeling"),
+        ("Daily Sector Breadth Matrix", "Real-time institutional liquidity and rotation tracking")
+    ]
+
+    tf_y = h - 425
+    for feat_title, feat_desc in features:
+        c.setFont("Helvetica-Bold", 15)
+        c.setFillColor(accent_cyan)
+        c.drawString(95, tf_y, f"> {feat_title}:")
+        c.setFont("Helvetica", 13)
+        c.setFillColor(text_muted)
+        c.drawString(350, tf_y, feat_desc)
+        tf_y -= 45
+
+    # Card 3: High-Contrast Hero Call to Action
+    c.setFillColor(card_inner)
+    c.roundRect(60, h - 915, w - 120, 250, 18, fill=True, stroke=False)
+
+    c.setFont("Helvetica-Bold", 22)
     c.setFillColor(accent_cyan)
+    c.drawCentredString(w / 2.0, h - 700, "ACCESS THE MORNING TERMINAL FEED & SIGN UP")
+
+    c.setFont("Helvetica", 15)
+    c.setFillColor(text_white)
+    c.drawCentredString(w / 2.0, h - 735, "Receive daily algorithmic market screening and full CSV datasets before US market open.")
+
+    # Action Pill Button
+    c.setFillColor(accent_green)
+    c.roundRect(w / 2.0 - 240, h - 845, 480, 72, 36, fill=True, stroke=False)
+    c.setFont("Helvetica-Bold", 28)
+    c.setFillColor(HexColor("#030712"))
+    c.drawCentredString(w / 2.0, h - 800, "corpacuity.co.uk")
+
+    c.setFont("Helvetica-Bold", 15)
+    c.setFillColor(text_muted)
     c.drawCentredString(w / 2, 60, "Corp Acuity Ltd // Quantitative Systematic Research")
     c.showPage()
 
