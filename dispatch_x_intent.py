@@ -1,4 +1,4 @@
-import os
+﻿import os
 import sys
 import json
 import urllib.parse
@@ -8,6 +8,65 @@ from email.mime.text import MIMEText
 
 META_FILE = "latest_post_meta.json"
 HELPER_HTML_FILE = "thread_helper.html"
+
+# =====================================================================
+# MODULAR PHRASE MATRIX & ANATOMY ASSETS
+# =====================================================================
+PHRASE_MATRIX = {
+    "regime": {
+        "bullish": [
+            "Broad risk expanding ({breadth}% > 200 EMA).",
+            "Institutional bid broadening: {breadth}% above 200 EMA.",
+            "Market posture constructive with {breadth}% breadth."
+        ],
+        "rotational": [
+            "Rotational accumulation active ({breadth}% > 200 EMA).",
+            "Selective capital allocation: {breadth}% holding long-term trend.",
+            "Defensives absorbing flow as breadth holds steady at {breadth}%."
+        ],
+        "defensive": [
+            "Defensive posture active: breadth subdued at {breadth}%.",
+            "Selective setups only: {breadth}% above 200 EMA requires tight risk.",
+            "Capital preservation focus: market breadth at {breadth}%."
+        ]
+    },
+    "setups": {
+        "Base-Reset": {
+            "high_r": "High asymmetry base-reset coiling with {r}R structural upside.",
+            "tight": "Consolidation base tightening with a defined {risk}% risk window.",
+            "standard": "Base-Reset continuation clearing multi-week institutional shelf.",
+            "card": "anatomy_base_reset.png",
+            "label": "Base-Reset Anatomy"
+        },
+        "Momentum Flag": {
+            "high_r": "Momentum Flag coiling after advance, targeting {r}R asymmetry.",
+            "tight": "Supply contraction visible across 10-day flag structure.",
+            "standard": "Momentum Flag setting up: tight price compression above trend.",
+            "card": "anatomy_momentum_flag.png",
+            "label": "Momentum Flag Anatomy"
+        },
+        "Pocket Pivot": {
+            "high_r": "Pocket pivot continuation offering {r}R reward-to-risk ratio.",
+            "tight": "Early accumulation pivot with tight {risk}% invalidation level.",
+            "standard": "Pocket pivot surfacing out of constructive basing structure.",
+            "card": "anatomy_pocket_pivot.png",
+            "label": "Pocket Pivot Anatomy"
+        },
+        "Liquidity Sweep": {
+            "high_r": "Mean-reversion sweep reclaiming structural shelf ({r}R target).",
+            "tight": "False breakdown reclaimed: tight {risk}% risk cushion.",
+            "standard": "Liquidity sweep confirmation: stops cleared, demand re-entering.",
+            "card": "anatomy_liquidity_sweep.png",
+            "label": "Liquidity Sweep Anatomy"
+        }
+    },
+    "questions": [
+        "Which sector are you prioritizing into today's session?",
+        "Are you leaning into momentum flags or waiting for base-reset confirmations?",
+        "How are you structuring exposure given current index breadth?",
+        "Watching defensives or tech leaders for today's pivots?"
+    ]
+}
 
 def format_num(val, prefix="", suffix="", decimals=2):
     if val is None:
@@ -24,6 +83,37 @@ def clean_zacks(rank_val):
     rank_str = str(rank_val).strip()
     return rank_str if rank_str.startswith("#") else f"#{rank_str}"
 
+def get_macro_hook(breadth):
+    if breadth >= 60.0:
+        bucket = "bullish"
+    elif breadth >= 45.0:
+        bucket = "rotational"
+    else:
+        bucket = "defensive"
+    idx = int(breadth * 10) % len(PHRASE_MATRIX["regime"][bucket])
+    return PHRASE_MATRIX["regime"][bucket][idx].format(breadth=breadth)
+
+def get_setup_narrative(cat, r_ratio_val, risk_pct_val):
+    bank = PHRASE_MATRIX["setups"].get(cat, PHRASE_MATRIX["setups"]["Base-Reset"])
+    try:
+        r_flt = float(r_ratio_val) if r_ratio_val is not None else 0.0
+    except (ValueError, TypeError):
+        r_flt = 0.0
+    try:
+        risk_flt = float(risk_pct_val) if risk_pct_val is not None else 5.0
+    except (ValueError, TypeError):
+        risk_flt = 5.0
+
+    if r_flt >= 6.0:
+        return bank["high_r"].format(r=f"{r_flt:.2f}", risk=f"{risk_flt:.2f}")
+    elif risk_flt <= 3.0:
+        return bank["tight"].format(r=f"{r_flt:.2f}", risk=f"{risk_flt:.2f}")
+    return bank["standard"].format(r=f"{r_flt:.2f}", risk=f"{risk_flt:.2f}")
+
+def get_card_info(cat):
+    bank = PHRASE_MATRIX["setups"].get(cat, PHRASE_MATRIX["setups"]["Base-Reset"])
+    return bank.get("card", "anatomy_base_reset.png"), bank.get("label", "Pattern Anatomy")
+
 def build_thread_payloads():
     if not os.path.exists(META_FILE):
         print(f"[X INTENT] {META_FILE} not found.")
@@ -36,8 +126,8 @@ def build_thread_payloads():
     exposure = meta.get("max_exposure", "30% - 60%")
     pct_above_200 = meta.get("pct_above_200", 0.0)
 
-    # Concise regime labels for strict character compliance
     regime_label = "EXPANSION" if "GREEN" in regime else ("DEFENSIVE" if "RED" in regime else "ACCUMULATION")
+    macro_hook = get_macro_hook(pct_above_200)
 
     setup_slots = [
         ('top_br', 'Base-Reset'),
@@ -66,27 +156,32 @@ def build_thread_payloads():
         pivot = format_num(primary_cand.get('Pivot_Trigger'), prefix="$")
         stop = format_num(primary_cand.get('Stop_Loss'), prefix="$")
         risk = format_num(primary_cand.get('Risk_%'), suffix="%")
-        asymmetry = format_num(primary_cand.get('R_Ratio'), suffix="R")
-        earnings = primary_cand.get('Earnings_Risk', 'SAFE')
+        narrative = get_setup_narrative(primary_label, primary_cand.get('R_Ratio'), primary_cand.get('Risk_%'))
+        card_file, card_lbl = get_card_info(primary_label)
 
         t1_text = (
             f"CORP ACUITY // ASYMMETRY SCAN\n\n"
-            f"Regime: {regime_label} ({exposure})\n"
-            f"Breadth: {pct_above_200}% > 200 EMA\n\n"
+            f"{macro_hook}\n"
+            f"Exposure: {exposure}\n\n"
             f"Focus: ${p_ticker} ({primary_label})\n"
-            f"• Pivot: {pivot}\n"
-            f"• Stop: {stop} ({risk} risk)\n"
-            f"• Payoff: {asymmetry}\n"
-            f"• Runway: {earnings}\n\n"
-            f"Void if open >2.5% past pivot.\n"
+            f"{narrative}\n"
+            f"• Pivot: {pivot} | Stop: {stop} ({risk} risk)\n\n"
+            f"Invalid if open >2.5% over pivot.\n"
             f"Setups in thread 🧵👇\n\n"
-            f"$SPY$QQQ #FinTwit"
+            f"${p_ticker} #FinTwit"
         )
+        if len(t1_text) > 280:
+            t1_text = t1_text.replace(f"Exposure: {exposure}\n\n", "")
+        if len(t1_text) > 280:
+            t1_text = t1_text.replace(" #FinTwit", "")
+        if len(t1_text) > 280:
+            t1_text = t1_text.replace("Invalid if open >2.5% over pivot.\n", "")
     else:
+        card_file, card_lbl = "anatomy_regime.png", "Macro Regime Anatomy"
         t1_text = (
             f"CORP ACUITY // ASYMMETRY SCAN\n\n"
-            f"Regime: {regime_label} ({exposure})\n"
-            f"Breadth: {pct_above_200}% > 200 EMA\n\n"
+            f"{macro_hook}\n"
+            f"Exposure: {exposure}\n\n"
             f"Radar Focus: {radar_str}\n\n"
             f"Rule: Strict 2.0R asymmetry floor.\n"
             f"Setups in thread 🧵👇\n\n"
@@ -95,7 +190,8 @@ def build_thread_payloads():
 
     thread_posts.append({
         "title": "Tweet 1: Root Anchor Post",
-        "role": "Post this as your main tweet (attach Card 1 & Card 2)",
+        "role": f"Main tweet (attach Card 1 & {card_lbl})",
+        "card_asset": f"assets/cards/{card_file}",
         "text": t1_text,
         "url": f"https://x.com/intent/tweet?text={urllib.parse.quote(t1_text)}"
     })
@@ -108,34 +204,44 @@ def build_thread_payloads():
         risk = format_num(cand.get('Risk_%'), suffix="%")
         asymmetry = format_num(cand.get('R_Ratio'), suffix="R")
         zacks = clean_zacks(cand.get('Zacks_Rank'))
-        earnings = cand.get('Earnings_Risk', 'SAFE')
+        sub_narrative = get_setup_narrative(label, cand.get('R_Ratio'), cand.get('Risk_%'))
+        sub_card, sub_lbl = get_card_info(label)
 
         reply_text = (
             f"Setup #{i}: ${ticker} ({label})\n\n"
+            f"{sub_narrative}\n\n"
             f"• Pivot: {pivot}\n"
             f"• Stop: {stop} ({risk} risk)\n"
             f"• Payoff: {asymmetry}\n"
-            f"• Catalyst: Zacks {zacks}\n"
-            f"• Runway: {earnings}\n\n"
+            f"• Catalyst: Zacks {zacks}\n\n"
             f"Execution: Standard swing leeway."
         )
+        if len(reply_text) > 280:
+            reply_text = reply_text.replace(f"\n• Catalyst: Zacks {zacks}", "")
+
         thread_posts.append({
             "title": f"Tweet {i}: Thread Reply (Setup #{i})",
-            "role": f"Reply in thread (attach Card {i+1})",
+            "role": f"Reply in thread (attach {sub_lbl})",
+            "card_asset": f"assets/cards/{sub_card}",
             "text": reply_text,
             "url": f"https://x.com/intent/tweet?text={urllib.parse.quote(reply_text)}"
         })
 
     # 3. FINAL THREAD CLOSER
     closer_num = len(thread_posts) + 1
+    q_idx = int(pct_above_200) % len(PHRASE_MATRIX["questions"])
+    question = PHRASE_MATRIX["questions"][q_idx]
+
     t_close_text = (
         f"Execution Governance & Screener Terminal:\n\n"
         f"Access quantitative breakdowns, daily PDF slide deck, and regime exposure directives:\n\n"
-        f"👉 corpacuity.co.uk/intel.html"
+        f"👉 corpacuity.co.uk/intel.html\n\n"
+        f"{question}"
     )
     thread_posts.append({
         "title": f"Tweet {closer_num}: Final Thread Reply (Terminal Link)",
-        "role": "Terminal link reply at end of thread",
+        "role": "Terminal link reply at end of thread (no media)",
+        "card_asset": "None",
         "text": t_close_text,
         "url": f"https://x.com/intent/tweet?text={urllib.parse.quote(t_close_text)}"
     })
@@ -143,7 +249,6 @@ def build_thread_payloads():
     return thread_posts
 
 def generate_thread_helper_html(thread_posts):
-    card_base = "https://corpacuity.co.uk/x_cards"
     cards_js = json.dumps([p["text"] for p in thread_posts])
 
     html_content = f"""<!DOCTYPE html>
@@ -254,6 +359,18 @@ def generate_thread_helper_html(thread_posts):
       white-space: pre-wrap;
       margin-bottom: 12px;
     }}
+    .attachment-pill {{
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      background: #0f172a;
+      border: 1px solid var(--border);
+      color: var(--accent);
+      padding: 6px 10px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+    }}
     .card-actions {{
       display: flex;
       justify-content: space-between;
@@ -304,7 +421,7 @@ def generate_thread_helper_html(thread_posts):
     <div class="header">
       <h1>Corp Acuity // X Thread Dispatcher</h1>
       <p class="instructions">
-        <strong>Workflow:</strong> Click <em>"Open Composer with Tweet 1"</em>. In X, hit the <strong>(+)</strong> button to add a tweet slot, then simply click <em>"Copy Tweet #"</em> below and paste into each slot.
+        <strong>Workflow:</strong> Click <em>"Open Composer with Tweet 1"</em>. In X, hit the <strong>(+)</strong> button to add a tweet slot, drag the designated visual card, then click <em>"Copy Tweet #"</em> below and paste into each slot.
       </p>
       <div class="action-bar">
         <a href="{thread_posts[0]['url']}" target="_blank" class="primary-btn">
@@ -316,12 +433,11 @@ def generate_thread_helper_html(thread_posts):
     <div id="thread-cards"></div>
 
     <div class="asset-tray">
-      <strong style="color: var(--text-dim);">Visual Card Attachments:</strong>
+      <strong style="color: var(--text-dim);">Local Visual Card Assets (Drag & Drop):</strong>
       <div class="asset-links">
-        <a class="asset-link" href="{card_base}/card_1.png" target="_blank">Card 1 (Regime)</a>
-        <a class="asset-link" href="{card_base}/card_2.png" target="_blank">Card 2 (Radar)</a>
-        <a class="asset-link" href="{card_base}/card_3.png" target="_blank">Card 3 (Setup 1)</a>
-        <a class="asset-link" href="{card_base}/card_4.png" target="_blank">Card 4 (Setup 2)</a>
+        <span class="asset-link">📁 ./assets/cards/anatomy_base_reset.png</span>
+        <span class="asset-link">📁 ./assets/cards/anatomy_momentum_flag.png</span>
+        <span class="asset-link">📁 ./assets/cards/anatomy_pocket_pivot.png</span>
       </div>
     </div>
   </div>
@@ -330,6 +446,7 @@ def generate_thread_helper_html(thread_posts):
     const posts = {cards_js};
     const titles = {json.dumps([p["title"] for p in thread_posts])};
     const roles = {json.dumps([p["role"] for p in thread_posts])};
+    const assets = {json.dumps([p.get("card_asset", "None") for p in thread_posts])};
 
     const container = document.getElementById('thread-cards');
 
@@ -337,12 +454,14 @@ def generate_thread_helper_html(thread_posts):
       const card = document.createElement('div');
       card.className = 'card';
       const charCount = text.length;
+      const assetHint = assets[idx] !== "None" ? `<div class="attachment-pill">📎 <strong>Attach Card:</strong> ${{assets[idx]}}</div>` : '';
 
       card.innerHTML = `
         <div class="card-header">
           <h2 class="card-title">${{titles[idx]}}</h2>
           <span class="char-badge">${{charCount}} / 280 chars</span>
         </div>
+        ${{assetHint}}
         <div class="text-box" id="text-${{idx}}">${{text}}</div>
         <div class="card-actions">
           <button class="copy-btn" onclick="copySlot(${{idx}}, this)">📋 Copy Tweet #${{idx + 1}}</button>
@@ -404,28 +523,16 @@ def send_dispatch_email(thread_posts):
       <div class="card">
         <h2 style="color: #38bdf8; margin-top: 0;">Corp Acuity // Morning Dispatch Console</h2>
         <p style="font-size: 14px; color: #94a3b8; line-height: 1.5;">
-          Today's scan is rendered and validated under 280 characters. Use the single-click dispatch console to copy and deploy each thread slot into X in under 30 seconds:
+          Today's scan is rendered and validated under 280 characters with dynamic setup narratives.
         </p>
 
         <div style="text-align: center; margin: 25px 0;">
           <a href="{helper_url}" class="btn" target="_blank">🚀 Open Thread Dispatch Console ➔</a>
         </div>
-
-        <p style="font-size: 12px; color: #64748b; line-height: 1.4;">
-          <strong>Quick steps:</strong><br>
-          1. Tap the button above to open the console.<br>
-          2. Click <em>"Open X Composer"</em> (loads Tweet 1 automatically).<br>
-          3. Tap <strong>(+)</strong> in X, then click <em>"Copy Tweet #2"</em> on the console and paste.<br>
-          4. Repeat for #3 and #4, then click <strong>Post all</strong>.
-        </p>
-
-        <hr style="border: 0; border-top: 1px solid #1e293b; margin: 24px 0;">
-        <p style="font-size: 11px; color: #64748b; margin: 0;">Automated pipeline running via GitHub Actions on corpacuity.co.uk</p>
       </div>
     </body>
     </html>
     """
-
     msg.attach(MIMEText(html_body, "html"))
 
     try:
