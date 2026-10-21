@@ -1,55 +1,48 @@
-﻿import post_writer
-import os
+﻿import os
 import sys
 import json
 import time
-import random
-import datetime
 import requests
+import post_writer
+import generate_live_charts
+import pdf_engine
 
 META_FILE = "latest_post_meta.json"
+CAROUSEL_PDF = "corp_acuity_linkedin_carousel.pdf"
 
-def build_dynamic_linkedin_post(regime_status, posture_box, max_exposure, top_br, top_htf, top_pp, top_ls, pct_above_200=53.1, top_runner=None):
-    # Dynamic Candidate Ticker Highlights
-    active_tickers = [c['Ticker'] for c in [top_br, top_htf, top_pp, top_ls] if c and c.get('Ticker')]
-    ticker_str = ", ".join([f"${t}" for t in active_tickers[:4]]) if active_tickers else "Screened Candidates"
+def ensure_carousel_and_charts(meta):
+    print("[1/3] Verifying and generating setup chart plates...")
+    try:
+        generate_live_charts.generate_all()
+    except Exception as e:
+        print(f"[!] Warning generating charts: {e}")
 
-    # Data-Driven Institutional Hooks (Appears before '...see more')
-    HOOKS = [
-        f"{pct_above_200:.1f}% of our US institutional universe is holding above its 200 EMA.\n\nWhen breadth consolidates near the median, capital allocation is governed by strict regime exposure ceilings rather than momentum pursuit.",
-        f"Macro Regime Posture: {regime_status} (Exposure Model: {max_exposure}).\n\nPreserving capital during rotational absorption is an active mathematical position. Systematic screening filters out emotional bias before individual tickers are considered.",
-        f"Systematic Asymmetry: Screening across the complete US equity universe isolates setups with >= 2.0R geometry.\n\nCurrent regime breadth ({pct_above_200:.1f}% > 200 EMA) throttles model exposure to {max_exposure}."
-    ]
-
-    hook = random.choice(HOOKS)
-
-    # Dynamic Case Study Mention
-    runner_mention = ""
-    if top_runner and top_runner.get('ticker') and top_runner.get('max_gain_pct', 0) > 0:
-        runner_mention = f"\n- Audited 5-Day Case Study: ${top_runner['ticker']} (+{top_runner['max_gain_pct']}% peak expansion / {top_runner.get('r_multiple', '1.4')}R)"
-
-    body = (
-        f"{hook}\n\n"
-        f"Our nightly quantitative engine evaluates US equities through three non-negotiable risk gates:\n\n"
-        f"1. Regime Sizing: Capital deployment scaled to 200 EMA breadth health ({max_exposure}).\n"
-        f"2. Structural Baseline: Zero tolerance for negative drift; price must respect long-term moving averages.\n"
-        f"3. Asymmetry Hurdle: Strict >= 2.0R reward-to-risk floor on every candidate.\n\n"
-        f"Swipe through today's 8-page briefing deck for:\n"
-        f"- System Regime Cockpit & Cross-Asset Liquidity Radar\n"
-        f"- Full Candlestick Setup Anatomies ({ticker_str}){runner_mention}\n"
-        f"- Mechanical Governance Rules & Pursuit Ceilings (+2.5%)\n\n"
-        f"Daily quantitative terminal feeds and complete CSV datasets: https://corpacuity.co.uk\n\n"
-        f"---\n"
-        f"Purely educational research & systematic quantitative modeling. Not investment advice or financial promotion.\n\n"
-        f"#QuantitativeFinance #MarketRegime #SystematicTrading #RiskManagement #Macroeconomics"
+    print("[2/3] Compiling fresh 8-page LinkedIn carousel PDF...")
+    pdf_engine.create_linkedin_carousel_pdf(
+        regime_status=meta.get('regime_status', 'AMBER: ROTATIONAL ACCUMULATION'),
+        posture_box=meta.get('posture_box', ''),
+        max_exposure=meta.get('max_exposure', '30% - 60%'),
+        pct_above_200=float(meta.get('pct_above_200', 53.1)),
+        top_runner=meta.get('top_runner'),
+        top_br=meta.get('top_br'),
+        top_htf=meta.get('top_htf'),
+        top_pp=meta.get('top_pp'),
+        top_ls=meta.get('top_ls'),
+        dashboard=meta.get('dashboard'),
+        macro_events=meta.get('macro_events')
     )
-    return body
-def publish_to_linkedin(pdf_path, regime_status, posture_box, max_exposure, pct_above_200, top_br, top_htf, top_pp, top_ls):
+    print(f"[+] Carousel PDF verified: {CAROUSEL_PDF}")
+
+def publish_to_linkedin(pdf_path, meta):
     token = os.getenv("LINKEDIN_ACCESS_TOKEN")
     author_urn = os.getenv("LINKEDIN_AUTHOR_URN")
     if not token or not author_urn:
         print("[LINKEDIN] Credentials not set in environment. Skipping auto-publish.")
         return
+
+    # Generate full post body using dynamic 4-archetype writer
+    body, selected_arch = post_writer.build_post_copy(meta)
+    print(f"[*] Posting narrative archetype: {selected_arch}")
 
     headers = {
         "Authorization": f"Bearer {token}",
@@ -58,108 +51,91 @@ def publish_to_linkedin(pdf_path, regime_status, posture_box, max_exposure, pct_
     }
 
     try:
+        print("[+] Initializing document upload with LinkedIn...")
         init_res = requests.post(
             "https://api.linkedin.com/rest/documents?action=initializeUpload",
             headers=headers,
             json={"initializeUploadRequest": {"owner": author_urn}},
             timeout=15
         )
-        if init_res.status_code not in [200, 201]:
-            print(f"[LINKEDIN] Init Upload Failed ({init_res.status_code}): {init_res.text}")
+        if init_res.status_code != 200:
+            print(f"[!] Document init failed: {init_res.status_code} - {init_res.text}")
             return
 
         init_data = init_res.json()["value"]
         upload_url = init_data["uploadUrl"]
-        doc_urn = init_data["document"]
+        document_urn = init_data["document"]
 
+        print("[+] Uploading carousel PDF binary...")
         with open(pdf_path, "rb") as f:
             pdf_bytes = f.read()
 
-        r_upload = requests.put(
-            upload_url,
-            headers={"Authorization": f"Bearer {token}", "Content-Type": "application/pdf"},
-            data=pdf_bytes,
-            timeout=45
-        )
-        if r_upload.status_code not in [200, 201]:
-            print(f"[LINKEDIN] File Stream Failed ({r_upload.status_code}): {r_upload.text}")
+        up_headers = {
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/pdf"
+        }
+        up_res = requests.put(upload_url, headers=up_headers, data=pdf_bytes, timeout=60)
+        if up_res.status_code not in (200, 201):
+            print(f"[!] PDF binary upload failed: {up_res.status_code} - {up_res.text}")
             return
 
-        print("[LINKEDIN] Document uploaded. Pausing 6 seconds for LinkedIn media processing...")
-        time.sleep(6.0)
+        # Poll document readiness
+        print("[+] Checking document processing status...")
+        doc_id = document_urn.split(":")[-1]
+        for _ in range(10):
+            time.sleep(2)
+            check_res = requests.get(f"https://api.linkedin.com/rest/documents/{doc_id}", headers=headers, timeout=10)
+            if check_res.status_code == 200:
+                status = check_res.json().get("status")
+                if status == "AVAILABLE":
+                    print("[+] Document status: AVAILABLE")
+                    break
+                elif status == "PROCESSING_FAILED":
+                    print("[!] LinkedIn document processing failed.")
+                    return
 
-        commentary = build_dynamic_linkedin_post(
-            regime_status,
-            posture_box,
-            max_exposure,
-            top_br,
-            top_htf,
-            top_pp,
-            top_ls
-        )
-
-        post_payload = {
+        # Publish document post
+        print("[+] Publishing full post commentary and document...")
+        payload = {
             "author": author_urn,
-            "commentary": commentary,
+            "commentary": body,
             "visibility": "PUBLIC",
             "distribution": {
                 "feedDistribution": "MAIN_FEED",
                 "targetEntities": [],
                 "thirdPartyDistributionChannels": []
             },
-            "lifecycleState": "PUBLISHED",
             "content": {
                 "media": {
-                    "title": f"CorpAcuity Market Intel // {datetime.date.today().strftime('%b %d, %Y')}",
-                    "id": doc_urn
+                    "title": "Corp Acuity // Market Intelligence Briefing",
+                    "id": document_urn
                 }
-            }
+            },
+            "lifecycleState": "PUBLISHED",
+            "isReshareDisabledByAuthor": False
         }
 
-        create_resp = requests.post(
-            "https://api.linkedin.com/rest/posts",
-            headers=headers,
-            json=post_payload,
-            timeout=20
-        )
-
-        post_urn = create_resp.headers.get("x-restli-id") or create_resp.json().get("id")
-        if create_resp.status_code in [200, 201] and post_urn:
-            print("[LINKEDIN] Successfully published carousel document to feed.")
+        post_res = requests.post("https://api.linkedin.com/rest/posts", headers=headers, json=payload, timeout=15)
+        if post_res.status_code == 201:
+            post_id = post_res.headers.get("x-restli-id", "Unknown")
+            print(f"[SUCCESS] Post successfully published to LinkedIn! Post URN: {post_id}")
         else:
-            print(f"[LINKEDIN] Post Publish Failed ({create_resp.status_code}): {create_resp.text}")
+            print(f"[!] LinkedIn post creation failed: {post_res.status_code} - {post_res.text}")
 
     except Exception as e:
-        print(f"[LINKEDIN] Automation Error: {e}")
+        print(f"[!] Error during LinkedIn dispatch: {e}")
 
 def main():
+    print("[BROADCAST] Commencing morning publication cycle...")
     if not os.path.exists(META_FILE):
-        print(f"[ERROR] {META_FILE} not found. The overnight scanner must run before publishing.")
-        sys.exit(1)
+        print(f"[!] Error: {META_FILE} missing.")
+        return
 
     with open(META_FILE, "r", encoding="utf-8") as f:
         meta = json.load(f)
 
-    pdf_path = meta.get("pdf_path", "daily_market_intelligence.pdf")
-
-    if not os.path.exists(pdf_path):
-        print(f"[ERROR] PDF '{pdf_path}' not found. Cannot publish.")
-        sys.exit(1)
-
-    print(f"[BROADCAST] Commencing morning publication of {pdf_path} to LinkedIn...")
-
-    publish_to_linkedin(
-        pdf_path=pdf_path,
-        regime_status=meta.get("regime_status", "UNKNOWN"),
-        posture_box=meta.get("posture_box", "SELECTIVE"),
-        max_exposure=meta.get("max_exposure", "N/A"),
-        pct_above_200=meta.get("pct_above_200", 0.0),
-        top_br=meta.get("top_br"),
-        top_htf=meta.get("top_htf"),
-        top_pp=meta.get("top_pp"),
-        top_ls=meta.get("top_ls")
-    )
-
+    ensure_carousel_and_charts(meta)
+    publish_to_linkedin(CAROUSEL_PDF, meta)
     print("[BROADCAST] Morning broadcast cycle complete.")
 
 if __name__ == "__main__":
