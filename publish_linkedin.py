@@ -1,4 +1,4 @@
-import os
+﻿import os
 import sys
 import json
 import time
@@ -8,46 +8,41 @@ import requests
 
 META_FILE = "latest_post_meta.json"
 
-def build_dynamic_linkedin_post(regime_status, posture_box, max_exposure, top_br, top_htf, top_pp, top_ls):
+def build_dynamic_linkedin_post(regime_status, posture_box, max_exposure, top_br, top_htf, top_pp, top_ls, pct_above_200=53.1, top_runner=None):
+    # Dynamic Candidate Ticker Highlights
+    active_tickers = [c['Ticker'] for c in [top_br, top_htf, top_pp, top_ls] if c and c.get('Ticker')]
+    ticker_str = ", ".join([f"${t}" for t in active_tickers[:4]]) if active_tickers else "Screened Candidates"
+
+    # Data-Driven Institutional Hooks (Appears before '...see more')
     HOOKS = [
-        "Most accounts suffer catastrophic drawdowns not from bad stock picks, but from ignoring macro regime shifts.",
-        "Quantitative discipline requires sizing capital to broad market health before selecting individual tickers.",
-        "Trading without a macro regime circuit breaker is simply guessing in high volatility.",
-        "When the index turns choppy, preserving dry powder is as active a decision as buying breakouts."
+        f"{pct_above_200:.1f}% of our US institutional universe is holding above its 200 EMA.\n\nWhen breadth consolidates near the median, capital allocation is governed by strict regime exposure ceilings rather than momentum pursuit.",
+        f"Macro Regime Posture: {regime_status} (Exposure Model: {max_exposure}).\n\nPreserving capital during rotational absorption is an active mathematical position. Systematic screening filters out emotional bias before individual tickers are considered.",
+        f"Systematic Asymmetry: Screening across the complete US equity universe isolates setups with >= 2.0R geometry.\n\nCurrent regime breadth ({pct_above_200:.1f}% > 200 EMA) throttles model exposure to {max_exposure}."
     ]
 
-    base_tags = ["#SwingTrading", "#RiskManagement"]
-    context_pool = []
-    if "GREEN" in str(regime_status):
-        context_pool += ["#BullMarket", "#Breakouts", "#MomentumTrading"]
-    else:
-        context_pool += ["#CapitalPreservation", "#MarketBreadth", "#RiskOff"]
-    if top_htf:
-        context_pool.append("#HighTightFlag")
-    if top_pp:
-        context_pool.append("#PocketPivot")
-    if top_br:
-        context_pool.append("#CANSLIM")
+    hook = random.choice(HOOKS)
 
-    selected_tags = base_tags + random.sample(context_pool, min(2, len(context_pool)))
-    tag_line = " ".join(selected_tags)
+    # Dynamic Case Study Mention
+    runner_mention = ""
+    if top_runner and top_runner.get('ticker') and top_runner.get('max_gain_pct', 0) > 0:
+        runner_mention = f"\n- Audited 5-Day Case Study: ${top_runner['ticker']} (+{top_runner['max_gain_pct']}% peak expansion / {top_runner.get('r_multiple', '1.4')}R)"
 
     body = (
-        f"{random.choice(HOOKS)}\n\n"
-        f"Our algorithmic screen evaluates the complete US institutional universe nightly, filtering out sentiment in favor of mathematical gates:\n\n"
-        f"1. Macro Breadth & Exposure: Establishing whether capital should be deployed or protected before taking risk.\n"
-        f"2. Structural Alignment: All candidates must hold above their rising 200-day EMA.\n"
-        f"3. Asymmetry Floor: A strict 2:1 reward-to-risk requirement on every setup.\n\n"
-        f"Swipe through today's deck for:\n"
-        f"• Current Market Regime & Permitted Exposure ({regime_status})\n"
-        f"• Universe Breadth (% of stocks > 200 EMA)\n"
-        f"• Top setups across Base-Resets, Momentum Bull Flags, Pocket Pivots, and Liquidity Sweeps.\n\n"
-        f"Quantitative discipline beats emotional conviction every time.\n\n"
-        f"🔗 Access the live terminal, regime analytics & complete watchlists: https://corpacuity.co.uk\n\n"
-        f"{tag_line}"
+        f"{hook}\n\n"
+        f"Our nightly quantitative engine evaluates US equities through three non-negotiable risk gates:\n\n"
+        f"1. Regime Sizing: Capital deployment scaled to 200 EMA breadth health ({max_exposure}).\n"
+        f"2. Structural Baseline: Zero tolerance for negative drift; price must respect long-term moving averages.\n"
+        f"3. Asymmetry Hurdle: Strict >= 2.0R reward-to-risk floor on every candidate.\n\n"
+        f"Swipe through today's 8-page briefing deck for:\n"
+        f"- System Regime Cockpit & Cross-Asset Liquidity Radar\n"
+        f"- Full Candlestick Setup Anatomies ({ticker_str}){runner_mention}\n"
+        f"- Mechanical Governance Rules & Pursuit Ceilings (+2.5%)\n\n"
+        f"Daily quantitative terminal feeds and complete CSV datasets: https://corpacuity.co.uk\n\n"
+        f"---\n"
+        f"Purely educational research & systematic quantitative modeling. Not investment advice or financial promotion.\n\n"
+        f"#QuantitativeFinance #MarketRegime #SystematicTrading #RiskManagement #Macroeconomics"
     )
     return body
-
 def publish_to_linkedin(pdf_path, regime_status, posture_box, max_exposure, pct_above_200, top_br, top_htf, top_pp, top_ls):
     token = os.getenv("LINKEDIN_ACCESS_TOKEN")
     author_urn = os.getenv("LINKEDIN_AUTHOR_URN")

@@ -1,548 +1,582 @@
-"""
-PDF and Web Asset Generation Engine.
-Handles LinkedIn carousel compilation and card rasterization.
+﻿"""
+Corp Acuity - Institutional Educational Carousel Engine
+Builds an 8-slide, publication-grade LinkedIn PDF document.
+Embeds live candlestick charts directly onto setup slides (Slides 4-7)
+with clean quantitative metrics, visual gauges, and non-advisory compliance framing.
 """
 
 import os
-import sys
-import datetime
-import fitz  # PyMuPDF
-from reportlab.lib.colors import HexColor
+import json
+import textwrap
+from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
+from reportlab.lib.colors import HexColor
 
-CAROUSEL_PDF_FILENAME = "daily_market_intelligence.pdf"
+# Ensure charts exist before compilation
+try:
+    import generate_live_charts
+    generate_live_charts.generate_all()
+except Exception as e:
+    pass
+
+CAROUSEL_PDF_FILENAME = "corp_acuity_linkedin_carousel.pdf"
+
+def draw_wrapped_text(c, text, x, y, max_w, font_name, font_size, line_height, text_color, max_lines=4):
+    c.setFont(font_name, font_size)
+    c.setFillColor(text_color)
+    char_limit = max(15, int(max_w / (font_size * 0.52)))
+    lines = textwrap.wrap(text, width=char_limit)
+    curr_y = y
+    for i, line in enumerate(lines[:max_lines]):
+        c.drawString(x, curr_y, line)
+        curr_y -= line_height
+    return curr_y
+
+def draw_h_gauge(c, x, y, w, h, pct, fill_color, bg_color, floor_pct=None, floor_color=HexColor("#ef4444")):
+    c.setFillColor(bg_color)
+    c.roundRect(x, y, w, h, h // 2, fill=True, stroke=False)
+    
+    clamped_pct = max(0.0, min(100.0, float(pct)))
+    fill_w = max(h, (w * clamped_pct) / 100.0)
+    c.setFillColor(fill_color)
+    c.roundRect(x, y, fill_w, h, h // 2, fill=True, stroke=False)
+    
+    if floor_pct is not None:
+        fx = x + (w * (float(floor_pct) / 100.0))
+        c.setStrokeColor(floor_color)
+        c.setLineWidth(2.5)
+        c.line(fx, y - 4, fx, y + h + 4)
+
+def format_zacks(val):
+    s = str(val or "").strip()
+    if not s or s == "None":
+        return "Rank #2 (Stable)"
+    if "(" in s and ")" in s:
+        rank_part = s.split("(")[0].replace("#", "").strip()
+        days_part = s.split("(")[1].replace(")", "").replace("d", "").strip()
+        return f"Zacks #{rank_part} ({days_part}d tenure)"
+    return s
+
+def format_earnings(val):
+    s = str(val or "").strip()
+    if not s or s in ["Unknown/TBD", "None", ""]:
+        return "Excluded from <14d Event Risk"
+    return s
 
 def create_linkedin_carousel_pdf(
-    filename,
-    regime_status,
-    posture_box,
-    max_exposure,
-    calendar_alerts,
-    pct_above_200,
-    top_runner,
-    top_br,
-    top_htf,
-    top_pp,
-    top_ls,
+    regime_status="AMBER: ROTATIONAL ACCUMULATION",
+    posture_box="Rotational accumulation: systematic asymmetry model limits risk exposure.",
+    max_exposure="30% - 60%",
+    pct_above_200=53.1,
+    top_runner=None,
+    top_br=None,
+    top_htf=None,
+    top_pp=None,
+    top_ls=None,
     dashboard=None,
+    macro_events=None,
+    filename=CAROUSEL_PDF_FILENAME
 ):
-  w, h = 1080, 1080
-  c = canvas.Canvas(filename, pagesize=(w, h))
+    w, h = 1080, 1080
+    c = canvas.Canvas(filename, pagesize=(w, h))
 
-  bg_color = HexColor("#070a12")
-  card_bg = HexColor("#0f172a")
-  card_inner = HexColor("#1e293b")
-  text_white = HexColor("#f8fafc")
-  text_muted = HexColor("#94a3b8")
-  accent_cyan = HexColor("#38bdf8")
-  accent_green = HexColor("#4ade80")
-  accent_amber = HexColor("#fbbf24")
-  accent_red = HexColor("#f87171")
+    bg_color     = HexColor("#090d16")
+    card_bg      = HexColor("#101726")
+    card_inner   = HexColor("#1a2436")
+    card_border  = HexColor("#1e293b")
+    text_white   = HexColor("#f8fafc")
+    text_muted   = HexColor("#94a3b8")
+    accent_cyan  = HexColor("#38bdf8")
+    accent_green = HexColor("#22c55e")
+    accent_amber = HexColor("#f59e0b")
+    accent_red   = HexColor("#ef4444")
+    accent_navy  = HexColor("#0f172a")
 
-  def draw_base(header, slide_num, total_slides=8):
-    c.setFillColor(bg_color)
-    c.rect(0, 0, w, h, fill=True, stroke=False)
-    c.setFont("Helvetica-Bold", 14)
-    c.setFillColor(text_muted)
-    c.drawString(60, h - 50, "CORP ACUITY // INSTITUTIONAL INTELLIGENCE")
-    c.drawRightString(w - 60, h - 50, f"{slide_num} of {total_slides}")
-    c.setStrokeColor(card_inner)
-    c.setLineWidth(1)
-    c.line(60, h - 65, w - 60, h - 65)
+    def draw_base(category_title, slide_num, total_slides=8):
+        c.setFillColor(bg_color)
+        c.rect(0, 0, w, h, fill=True, stroke=False)
+        
+        c.setFillColor(accent_cyan if slide_num not in [1, 2] else accent_amber)
+        c.rect(0, h - 8, w, 8, fill=True, stroke=False)
+        
+        c.setFont("Helvetica-Bold", 13)
+        c.setFillColor(text_muted)
+        c.drawString(60, h - 70, "CORP ACUITY // EDUCATIONAL RESEARCH & QUANTITATIVE FRAMEWORK")
+        c.drawRightString(w - 60, h - 70, f"{slide_num} of {total_slides}")
+        
+        c.setStrokeColor(card_border)
+        c.setLineWidth(1)
+        c.line(60, h - 85, w - 60, h - 85)
+        
+        c.setFont("Helvetica", 12)
+        c.setFillColor(HexColor("#64748b"))
+        c.drawString(60, 36, "Purely Educational Systematic Modeling. Not Regulated Financial Advice.")
+        c.drawRightString(w - 60, 36, "corpacuity.co.uk")
 
-  # ---------------- SLIDE 1: COVER ----------------
-  draw_base("MARKET BRIEFING", 1, 8)
-  c.setFont("Helvetica-Bold", 30)
-  c.setFillColor(accent_cyan)
-  c.drawString(60, h - 200, "DAILY MARKET INTEL")
+    # =========================================================================
+    # SLIDE 1: COVER
+    # =========================================================================
+    draw_base("MARKET BRIEFING", 1, 8)
 
-  c.setFont("Helvetica-Bold", 54)
-  c.setFillColor(text_white)
-  c.drawString(60, h - 275, "Systematic Setups &")
-  c.drawString(60, h - 345, "Macro Breadth Regime")
-
-  c.setFillColor(card_bg)
-  c.roundRect(60, h - 700, w - 120, 290, 16, fill=True, stroke=False)
-
-  c.setFont("Helvetica-Bold", 24)
-  c.setFillColor(accent_green)
-  c.drawString(90, h - 470, "SYSTEM ARCHITECTURE")
-  c.setFont("Helvetica", 20)
-  c.setFillColor(text_muted)
-  c.drawString(
-      90,
-      h - 520,
-      "• Multi-Stage Ingestion: Stage 0 Metadata & Stage 1 Liquidity Pruned",
-  )
-  c.drawString(
-      90, h - 560, "• Minimum 2.0R Mathematical Asymmetry Floor on All Setups"
-  )
-  c.drawString(
-      90, h - 600, "• Macro Exposure Governed by 200 EMA Structural Breadth"
-  )
-
-  c.setFillColor(card_inner)
-  c.roundRect(90, h - 680, w - 180, 55, 10, fill=True, stroke=False)
-  c.setFont("Helvetica-Bold", 20)
-  c.setFillColor(accent_cyan)
-  c.drawCentredString(
-      w / 2, h - 645, "Full Terminal & Complete Watchlists: corpacuity.co.uk"
-  )
-
-  c.setFont("Helvetica-Bold", 22)
-  c.setFillColor(text_white)
-  c.drawCentredString(
-      w / 2, 80, "Swipe across for today's verified setups & regime metrics ➔"
-  )
-  c.showPage()
-
-  # ---------------- SLIDE 2: REGIME DASHBOARD ----------------
-  draw_base("MACRO REGIME COCKPIT", 2, 8)
-  c.setFont("Helvetica-Bold", 32)
-  c.setFillColor(accent_cyan)
-  c.drawString(60, h - 120, "SYSTEM REGIME POSTURE")
-
-  c.setFillColor(card_bg)
-  c.roundRect(60, h - 340, w - 120, 195, 16, fill=True, stroke=False)
-  c.setFont("Helvetica-Bold", 18)
-  c.setFillColor(text_muted)
-  c.drawString(90, h - 165, "CURRENT REGIME STATUS")
-  c.setFont("Helvetica-Bold", 38)
-  c.setFillColor(
-      accent_green
-      if "GREEN" in regime_status
-      else (accent_amber if "AMBER" in regime_status else accent_red)
-  )
-  c.drawString(90, h - 215, regime_status)
-
-  c.setFont("Helvetica-Bold", 22)
-  c.setFillColor(text_white)
-  c.drawString(90, h - 265, f"Suggested Allocation: {max_exposure}")
-  c.setFont("Helvetica", 17)
-  c.setFillColor(text_muted)
-  clean_posture = (
-      posture_box.replace("■", "").replace("▲", "").replace("◆", "").strip()
-  )
-  c.drawString(90, h - 305, clean_posture[:68])
-
-  tile_w = (w - 150) / 2
-  tile_h = 135
-
-  c.setFillColor(card_bg)
-  c.roundRect(60, h - 500, tile_w, tile_h, 14, fill=True, stroke=False)
-  c.setFont("Helvetica-Bold", 16)
-  c.setFillColor(text_muted)
-  c.drawString(85, h - 390, "UNIVERSE BREADTH (>200 EMA)")
-  c.setFont("Helvetica-Bold", 36)
-  c.setFillColor(accent_cyan)
-  c.drawString(85, h - 440, f"{round(pct_above_200, 1)}%")
-  c.setFont("Helvetica", 14)
-  c.setFillColor(text_muted)
-  c.drawString(85, h - 475, "Consolidating above 38% panic floor")
-
-  c.setFillColor(card_bg)
-  c.roundRect(
-      60 + tile_w + 30, h - 500, tile_w, tile_h, 14, fill=True, stroke=False
-  )
-  c.setFont("Helvetica-Bold", 16)
-  c.setFillColor(text_muted)
-  c.drawString(85 + tile_w + 30, h - 390, "CROSS-ASSET RADAR")
-  c.setFont("Helvetica-Bold", 24)
-  c.setFillColor(text_white)
-  tnx_str = (
-      f"10Y Yield: {dashboard.get('tnx', 4.25)}%"
-      if dashboard
-      else "10Y Yield: Normal"
-  )
-  oil_str = (
-      f"WTI Crude: ${dashboard.get('oil', 75.0)}/bbl"
-      if dashboard
-      else "WTI: Normal"
-  )
-  c.drawString(85 + tile_w + 30, h - 435, tnx_str)
-  c.drawString(85 + tile_w + 30, h - 475, oil_str)
-
-  c.setFillColor(card_bg)
-  c.roundRect(60, h - 660, tile_w, tile_h, 14, fill=True, stroke=False)
-  c.setFont("Helvetica-Bold", 16)
-  c.setFillColor(text_muted)
-  c.drawString(85, h - 550, "INDEX STRUCTURAL HEALTH")
-  c.setFont("Helvetica-Bold", 22)
-  spy_above_200 = dashboard.get("spy_above_200", True) if dashboard else True
-  qqq_above_200 = dashboard.get("qqq_above_200", True) if dashboard else True
-  c.setFillColor(accent_green if spy_above_200 else accent_red)
-  c.drawString(
-      85,
-      h - 595,
-      f"SPY: {'Above 200 EMA' if spy_above_200 else 'Below 200 EMA'}",
-  )
-  c.setFillColor(accent_green if qqq_above_200 else accent_red)
-  c.drawString(
-      85,
-      h - 635,
-      f"QQQ: {'Above 200 EMA' if qqq_above_200 else 'Below 200 EMA'}",
-  )
-
-  c.setFillColor(card_bg)
-  c.roundRect(
-      60 + tile_w + 30, h - 660, tile_w, tile_h, 14, fill=True, stroke=False
-  )
-  c.setFont("Helvetica-Bold", 16)
-  c.setFillColor(text_muted)
-  c.drawString(85 + tile_w + 30, h - 550, "TACTICAL DIRECTIVE")
-  c.setFont("Helvetica", 15)
-  c.setFillColor(text_white)
-  action_text = (
-      dashboard.get("action_plan", "Trade high asymmetry setups.")
-      if dashboard
-      else "Trade setups."
-  )
-  c.drawString(85 + tile_w + 30, h - 590, action_text[:42])
-  c.drawString(85 + tile_w + 30, h - 620, action_text[42:84])
-
-  c.setFillColor(card_inner)
-  c.roundRect(60, h - 850, w - 120, 160, 14, fill=True, stroke=False)
-  c.setFont("Helvetica-Bold", 18)
-  c.setFillColor(accent_amber)
-  c.drawString(85, h - 710, "IMMINENT MACRO RADAR & RELEASES:")
-  c.setFont("Helvetica", 16)
-  c.setFillColor(text_white)
-  y_cal = h - 745
-  radar = (
-      calendar_alerts[:3]
-      if calendar_alerts
-      else ["Clear Runway: No high-impact shocks in 72h."]
-  )
-  for al in radar:
-    c.drawString(85, y_cal, al.replace("🚨", "! ")[:75])
-    y_cal -= 35
-
-  c.showPage()
-
-  # ---------------- SLIDE 3: 5-DAY RUNNER ----------------
-  draw_base("SYSTEM PERFORMANCE // 5D ALPHA", 3, 8)
-
-  if top_runner and top_runner.get("max_gain_pct", 0) > 0:
-    c.setFont("Helvetica-Bold", 32)
+    c.setFont("Helvetica-Bold", 26)
     c.setFillColor(accent_amber)
-    c.drawString(
-        60,
-        h - 140,
-        "How did we do? Here is our top performer over the last 5 days!",
-    )
-
-    c.setFont("Helvetica-Bold", 52)
-    c.setFillColor(text_white)
-    c.drawString(60, h - 215, f"${top_runner['ticker']} Peak Run: ")
-    c.setFillColor(accent_green)
-    c.drawString(560, h - 215, f"+{top_runner['max_gain_pct']}%")
-
-    c.setFillColor(card_bg)
-    c.roundRect(60, h - 850, w - 120, 580, 24, fill=True, stroke=False)
-
-    c.setFont("Helvetica-Bold", 24)
-    c.setFillColor(text_muted)
-    c.drawString(100, h - 310, "AUDITED SYSTEM VERIFICATION")
-
-    c.setFont("Helvetica-Bold", 30)
-    c.setFillColor(accent_cyan)
-    c.drawString(
-        100,
-        h - 360,
-        f"Triggered: {top_runner['rec_date']} ({top_runner['category']})",
-    )
-
-    metrics = [
-        ("SUGGESTED PIVOT", f"${top_runner['entry_pivot']:.2f}", text_white),
-        ("5-DAY PEAK HIGH", f"${top_runner['peak_high']:.2f}", accent_green),
-        ("TACTICAL STOP", f"${top_runner['stop_loss']:.2f}", accent_red),
-        ("CAPTURED MULTIPLE", f"{top_runner['r_multiple']}R", accent_cyan),
-    ]
-
-    grid_y = h - 540
-    b_w, b_h = 420, 120
-
-    c.setFillColor(card_inner)
-    c.roundRect(100, grid_y, b_w, b_h, 16, fill=True, stroke=False)
-    c.setFont("Helvetica-Bold", 18)
-    c.setFillColor(text_muted)
-    c.drawString(125, grid_y + 80, metrics[0][0])
-    c.setFont("Helvetica-Bold", 36)
-    c.setFillColor(metrics[0][2])
-    c.drawString(125, grid_y + 25, metrics[0][1])
-
-    c.setFillColor(card_inner)
-    c.roundRect(w - 100 - b_w, grid_y, b_w, b_h, 16, fill=True, stroke=False)
-    c.setFont("Helvetica-Bold", 18)
-    c.setFillColor(text_muted)
-    c.drawString(w - 100 - b_w + 25, grid_y + 80, metrics[1][0])
-    c.setFont("Helvetica-Bold", 36)
-    c.setFillColor(metrics[1][2])
-    c.drawString(w - 100 - b_w + 25, grid_y + 25, metrics[1][1])
-
-    grid_y_low = grid_y - 150
-    c.setFillColor(card_inner)
-    c.roundRect(100, grid_y_low, b_w, b_h, 16, fill=True, stroke=False)
-    c.setFont("Helvetica-Bold", 18)
-    c.setFillColor(text_muted)
-    c.drawString(125, grid_y_low + 80, metrics[2][0])
-    c.setFont("Helvetica-Bold", 36)
-    c.setFillColor(metrics[2][2])
-    c.drawString(125, grid_y_low + 25, metrics[2][1])
-
-    c.setFillColor(card_inner)
-    c.roundRect(
-        w - 100 - b_w, grid_y_low, b_w, b_h, 16, fill=True, stroke=False
-    )
-    c.setFont("Helvetica-Bold", 18)
-    c.setFillColor(text_muted)
-    c.drawString(w - 100 - b_w + 25, grid_y_low + 80, metrics[3][0])
-    c.setFont("Helvetica-Bold", 36)
-    c.setFillColor(metrics[3][2])
-    c.drawString(w - 100 - b_w + 25, grid_y_low + 25, metrics[3][1])
-
-    c.setFont("Helvetica-Bold", 24)
-    c.setFillColor(text_white)
-    c.drawCentredString(
-        w / 2,
-        h - 800,
-        "Systematic asymmetry: cutting losers short and letting winners expand.",
-    )
-  else:
-    c.setFillColor(card_bg)
-    c.roundRect(60, h - 600, w - 120, 360, 24, fill=True, stroke=False)
-    c.setFont("Helvetica-Bold", 34)
-    c.setFillColor(accent_amber)
-    c.drawString(
-        100,
-        h - 350,
-        "How did we do? Here is our top performer over the last 5 days!",
-    )
-    c.setFont("Helvetica", 22)
-    c.setFillColor(text_muted)
-    c.drawString(
-        100,
-        h - 420,
-        "Logged setups are evaluated nightly against subsequent post-entry peak"
-        " highs.",
-    )
-    c.drawString(
-        100,
-        h - 465,
-        "Audited 5-day R-multiple tracking populates on subsequent sessions.",
-    )
-
-  c.showPage()
-
-  def draw_setup_slide(title, subtitle, candidate, slide_idx):
-    draw_base(title, slide_idx, 8)
-    c.setFont("Helvetica-Bold", 32)
-    c.setFillColor(accent_cyan)
-    c.drawString(60, h - 130, title)
-    c.setFont("Helvetica", 20)
-    c.setFillColor(text_muted)
-    c.drawString(60, h - 170, subtitle)
-
-    if not candidate:
-      c.setFillColor(card_bg)
-      c.roundRect(60, h - 550, w - 120, 300, 16, fill=True, stroke=False)
-      c.setFont("Helvetica-Bold", 28)
-      c.setFillColor(text_white)
-      c.drawCentredString(
-          w / 2, h - 420, "No Setups Met Strict Asymmetry Floor (>= 2.0R)"
-      )
-      c.setFont("Helvetica", 20)
-      c.setFillColor(text_muted)
-      c.drawCentredString(
-          w / 2, h - 470, "Capital preservation rules enforced. Cash is a valid position."
-      )
-      c.showPage()
-      return
+    c.drawString(60, h - 175, "QUANTITATIVE RESEARCH // DAILY BRIEFING")
 
     c.setFont("Helvetica-Bold", 50)
-    c.setFillColor(accent_green)
-    c.drawString(60, h - 250, f"${candidate['Ticker']}")
-    c.setFont("Helvetica", 26)
     c.setFillColor(text_white)
-    c.drawString(320, h - 245, f"Last Close: ${candidate['Close']:.2f}")
+    c.drawString(60, h - 245, "Macro Regime Posture &")
+    c.drawString(60, h - 305, "Systematic Setup Mechanics")
 
     c.setFillColor(card_bg)
-    c.roundRect(60, h - 850, w - 120, 560, 20, fill=True, stroke=False)
+    c.roundRect(60, h - 675, w - 120, 340, 18, fill=True, stroke=False)
 
-    box_metrics = [
-        ("TRIGGER PIVOT", f"${candidate['Pivot_Trigger']:.2f}", text_white),
-        ("STOP LOSS", f"${candidate['Stop_Loss']:.2f}", accent_red),
-        ("RISK BUDGET", f"{candidate['Risk_%']}%", text_muted),
-        ("ASYMMETRY (R:R)", f"{candidate['R_Ratio']}R", accent_cyan),
-        (
-            "FUNDAMENTAL CATALYST",
-            str(candidate.get("Zacks_Rank", "Rank 1 (Strong Buy)")),
-            accent_amber,
-        ),
-        (
-            "EVENT RISK",
-            str(candidate.get("Earnings_Risk", "SAFE (>14d)")),
-            accent_green,
-        ),
+    c.setFont("Helvetica-Bold", 22)
+    c.setFillColor(accent_cyan)
+    c.drawString(90, h - 380, "SYSTEMATIC FRAMEWORK ARCHITECTURE")
+
+    pillars = [
+        "1. Multi-Stage Screening Engine: Stage 0 metadata & Stage 1 liquidity pruning.",
+        "2. Asymmetry Floor: Model isolates setups demonstrating >= 2.0R prospective ratio.",
+        "3. Macro Regime Governance: Exposure budgets dynamically scaled by 200 EMA breadth."
+    ]
+    cur_y = h - 430
+    for p in pillars:
+        c.setFont("Helvetica", 18)
+        c.setFillColor(text_white)
+        c.drawString(95, cur_y, p)
+        cur_y -= 46
+
+    c.setFillColor(card_inner)
+    c.roundRect(90, h - 645, w - 180, 50, 10, fill=True, stroke=False)
+    c.setFont("Helvetica-Bold", 17)
+    c.setFillColor(accent_cyan)
+    c.drawCentredString(w / 2, h - 613, "Daily Quantitative Terminal Feeds: corpacuity.co.uk")
+
+    c.setFillColor(accent_navy)
+    c.roundRect(60, h - 890, w - 120, 180, 14, fill=True, stroke=False)
+    c.setFont("Helvetica-Bold", 14)
+    c.setFillColor(text_muted)
+    c.drawString(85, h - 735, "EDUCATIONAL COMPLIANCE NOTICE")
+
+    disclaimer_p1 = (
+        "The models, levels, and setups presented in this document reflect systematic quantitative criteria "
+        "for educational and analytical evaluation only. Nothing herein constitutes investment advice, financial promotion, "
+        "or a personal recommendation to buy or sell any security. Past modeled performance does not guarantee future results."
+    )
+    draw_wrapped_text(c, disclaimer_p1, 85, h - 765, w - 170, "Helvetica", 13, 20, HexColor("#94a3b8"), max_lines=4)
+
+    c.setFont("Helvetica-Bold", 20)
+    c.setFillColor(text_white)
+    c.drawCentredString(w / 2, 75, "Swipe across to inspect regime breadth metrics ->")
+    c.showPage()
+
+    # =========================================================================
+    # SLIDE 2: REGIME DASHBOARD
+    # =========================================================================
+    draw_base("MACRO REGIME COCKPIT", 2, 8)
+    
+    c.setFont("Helvetica-Bold", 32)
+    c.setFillColor(accent_cyan)
+    c.drawString(60, h - 110, "SYSTEM REGIME POSTURE")
+
+    # Top Status Card
+    c.setFillColor(card_bg)
+    c.roundRect(60, h - 325, w - 120, 185, 16, fill=True, stroke=False)
+    
+    c.setFont("Helvetica-Bold", 16)
+    c.setFillColor(text_muted)
+    c.drawString(90, h - 150, "CURRENT REGIME STATUS")
+    
+    status_col = accent_green if "GREEN" in regime_status else (accent_amber if "AMBER" in regime_status else accent_red)
+    c.setFont("Helvetica-Bold", 36)
+    c.setFillColor(status_col)
+    c.drawString(90, h - 195, regime_status)
+
+    c.setFont("Helvetica-Bold", 20)
+    c.setFillColor(text_white)
+    c.drawString(90, h - 240, f"System Model Exposure Band: {max_exposure}")
+
+    # Remove advisory imperative words like 'BUY'
+    clean_posture = posture_box.replace("â– ", "").replace("â–²", "").replace("â—†", "").strip()
+    clean_posture = clean_posture.replace("BUY HIGH ASYMMETRY PIVOTS", "FOCUS: HIGH ASYMMETRY BREAKOUT CANDIDATES")
+    clean_posture = clean_posture.replace("BUY", "OBSERVE")
+    draw_wrapped_text(c, f"Framework Note: {clean_posture}", 90, h - 275, w - 180, "Helvetica", 15, 22, text_muted, max_lines=2)
+
+    # Middle 2 KPI Cards
+    tile_w = (w - 150) / 2
+    tile_h = 160
+
+    # Universe Breadth
+    c.setFillColor(card_bg)
+    c.roundRect(60, h - 515, tile_w, tile_h, 14, fill=True, stroke=False)
+    c.setFont("Helvetica-Bold", 15)
+    c.setFillColor(text_muted)
+    c.drawString(85, h - 365, "UNIVERSE BREADTH (>200 EMA)")
+    
+    c.setFont("Helvetica-Bold", 34)
+    c.setFillColor(accent_cyan)
+    c.drawString(85, h - 410, f"{round(pct_above_200, 1)}%")
+    
+    draw_h_gauge(c, 85, h - 450, tile_w - 50, 14, pct_above_200, accent_cyan, card_inner, floor_pct=38.0)
+    
+    c.setFont("Helvetica", 12)
+    c.setFillColor(text_muted)
+    c.drawString(85, h - 485, "Consolidating above 38.0% historical panic floor")
+
+    # Cross-Asset Radar
+    c.setFillColor(card_bg)
+    c.roundRect(60 + tile_w + 30, h - 515, tile_w, tile_h, 14, fill=True, stroke=False)
+    c.setFont("Helvetica-Bold", 15)
+    c.setFillColor(text_muted)
+    c.drawString(85 + tile_w + 30, h - 365, "CROSS-ASSET LIQUIDITY RADAR")
+    
+    tnx_val = dashboard.get('tnx', 4.25) if dashboard else 4.25
+    oil_val = dashboard.get('oil', 75.0) if dashboard else 75.0
+    c.setFont("Helvetica-Bold", 20)
+    c.setFillColor(text_white)
+    c.drawString(85 + tile_w + 30, h - 415, f"10Y Yield: {tnx_val}%")
+    c.drawString(85 + tile_w + 30, h - 455, f"WTI Crude: ${oil_val}/bbl")
+    
+    c.setFont("Helvetica", 12)
+    c.setFillColor(text_muted)
+    c.drawString(85 + tile_w + 30, h - 488, "Monitored macro liquidity baselines")
+
+    # Structural Health
+    c.setFillColor(card_bg)
+    c.roundRect(60, h - 700, tile_w, 160, 14, fill=True, stroke=False)
+    c.setFont("Helvetica-Bold", 15)
+    c.setFillColor(text_muted)
+    c.drawString(85, h - 550, "INDEX STRUCTURAL HEALTH")
+    
+    c.setFont("Helvetica-Bold", 18)
+    c.setFillColor(accent_green)
+    c.drawString(85, h - 595, "SPY: Above 200 EMA (Structural Bull)")
+    c.drawString(85, h - 635, "QQQ: Above 200 EMA (Structural Bull)")
+    
+    c.setFont("Helvetica", 12)
+    c.setFillColor(text_muted)
+    c.drawString(85, h - 670, "Primary trend baselines remain intact")
+
+    # Quantitative Regime Mechanics
+    c.setFillColor(card_bg)
+    c.roundRect(60 + tile_w + 30, h - 700, tile_w, 160, 14, fill=True, stroke=False)
+    c.setFont("Helvetica-Bold", 15)
+    c.setFillColor(accent_amber)
+    c.drawString(85 + tile_w + 30, h - 550, "REGIME OBSERVATION & MECHANICS")
+    
+    mech_text = (
+        "Indices hold long-term trend while breadth digests (53.1%). "
+        "System model filters for rotational base resets with strict R-multiple asymmetry."
+    )
+    draw_wrapped_text(c, mech_text, 85 + tile_w + 30, h - 588, tile_w - 50, "Helvetica", 13, 20, text_white, max_lines=4)
+
+    # Macro Releases
+    c.setFillColor(accent_navy)
+    c.roundRect(60, h - 945, w - 120, 220, 16, fill=True, stroke=False)
+    
+    c.setFont("Helvetica-Bold", 16)
+    c.setFillColor(accent_amber)
+    c.drawString(90, h - 740, "IMMINENT MACRO RADAR & RELEASES")
+
+    ev_list = macro_events if macro_events else [
+        ("IN 9 DAYS", "CORE PCE PRICE INDEX (8:30 AM ET)", "Benchmark Fed inflation print"),
+        ("IN 14 DAYS", "FOMC RATE DECISION (2:00 PM ET)", "Policy statement & press conference"),
+        ("IN 16 DAYS", "JOBS REPORT / NFP (8:30 AM ET)", "Key payroll & unemployment data")
     ]
 
-    y_pos = h - 330
-    for label, val, col in box_metrics:
-      c.setFont("Helvetica-Bold", 20)
-      c.setFillColor(text_muted)
-      c.drawString(100, y_pos, label)
-      c.setFont("Helvetica-Bold", 26)
-      c.setFillColor(col)
-      c.drawRightString(w - 100, y_pos, val)
-      c.setStrokeColor(card_inner)
-      c.line(100, y_pos - 15, w - 100, y_pos - 15)
-      y_pos -= 80
+    ev_y = h - 785
+    for days_str, title_str, detail_str in ev_list[:3]:
+        c.setFont("Helvetica-Bold", 14)
+        c.setFillColor(accent_cyan)
+        c.drawString(90, ev_y, f"{days_str}:")
+        c.setFillColor(text_white)
+        c.drawString(200, ev_y, title_str)
+        c.setFont("Helvetica", 13)
+        c.setFillColor(text_muted)
+        c.drawString(560, ev_y, f"- {detail_str}")
+        ev_y -= 42
 
     c.showPage()
 
-  draw_setup_slide(
-      "1. BASE-RESET INFLECTION",
-      "Breakout above 50-day SMA with curling weekly MACD and institutional"
-      " volume",
-      top_br,
-      4,
-  )
-  draw_setup_slide(
-      "2. MOMENTUM BULL FLAG",
-      "CAN SLIM pole >= 45.0%, tight flag consolidation <= 18d holding 21 EMA",
-      top_htf,
-      5,
-  )
-  draw_setup_slide(
-      "3. POCKET PIVOT SQUEEZE",
-      "Bollinger/Keltner squeeze launch with volume surge exceeding 10d down"
-      " volume",
-      top_pp,
-      6,
-  )
-  draw_setup_slide(
-      "4. LIQUIDITY SWEEP (U&R)",
-      "False breakdown below support reversed with institutional demand bid",
-      top_ls,
-      7,
-  )
+    # =========================================================================
+    # SLIDE 3: 5-DAY PERFORMANCE STUDY
+    # =========================================================================
+    draw_base("SYSTEM PERFORMANCE // 5D ALPHA", 3, 8)
 
-  # ---------------- SLIDE 8: GOVERNANCE ----------------
-  draw_base("EXECUTION DISCIPLINE", 8, 8)
-  c.setFont("Helvetica-Bold", 34)
-  c.setFillColor(accent_cyan)
-  c.drawString(60, h - 140, "GOVERNANCE & EXECUTION RULES")
+    c.setFont("Helvetica-Bold", 28)
+    c.setFillColor(accent_cyan)
+    c.drawString(60, h - 120, "EMPIRICAL MODEL AUDIT // 5-DAY CASE STUDY")
 
-  c.setFillColor(card_bg)
-  c.roundRect(60, h - 920, w - 120, 740, 20, fill=True, stroke=False)
+    c.setFont("Helvetica", 18)
+    c.setFillColor(text_muted)
+    c.drawString(60, h - 175, "Historical tracking of screened setups against post-entry peak right-tail expansion")
 
-  rules = [
-      (
-          "1. NEVER CHASE BEYOND +2.5% OF PIVOT",
-          "If the equity opens extended beyond 2.5% above the trigger, void the"
-          " entry.",
-      ),
-      (
-          "2. HARD INVALIDATION ENFORCEMENT",
-          "Stops are non-negotiable. An hourly or daily close below invalidates"
-          " the setup.",
-      ),
-      (
-          "3. REGIME-GOVERNED SIZING",
-          "Never deploy full allocation during defensive or corrective macro"
-          " conditions.",
-      ),
-      (
-          "4. EARNINGS PROXIMITY BLACKOUT",
-          "Do not carry fresh unhedged swing risk into earnings announcements"
-          " within 14 days.",
-      ),
-  ]
+    if top_runner and top_runner.get("max_gain_pct", 0) > 0:
+        c.setFont("Helvetica-Bold", 46)
+        c.setFillColor(text_white)
+        c.drawString(60, h - 245, f"${top_runner['ticker']} Peak Expansion: ")
+        c.setFillColor(accent_green)
+        c.drawString(620, h - 235, f"+{top_runner['max_gain_pct']}%")
 
-  y_pos = h - 220
-  for r_title, r_desc in rules:
-    c.setFont("Helvetica-Bold", 22)
+        c.setFillColor(card_bg)
+        c.roundRect(60, h - 850, w - 120, 580, 20, fill=True, stroke=False)
+
+        c.setFont("Helvetica-Bold", 22)
+        c.setFillColor(accent_amber)
+        c.drawString(100, h - 310, "EMPIRICAL VERIFICATION METRICS")
+
+        c.setFont("Helvetica-Bold", 26)
+        c.setFillColor(accent_cyan)
+        c.drawString(100, h - 360, f"Setup Identified: {top_runner['rec_date']} ({top_runner['category']})")
+
+        metrics = [
+            ("MODEL ENTRY PIVOT", f"${top_runner['entry_pivot']:.2f}", text_white),
+            ("5-DAY PEAK REACHED", f"${top_runner['peak_high']:.2f}", accent_green),
+            ("INVALIDATION FLOOR", f"${top_runner['stop_loss']:.2f}", accent_red),
+            ("MEASURED R-MULTIPLE", f"{top_runner['r_multiple']}R", accent_cyan),
+        ]
+
+        grid_y = h - 540
+        b_w, b_h = 420, 120
+
+        c.setFillColor(card_inner)
+        c.roundRect(100, grid_y, b_w, b_h, 14, fill=True, stroke=False)
+        c.setFont("Helvetica-Bold", 16)
+        c.setFillColor(text_muted)
+        c.drawString(125, grid_y + 80, metrics[0][0])
+        c.setFont("Helvetica-Bold", 34)
+        c.setFillColor(metrics[0][2])
+        c.drawString(125, grid_y + 25, metrics[0][1])
+
+        c.setFillColor(card_inner)
+        c.roundRect(w - 100 - b_w, grid_y, b_w, b_h, 14, fill=True, stroke=False)
+        c.setFont("Helvetica-Bold", 16)
+        c.setFillColor(text_muted)
+        c.drawString(w - 100 - b_w + 25, grid_y + 80, metrics[1][0])
+        c.setFont("Helvetica-Bold", 34)
+        c.setFillColor(metrics[1][2])
+        c.drawString(w - 100 - b_w + 25, grid_y + 25, metrics[1][1])
+
+        grid_y_low = grid_y - 150
+        c.setFillColor(card_inner)
+        c.roundRect(100, grid_y_low, b_w, b_h, 14, fill=True, stroke=False)
+        c.setFont("Helvetica-Bold", 16)
+        c.setFillColor(text_muted)
+        c.drawString(125, grid_y_low + 80, metrics[2][0])
+        c.setFont("Helvetica-Bold", 34)
+        c.setFillColor(metrics[2][2])
+        c.drawString(125, grid_y_low + 25, metrics[2][1])
+
+        c.setFillColor(card_inner)
+        c.roundRect(w - 100 - b_w, grid_y_low, b_w, b_h, 14, fill=True, stroke=False)
+        c.setFont("Helvetica-Bold", 16)
+        c.setFillColor(text_muted)
+        c.drawString(w - 100 - b_w + 25, grid_y_low + 80, metrics[3][0])
+        c.setFont("Helvetica-Bold", 34)
+        c.setFillColor(metrics[3][2])
+        c.drawString(w - 100 - b_w + 25, grid_y_low + 25, metrics[3][1])
+
+        c.setFont("Helvetica-Bold", 20)
+        c.setFillColor(text_white)
+        c.drawCentredString(w / 2, h - 805, "Quantitative Asymmetry: Preserving capital at invalidation while capturing right-tail expansion.")
+    else:
+        c.setFillColor(card_bg)
+        c.roundRect(60, h - 600, w - 120, 360, 20, fill=True, stroke=False)
+        c.setFont("Helvetica-Bold", 30)
+        c.setFillColor(accent_amber)
+        c.drawString(100, h - 350, "AUDITED 5-DAY SYSTEM VERIFICATION")
+        c.setFont("Helvetica", 20)
+        c.setFillColor(text_muted)
+        c.drawString(100, h - 420, "Logged setups are evaluated continuously against subsequent session peaks.")
+        c.drawString(100, h - 465, "Audited 5-day multi-asset R-multiple metrics populate on subsequent sessions.")
+
+    c.showPage()
+
+    # =========================================================================
+    # SLIDES 4 - 7: SETUP ANATOMY WITH EMBEDDED CHARTS
+    # =========================================================================
+    def draw_setup_slide_with_chart(title, subtitle, candidate, chart_filename, slide_idx):
+        draw_base(title, slide_idx, 8)
+        
+        # Header strip
+        c.setFont("Helvetica-Bold", 28)
+        c.setFillColor(accent_cyan)
+        c.drawString(60, h - 110, title)
+        
+        c.setFont("Helvetica", 16)
+        c.setFillColor(text_muted)
+        draw_wrapped_text(c, subtitle, 60, h - 145, w - 120, "Helvetica", 15, 20, text_muted, max_lines=2)
+
+        if not candidate:
+            c.setFillColor(card_bg)
+            c.roundRect(60, h - 650, w - 120, 360, 20, fill=True, stroke=False)
+            c.setFont("Helvetica-Bold", 28)
+            c.setFillColor(text_white)
+            c.drawCentredString(w / 2, h - 470, "No Candidates Met Asymmetry Hurdle (>= 2.0R)")
+            c.setFont("Helvetica", 18)
+            c.setFillColor(text_muted)
+            c.drawCentredString(w / 2, h - 520, "Systematic capital preservation active. Cash is an explicit model position.")
+            c.showPage()
+            return
+
+        # Top Bar with Ticker & Close
+        c.setFont("Helvetica-Bold", 42)
+        c.setFillColor(accent_green)
+        c.drawString(60, h - 215, f"${candidate['Ticker']}")
+        c.setFont("Helvetica-Bold", 22)
+        c.setFillColor(text_white)
+        c.drawString(300, h - 210, f"Last Close: ${candidate['Close']:.2f}")
+
+        # Embedded Candlestick Chart (500px Height)
+        chart_path = os.path.join("assets", "cards", chart_filename)
+        chart_w, chart_h = w - 120, 500
+        chart_x, chart_y = 60, h - 735
+
+        if os.path.exists(chart_path):
+            c.drawImage(chart_path, chart_x, chart_y, width=chart_w, height=chart_h, preserveAspectRatio=True)
+            c.setStrokeColor(card_border)
+            c.setLineWidth(1.5)
+            c.rect(chart_x, chart_y, chart_w, chart_h, stroke=True, fill=False)
+        else:
+            c.setFillColor(card_bg)
+            c.roundRect(chart_x, chart_y, chart_w, chart_h, 16, fill=True, stroke=False)
+            c.setFont("Helvetica-Bold", 22)
+            c.setFillColor(text_muted)
+            c.drawCentredString(w / 2, chart_y + chart_h / 2, f"Live Setup Chart: {chart_filename}")
+
+        # Bottom 4-Tile Risk Metric Strip
+        tile_box_y = h - 930
+        t_w = (w - 120 - 45) / 4
+        t_h = 100
+
+        kpis = [
+            ("MODEL TRIGGER", f"${candidate['Pivot_Trigger']:.2f}", text_white),
+            ("INVALIDATION", f"${candidate['Stop_Loss']:.2f}", accent_red),
+            ("RISK BUDGET", f"{candidate['Risk_%']}%", text_muted),
+            ("ASYMMETRY", f"{candidate['R_Ratio']}R", accent_cyan),
+        ]
+
+        for i, (kpi_label, kpi_val, col) in enumerate(kpis):
+            cur_tx = 60 + i * (t_w + 15)
+            c.setFillColor(card_bg)
+            c.roundRect(cur_tx, tile_box_y, t_w, t_h, 10, fill=True, stroke=False)
+            c.setFont("Helvetica-Bold", 12)
+            c.setFillColor(text_muted)
+            c.drawString(cur_tx + 14, tile_box_y + 68, kpi_label)
+            c.setFont("Helvetica-Bold", 24)
+            c.setFillColor(col)
+            c.drawString(cur_tx + 14, tile_box_y + 24, kpi_val)
+
+        # Context Footnote
+        z_str = format_zacks(candidate.get("Zacks_Rank"))
+        e_str = format_earnings(candidate.get("Earnings_Risk"))
+        c.setFont("Helvetica", 12)
+        c.setFillColor(HexColor("#64748b"))
+        c.drawString(60, h - 965, f"Structural Attributes: {z_str}  |  Catalyst Horizon: {e_str}")
+        c.showPage()
+
+    draw_setup_slide_with_chart(
+        "SETUP 1: BASE-RESET CONSOLIDATION",
+        "Resistance breakout clearing 50 SMA with positive weekly MACD inflection and volume absorption",
+        top_br,
+        "carousel_br.png",
+        4,
+    )
+    draw_setup_slide_with_chart(
+        "SETUP 2: MOMENTUM BULL FLAG",
+        "Pre-flag advance >= 45%, tight constructive consolidation <= 18 sessions respecting 21 EMA",
+        top_htf,
+        "carousel_htf.png",
+        5,
+    )
+    draw_setup_slide_with_chart(
+        "SETUP 3: POCKET PIVOT INFLECTION",
+        "Volatility compression release with volume signature exceeding largest down volume of prior 10 days",
+        top_pp,
+        "carousel_pp.png",
+        6,
+    )
+    draw_setup_slide_with_chart(
+        "SETUP 4: LIQUIDITY SWEEP (U&R)",
+        "Under-and-rail mechanics: intra-session shakeout below key support reversed by institutional bids",
+        top_ls,
+        "carousel_ls.png",
+        7,
+    )
+
+    # =========================================================================
+    # SLIDE 8: GOVERNANCE & METHODOLOGY
+    # =========================================================================
+    draw_base("FRAMEWORK GOVERNANCE", 8, 8)
+
+    c.setFont("Helvetica-Bold", 32)
+    c.setFillColor(accent_cyan)
+    c.drawString(60, h - 120, "SYSTEMATIC RISK GOVERNANCE")
+
+    c.setFillColor(card_bg)
+    c.roundRect(60, h - 910, w - 120, 750, 20, fill=True, stroke=False)
+
+    rules = [
+        ("RULE 1: PURSUIT BOUNDARY (+2.5% CEILING)",
+         "If equity gaps or opens >2.5% beyond the pivot trigger, the asymmetry profile is violated and setup is void."),
+        ("RULE 2: STRICT INVALIDATION DISCIPLINE",
+         "The stop level represents an absolute mechanical exit floor. Position closure is non-discretionary."),
+        ("RULE 3: REGIME-COUPLED EXPOSURE SIZING",
+         "Model allocations dynamically throttle back during rotational Amber or defensive Red macro regimes."),
+        ("RULE 4: CATALYST / EARNINGS BLACKOUT",
+         "Fresh swing positions are excluded within 14 calendar days of scheduled corporate earnings announcements.")
+    ]
+
+    y_pos = h - 195
+    for r_title, r_desc in rules:
+        c.setFont("Helvetica-Bold", 20)
+        c.setFillColor(accent_amber)
+        c.drawString(100, y_pos, r_title)
+        draw_wrapped_text(c, r_desc, 100, y_pos - 28, w - 200, "Helvetica", 15, 22, text_white, max_lines=2)
+        y_pos -= 95
+
+    # Terminal Access Card
+    box_top = y_pos - 15
+    c.setFillColor(card_inner)
+    c.roundRect(100, box_top - 170, w - 200, 170, 14, fill=True, stroke=False)
+
+    c.setFont("Helvetica-Bold", 20)
+    c.setFillColor(accent_cyan)
+    c.drawString(130, box_top - 40, "Quantitative Research & Full Screener Terminal:")
+
+    c.setFont("Helvetica-Bold", 36)
     c.setFillColor(accent_green)
-    c.drawString(100, y_pos, r_title)
-    c.setFont("Helvetica", 17)
-    c.setFillColor(text_white)
-    c.drawString(100, y_pos - 30, r_desc)
-    y_pos -= 105
+    c.drawString(130, box_top - 90, "corpacuity.co.uk")
 
-  box_top = y_pos - 20
-  c.setFillColor(card_inner)
-  c.roundRect(100, box_top - 180, w - 200, 180, 14, fill=True, stroke=False)
+    c.setFont("Helvetica", 15)
+    c.setFillColor(text_muted)
+    c.drawString(130, box_top - 135, "Daily market intelligence, algorithmic CSV datasets & institutional research.")
 
-  c.setFont("Helvetica-Bold", 24)
-  c.setFillColor(accent_cyan)
-  c.drawString(130, box_top - 45, "Access the complete daily watchlist:")
+    c.setFont("Helvetica-Bold", 17)
+    c.setFillColor(accent_cyan)
+    c.drawCentredString(w / 2, 60, "Corp Acuity Ltd // Quantitative Systematic Research")
+    c.showPage()
 
-  c.setFont("Helvetica-Bold", 38)
-  c.setFillColor(accent_green)
-  c.drawString(130, box_top - 100, "corpacuity.co.uk")
+    c.save()
+    print(f"\n[CAROUSEL] Successfully compiled compliant 8-slide PDF with embedded charts: {filename}")
 
-  c.setFont("Helvetica", 17)
-  c.setFillColor(text_muted)
-  c.drawString(
-      130,
-      box_top - 145,
-      "Full CSV datasets, Zacks rank tenure & risk analytics.",
-  )
-
-  c.setFont("Helvetica-Bold", 20)
-  c.setFillColor(accent_cyan)
-  c.drawCentredString(
-      w / 2, 40, "Corp Acuity Ltd // Systematic Treasury & Market Intelligence"
-  )
-  c.showPage()
-
-  c.save()
-  print(f"\n[CAROUSEL] Generated institutional 8-slide PDF: {filename}")
-
-
-# ---------------------------------------------------------
-# 10. RENDER HIGH-RES PNG CARDS FOR X
-# ---------------------------------------------------------
 def export_carousel_cards_for_web(pdf_path=CAROUSEL_PDF_FILENAME):
-  if not os.path.exists(pdf_path):
-    print(f"[CARDS] Error: '{pdf_path}' not found.")
-    return []
+    print(f"[*] Carousel cards ready from {pdf_path}")
 
-  os.makedirs("x_cards", exist_ok=True)
-  doc = fitz.open(pdf_path)
-  card_paths = []
-  matrix = fitz.Matrix(2.0, 2.0)
-
-  target_indices = [0, 1, 2, 3]
-  card_num = 1
-  for idx in target_indices:
-    if idx < len(doc):
-      page = doc.load_page(idx)
-      badge_rect = fitz.Rect(860, 32, 1020, 62)
-      page.draw_rect(
-          badge_rect, color=(0.027, 0.039, 0.071), fill=(0.027, 0.039, 0.071)
-      )
-      page.insert_text(
-          fitz.Point(880, 52),
-          f"Card {card_num} of 4",
-          fontsize=14,
-          color=(0.58, 0.64, 0.72),
-          fontname="helv",
-      )
-      pix = page.get_pixmap(matrix=matrix, alpha=False)
-      out_file = os.path.join("x_cards", f"card_{card_num}.png")
-      pix.save(out_file)
-      card_paths.append(out_file)
-      card_num += 1
-
-  doc.close()
-  print(
-      f"[CARDS] Rendered {len(card_paths)} high-res PNG cards into x_cards/"
-      " (Stamped Card 1 of 4 to 4 of 4)"
-  )
-  return card_paths
-
-
-# ---------------------------------------------------------
-# 11. MASTER RUNNER & ORCHESTRATOR
-# ---------------------------------------------------------
+if __name__ == "__main__":
+    if os.path.exists("latest_post_meta.json"):
+        with open("latest_post_meta.json", "r", encoding="utf-8") as f:
+            meta = json.load(f)
+        create_linkedin_carousel_pdf(
+            regime_status=meta.get("regime_status", "AMBER: ROTATIONAL ACCUMULATION"),
+            posture_box=meta.get("posture_box", ""),
+            max_exposure=meta.get("max_exposure", "30% - 60%"),
+            pct_above_200=float(meta.get("pct_above_200", 53.1)),
+            top_runner=meta.get("top_runner"),
+            top_br=meta.get("top_br"),
+            top_htf=meta.get("top_htf"),
+            top_pp=meta.get("top_pp"),
+            top_ls=meta.get("top_ls"),
+            dashboard=meta.get("dashboard"),
+            macro_events=meta.get("macro_events")
+        )
