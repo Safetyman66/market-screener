@@ -2,6 +2,7 @@
 import sys
 import json
 import time
+import re
 import requests
 import post_writer
 import generate_live_charts
@@ -9,6 +10,21 @@ import pdf_engine
 
 META_FILE = "latest_post_meta.json"
 CAROUSEL_PDF = "corp_acuity_linkedin_carousel.pdf"
+
+def escape_linkedin_text(text):
+    """
+    LinkedIn Posts API parses commentary with Little Text Format.
+    Unescaped parentheses, brackets, or angle brackets cause silent truncation.
+    Reserved characters: \ | { } @ [ ] ( ) < > * _ ~
+    """
+    # 1. Escape literal backslashes first
+    text = text.replace("\\", "\\\\")
+    # 2. Escape reserved syntax characters without breaking valid hashtags
+    reserved = r'([|{}@\[\]()<>\*_~])'
+    text = re.sub(reserved, r'\\\1', text)
+    # 3. Escape isolated '#' symbols that are not legitimate hashtags
+    text = re.sub(r'#(?![a-zA-Z0-9])', r'\#', text)
+    return text
 
 def ensure_carousel_and_charts(meta):
     print("[1/3] Verifying and generating setup chart plates...")
@@ -43,9 +59,12 @@ def publish_to_linkedin(pdf_path, meta):
     # Generate full post body using dynamic 4-archetype writer
     body, selected_arch = post_writer.build_post_copy(meta)
     
-    # Strip the raw URL from the post body to maximize LinkedIn feed distribution
+    # Strip raw URL from body to protect reach
     body = body.replace("Daily quantitative terminal feeds and complete CSV datasets: https://corpacuity.co.uk\n\n", "")
     print(f"[*] Posting narrative archetype: {selected_arch}")
+
+    # Escape commentary for LinkedIn Little Text parser
+    escaped_commentary = escape_linkedin_text(body)
 
     headers = {
         "Authorization": f"Bearer {token}",
@@ -82,7 +101,6 @@ def publish_to_linkedin(pdf_path, meta):
             print(f"[!] PDF binary upload failed: {up_res.status_code} - {up_res.text}")
             return
 
-        # Poll document readiness
         print("[+] Checking document processing status...")
         doc_id = document_urn.split(":")[-1]
         for _ in range(10):
@@ -97,11 +115,10 @@ def publish_to_linkedin(pdf_path, meta):
                     print("[!] LinkedIn document processing failed.")
                     return
 
-        # Publish document post
         print("[+] Publishing full post commentary and document...")
         payload = {
             "author": author_urn,
-            "commentary": body,
+            "commentary": escaped_commentary,
             "visibility": "PUBLIC",
             "distribution": {
                 "feedDistribution": "MAIN_FEED",
@@ -123,7 +140,6 @@ def publish_to_linkedin(pdf_path, meta):
             post_id = post_res.headers.get("x-restli-id", "Unknown")
             print(f"[SUCCESS] Post successfully published to LinkedIn! Post URN: {post_id}")
 
-            # Automated First Comment: Drops the outbound link without triggering LinkedIn's link penalty
             if post_id != "Unknown":
                 print("[+] Dispatching automated first comment with terminal link...")
                 comment_headers = {
@@ -140,16 +156,12 @@ def publish_to_linkedin(pdf_path, meta):
                     }
                 }
                 time.sleep(1)
-                c_res = requests.post(
+                requests.post(
                     f"https://api.linkedin.com/rest/socialActions/{post_id}/comments",
                     headers=comment_headers,
                     json=comment_payload,
                     timeout=10
                 )
-                if c_res.status_code in (200, 201):
-                    print("[+] First comment successfully pinned/dispatched.")
-                else:
-                    print(f"[!] Warning on first comment dispatch: {c_res.status_code} - {c_res.text}")
         else:
             print(f"[!] LinkedIn post creation failed: {post_res.status_code} - {post_res.text}")
 
