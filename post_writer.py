@@ -22,16 +22,42 @@ def format_ticker_list(meta):
     return ", ".join(tickers) if tickers else "$TJX, $WST, $TMO, $BWA"
 
 def build_post_copy(meta, forced_archetype=None):
-    regime = meta.get("regime_status", "AMBER: ROTATIONAL ACCUMULATION")
-    posture = meta.get("posture_box", "Rotational accumulation: systematic asymmetry model limits risk exposure.")
-    exposure = meta.get("max_exposure", "30% - 60%")
-    breadth = float(meta.get("pct_above_200", 53.1))
-    runner = meta.get("top_runner", {})
-    runner_gain = float(runner.get("max_gain_pct", 0) if runner else 0)
-    runner_ticker = runner.get("ticker", "CXT") if runner else "CXT"
-    runner_r = runner.get("r_multiple", "1.4") if runner else "1.4"
+    regime = str(meta.get("regime_status", "AMBER: ROTATIONAL ACCUMULATION"))
+    posture = str(meta.get("posture_box", "Rotational accumulation: systematic asymmetry model limits risk exposure."))
+    exposure = str(meta.get("max_exposure", "30% - 60%"))
     
-    dashboard = meta.get("dashboard", {})
+    try:
+        breadth = float(meta.get("pct_above_200", 53.1))
+    except Exception:
+        breadth = 53.1
+
+    runner = meta.get("top_runner", {}) or {}
+    try:
+        runner_gain = float(runner.get("max_gain_pct", 11.8))
+    except Exception:
+        runner_gain = 11.8
+
+    runner_ticker = str(runner.get("ticker", "CXT"))
+    runner_r = str(runner.get("r_multiple", "1.4"))
+
+    try:
+        entry_pivot = float(runner.get("entry_pivot", 51.77))
+    except Exception:
+        entry_pivot = 51.77
+
+    try:
+        stop_loss = float(runner.get("stop_loss", 47.31))
+    except Exception:
+        stop_loss = 47.31
+
+    try:
+        peak_high = float(runner.get("peak_high", 57.87))
+    except Exception:
+        peak_high = 57.87
+
+    risk_box = abs(entry_pivot - stop_loss)
+
+    dashboard = meta.get("dashboard", {}) or {}
     tnx = dashboard.get("tnx", 4.25)
     oil = dashboard.get("oil", 75.0)
 
@@ -43,9 +69,9 @@ def build_post_copy(meta, forced_archetype=None):
     else:
         if runner_gain >= 10.0 and random.random() < 0.40:
             archetype = "EMPIRICAL_AUDIT"
-        elif "RED" in str(regime) or breadth < 45.0:
+        elif "RED" in regime or breadth < 45.0:
             archetype = "CAPITAL_PRESERVATION"
-        elif "GREEN" in str(regime) and breadth > 60.0:
+        elif "GREEN" in regime and breadth > 60.0:
             archetype = "MOMENTUM_EXPANSION"
         else:
             archetype = "ROTATIONAL_COMPRESSION"
@@ -80,9 +106,9 @@ def build_post_copy(meta, forced_archetype=None):
         hook = random.choice(lead_hooks)
         theme_body = (
             f"Examining the empirical execution geometry of the ${runner_ticker} screened setup:\n\n"
-            f"- Model Entry Pivot: ${runner.get('entry_pivot', 51.77):.2f}\n"
-            f"- Invalidation Floor: ${runner.get('stop_loss', 47.31):.2f} (Defined Risk Box: ${(runner.get('entry_pivot', 51.77) - runner.get('stop_loss', 47.31)):.2f})\n"
-            f"- 5-Day Measured High: ${runner.get('peak_high', 57.87):.2f} (+{runner_gain:.1f}% peak right-tail expansion)\n"
+            f"- Model Entry Pivot: ${entry_pivot:.2f}\n"
+            f"- Invalidation Floor: ${stop_loss:.2f} (Defined Risk Box: ${risk_box:.2f})\n"
+            f"- 5-Day Measured High: ${peak_high:.2f} (+{runner_gain:.1f}% peak right-tail expansion)\n"
             f"- Empirical Return: {runner_r}R on capital at initial invalidation\n\n"
             f"When risk is defined prior to trade commitment, the math does the heavy lifting.\n\n"
             f"Swipe through today's 8-page briefing deck for:\n"
@@ -94,8 +120,8 @@ def build_post_copy(meta, forced_archetype=None):
         tags = "#TradingAlpha #EmpiricalAudit #RiskReward #QuantitativeTrading #PortfolioManagement"
 
     elif archetype == "CAPITAL_PRESERVATION":
-        defensive_exposure = "0% - 20%" if ("RED" in str(regime) or breadth < 45.0) else exposure
-        defensive_regime = "RED: CAPITAL PRESERVATION" if ("RED" in str(regime) or breadth < 45.0) else regime
+        defensive_exposure = "0% - 20%" if ("RED" in regime or breadth < 45.0) else exposure
+        defensive_regime = "RED: CAPITAL PRESERVATION" if ("RED" in regime or breadth < 45.0) else regime
 
         lead_hooks = [
             f"Preserving dry powder during market degradation is an active quantitative position.\n\nUniverse breadth has compressed to {breadth:.1f}% > 200 EMA, triggering model capital preservation rules.",
@@ -116,7 +142,7 @@ def build_post_copy(meta, forced_archetype=None):
         )
         tags = "#CapitalPreservation #RiskManagement #Macroeconomics #QuantitativeFinance #DownsideProtection"
 
-    else:  # ROTATIONAL_COMPRESSION (Default Amber)
+    else:  # ROTATIONAL_COMPRESSION
         lead_hooks = [
             f"{breadth:.1f}% of our US institutional universe is holding above its 200 EMA.\n\nWhen breadth consolidates near the median while benchmark 10Y yields test {tnx}%, capital allocation is governed by regime ceilings rather than momentum pursuit.",
             f"Macro Regime Posture: {regime} (Model Exposure Band: {exposure}).\n\nHeadline indices continue to hold primary trend, but internal rotational chop requires mathematical selectivity over broad index beta.",
@@ -147,44 +173,13 @@ def build_post_copy(meta, forced_archetype=None):
     )
     return full_post, archetype
 
-def preview_all_archetypes():
+if __name__ == "__main__":
     meta_path = "latest_post_meta.json"
     if os.path.exists(meta_path):
         with open(meta_path, "r", encoding="utf-8") as f:
             meta = json.load(f)
-    else:
-        meta = {
-            "regime_status": "AMBER: ROTATIONAL ACCUMULATION",
-            "max_exposure": "30% - 60%",
-            "pct_above_200": 53.1,
-            "top_runner": {"ticker": "CXT", "max_gain_pct": 11.8, "r_multiple": "1.4", "entry_pivot": 51.77, "stop_loss": 47.31, "peak_high": 57.87},
-            "top_br": {"Ticker": "TJX"}, "top_htf": {"Ticker": "WST"},
-            "top_pp": {"Ticker": "TMO"}, "top_ls": {"Ticker": "BWA"},
-            "dashboard": {"tnx": 4.25, "oil": 75.0}
-        }
-
-    archetypes = ["ROTATIONAL_COMPRESSION", "MOMENTUM_EXPANSION", "EMPIRICAL_AUDIT", "CAPITAL_PRESERVATION"]
-    
-    print("\n" + "="*80)
-    print(" CORP ACUITY // DYNAMIC LINKEDIN COPY GENERATOR - ARCHETYPE PREVIEW")
-    print("="*80)
-    for arch in archetypes:
-        post_text, selected = build_post_copy(meta, forced_archetype=arch)
-        print(f"\n>>> [ARCHETYPE: {selected}] <<<\n")
-        print(post_text)
-        print("\n" + "-"*80)
-
-if __name__ == "__main__":
-    import sys
-    if "--preview" in sys.argv:
-        preview_all_archetypes()
-    else:
-        meta_path = "latest_post_meta.json"
-        if os.path.exists(meta_path):
-            with open(meta_path, "r", encoding="utf-8") as f:
-                meta = json.load(f)
-            post, arch = build_post_copy(meta)
-            print(f"[Selected Archetype: {arch}]\n")
-            print(post)
-        else:
-            preview_all_archetypes()
+        for arch in ["ROTATIONAL_COMPRESSION", "MOMENTUM_EXPANSION", "EMPIRICAL_AUDIT", "CAPITAL_PRESERVATION"]:
+            p, a = build_post_copy(meta, forced_archetype=arch)
+            print(f"=== {a} ===")
+            print(p[-120:]) # print the tail to prove it reaches the end
+            print()
