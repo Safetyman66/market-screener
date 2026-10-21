@@ -42,6 +42,9 @@ def publish_to_linkedin(pdf_path, meta):
 
     # Generate full post body using dynamic 4-archetype writer
     body, selected_arch = post_writer.build_post_copy(meta)
+    
+    # Strip the raw URL from the post body to maximize LinkedIn feed distribution
+    body = body.replace("Daily quantitative terminal feeds and complete CSV datasets: https://corpacuity.co.uk\n\n", "")
     print(f"[*] Posting narrative archetype: {selected_arch}")
 
     headers = {
@@ -119,6 +122,34 @@ def publish_to_linkedin(pdf_path, meta):
         if post_res.status_code == 201:
             post_id = post_res.headers.get("x-restli-id", "Unknown")
             print(f"[SUCCESS] Post successfully published to LinkedIn! Post URN: {post_id}")
+
+            # Automated First Comment: Drops the outbound link without triggering LinkedIn's link penalty
+            if post_id != "Unknown":
+                print("[+] Dispatching automated first comment with terminal link...")
+                comment_headers = {
+                    "Authorization": f"Bearer {token}",
+                    "Content-Type": "application/json",
+                    "X-Restli-Protocol-Version": "2.0.0",
+                    "LinkedIn-Version": "202604"
+                }
+                comment_payload = {
+                    "actor": author_urn,
+                    "object": post_id,
+                    "message": {
+                        "text": "Access the full quantitative terminal, raw CSV downloads, and nightly screener datasets: https://corpacuity.co.uk"
+                    }
+                }
+                time.sleep(1)
+                c_res = requests.post(
+                    f"https://api.linkedin.com/rest/socialActions/{post_id}/comments",
+                    headers=comment_headers,
+                    json=comment_payload,
+                    timeout=10
+                )
+                if c_res.status_code in (200, 201):
+                    print("[+] First comment successfully pinned/dispatched.")
+                else:
+                    print(f"[!] Warning on first comment dispatch: {c_res.status_code} - {c_res.text}")
         else:
             print(f"[!] LinkedIn post creation failed: {post_res.status_code} - {post_res.text}")
 

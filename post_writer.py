@@ -15,8 +15,10 @@ def format_ticker_list(meta):
     tickers = []
     for k in ['top_br', 'top_htf', 'top_pp', 'top_ls']:
         cand = meta.get(k)
-        if cand and cand.get('Ticker'):
+        if isinstance(cand, dict) and cand.get('Ticker'):
             tickers.append(f"${cand['Ticker']}")
+        elif isinstance(cand, str):
+            tickers.append(f"${cand}")
     return ", ".join(tickers) if tickers else "$TJX, $WST, $TMO, $BWA"
 
 def build_post_copy(meta, forced_archetype=None):
