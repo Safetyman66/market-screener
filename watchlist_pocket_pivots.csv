@@ -1,1 +1,8 @@
-
+Ticker,Close,Headroom_%,Ext_10EMA_%,Above_200EMA_%,Vol_Pocket_Ratio,Conviction_Score,Pivot_Trigger,Stop_Loss,Risk_%,R_Ratio,ADV_20,1Min_Vol_Hurdle,Execution_Archetype,Category,Zacks_Rank,Earnings_Risk,Structural_Catalyst,Execution_Protocol
+DD,132.96,17.4,1.7,1.1,1.39x,5.18,133.26,128.8,3.35,5.18,801405,2804,BREAKOUT,Pocket Pivot,#3 (New),Unknown/TBD,TECHNICAL MOMENTUM,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+DOV,197.14,19.6,1.9,-2.1,1.26x,6.71,198.13,192.35,2.92,6.71,1064200,3724,BREAKOUT,Pocket Pivot,#3 (1d),Unknown/TBD,TECHNICAL MOMENTUM,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+MEDP,622.43,8.9,0.8,15.4,1.24x,3.98,637.15,613.13,3.77,3.98,265400,928,BREAKOUT,Pocket Pivot,#3 (6d),Unknown/TBD,TECHNICAL MOMENTUM,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+TDY,632.21,10.4,2.3,2.5,2.44x,5.68,632.45,615.76,2.64,5.68,287460,1006,BREAKOUT,Pocket Pivot,#3 (5d),Unknown/TBD,TECHNICAL MOMENTUM,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+TMO,687.37,2.4,1.6,22.2,1.28x,9.04,693.37,666.55,3.87,9.04,2284865,7997,BREAKOUT,Pocket Pivot,#2 (5d),Unknown/TBD,ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+VLTO,101.36,3.7,1.9,7.1,1.29x,3.63,102.35,98.12,4.13,3.63,1763975,6173,BREAKOUT,Pocket Pivot,#3 (New),Unknown/TBD,TECHNICAL MOMENTUM,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+WST,388.78,0.2,2.8,21.2,1.23x,7.92,389.75,372.52,4.42,7.92,516095,1806,BREAKOUT,Pocket Pivot,#2 (22d),Unknown/TBD,ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
