@@ -525,6 +525,8 @@ def generate_thread_helper_html(thread_posts):
     print(f"[X INTENT] Generated dispatch helper page: {HELPER_HTML_FILE}")
 
 def send_dispatch_email(thread_posts):
+    from email.mime.image import MIMEImage
+
     host = os.environ.get("SMTP_HOST")
     port = int(os.environ.get("SMTP_PORT", 587))
     user = os.environ.get("SMTP_USER")
@@ -535,10 +537,14 @@ def send_dispatch_email(thread_posts):
         print("[!] SMTP credentials missing in environment. Skipping email dispatch.")
         return
 
-    msg = MIMEMultipart("alternative")
-    msg["Subject"] = "Corp Acuity // Today's X Morning Thread Dispatch"
-    msg["From"] = user
-    msg["To"] = recipient
+    # Root container: related so inline images display alongside HTML
+    msg_root = MIMEMultipart("related")
+    msg_root["Subject"] = "Corp Acuity // Today's X Morning Thread Dispatch"
+    msg_root["From"] = user
+    msg_root["To"] = recipient
+
+    msg_alt = MIMEMultipart("alternative")
+    msg_root.attach(msg_alt)
 
     # Text fallback
     text_lines = ["Corp Acuity // X Morning Thread Dispatch\n"]
@@ -547,22 +553,47 @@ def send_dispatch_email(thread_posts):
         text_lines.append(p["text"])
         text_lines.append(f"Composer: {p['url']}\n")
     text_content = "\n".join(text_lines)
+    msg_alt.attach(MIMEText(text_content, "plain"))
 
-    # Rich HTML Email with quick compose buttons
+    # Rich HTML & Embedded Cards
+    images_to_attach = []
     html_cards = ""
+
     for i, p in enumerate(thread_posts, 1):
         card_lbl = p.get('card_label', 'No media')
+        card_path = p.get('card_asset', 'None')
         text_formatted = p['text'].replace('\n', '<br>')
+
+        img_html = ""
+        # Check if card image exists on disk
+        resolved_card = card_path
+        if resolved_card and resolved_card != "None":
+            if not os.path.exists(resolved_card):
+                alt_p = os.path.join("assets", "cards", os.path.basename(resolved_card))
+                if os.path.exists(alt_p):
+                    resolved_card = alt_p
+
+            if os.path.exists(resolved_card):
+                cid_name = f"card_{i}"
+                img_html = f"""
+                <div style="margin: 12px 0;">
+                    <img src="cid:{cid_name}" style="max-width:100%; width:540px; height:auto; border-radius:6px; border:1px solid #1e293b; display:block;" alt="{card_lbl}">
+                    <span style="font-size:11px; color:#94a3b8; display:block; margin-top:4px;">Right-click / Long-press image to Copy or Save</span>
+                </div>
+                """
+                images_to_attach.append((cid_name, resolved_card))
+
         html_cards += f"""
-        <div style="background:#161e2e; border:1px solid #1e293b; border-radius:8px; padding:16px; margin-bottom:16px;">
-            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                <strong style="color:#38bdf8; font-size:14px;">{p['title']}</strong>
-                <span style="color:#94a3b8; font-size:12px;">{card_lbl}</span>
+        <div style="background:#161e2e; border:1px solid #1e293b; border-radius:8px; padding:16px; margin-bottom:18px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                <strong style="color:#38bdf8; font-size:14px; letter-spacing:0.3px;">{p['title']}</strong>
+                <span style="color:#94a3b8; font-size:12px; margin-left:12px; background:#0f172a; padding:2px 8px; border-radius:4px; border:1px solid #1e293b;">{card_lbl}</span>
             </div>
-            <div style="background:#0a0e17; border:1px solid #1e293b; border-radius:6px; padding:12px; font-family:monospace; font-size:12px; color:#cbd5e1; line-height:1.5; margin-bottom:12px;">
-                {text_formatted}
+            {img_html}
+            <div style="background:#0a0e17; border:1px solid #1e293b; border-radius:6px; padding:12px; font-family:Consolas, Monaco, monospace; font-size:12px; color:#cbd5e1; line-height:1.5; margin-bottom:12px; white-space:pre-wrap;">
+{p['text']}
             </div>
-            <a href="{p['url']}" target="_blank" style="background:#0284c7; color:#ffffff; text-decoration:none; padding:8px 14px; border-radius:6px; font-size:12px; font-weight:bold; display:inline-block;">
+            <a href="{p['url']}" target="_blank" style="background:#0284c7; color:#ffffff; text-decoration:none; padding:9px 16px; border-radius:6px; font-size:12px; font-weight:bold; display:inline-block;">
                 Open Tweet in X Composer
             </a>
         </div>
@@ -572,10 +603,10 @@ def send_dispatch_email(thread_posts):
     <!DOCTYPE html>
     <html>
     <body style="background:#0b0f19; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; color:#f8fafc; padding:20px;">
-        <div style="max-width:640px; margin:0 auto;">
+        <div style="max-width:600px; margin:0 auto;">
             <div style="text-align:center; padding-bottom:16px; margin-bottom:20px; border-bottom:1px solid #1e293b;">
                 <h2 style="color:#38bdf8; margin:0 0 6px 0;">Corp Acuity // X Thread Dispatch</h2>
-                <p style="color:#94a3b8; font-size:13px; margin:0;">Morning scanner setup thread ready for one-click publishing.</p>
+                <p style="color:#94a3b8; font-size:13px; margin:0;">Morning scanner setup thread &bull; Copy image &amp; open composer.</p>
             </div>
             {html_cards}
             <div style="text-align:center; font-size:11px; color:#64748b; margin-top:20px;">
@@ -586,21 +617,32 @@ def send_dispatch_email(thread_posts):
     </html>
     """
 
-    msg.attach(MIMEText(text_content, "plain"))
-    msg.attach(MIMEText(html_content, "html"))
+    msg_alt.attach(MIMEText(html_content, "html"))
+
+    # Attach all inline images with Content-ID
+    for cid_name, img_path in images_to_attach:
+        try:
+            with open(img_path, "rb") as f:
+                img_data = f.read()
+                mime_img = MIMEImage(img_data)
+                mime_img.add_header("Content-ID", f"<{cid_name}>")
+                mime_img.add_header("Content-Disposition", "inline", filename=os.path.basename(img_path))
+                msg_root.attach(mime_img)
+        except Exception as img_err:
+            print(f"[!] Warning attaching image {img_path}: {img_err}")
 
     try:
         print(f"[+] Connecting to SMTP server {host}:{port}...")
         if port == 465:
             with smtplib.SMTP_SSL(host, port, timeout=15) as server:
                 server.login(user, password)
-                server.sendmail(user, recipient, msg.as_string())
+                server.sendmail(user, recipient, msg_root.as_string())
         else:
             with smtplib.SMTP(host, port, timeout=15) as server:
                 server.starttls()
                 server.login(user, password)
-                server.sendmail(user, recipient, msg.as_string())
-        print(f"[SUCCESS] X thread dispatch email successfully sent to {recipient}")
+                server.sendmail(user, recipient, msg_root.as_string())
+        print(f"[SUCCESS] X thread dispatch email with embedded cards successfully sent to {recipient}")
     except Exception as e:
         print(f"[!] SMTP dispatch failed: {e}")
 
