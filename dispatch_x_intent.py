@@ -112,9 +112,17 @@ def get_setup_narrative(cat, r_ratio_val, risk_pct_val):
         return bank["tight"].format(r=f"{r_flt:.2f}", risk=f"{risk_flt:.2f}")
     return bank["standard"].format(r=f"{r_flt:.2f}", risk=f"{risk_flt:.2f}")
 
-def get_card_info(cat):
-    bank = PHRASE_MATRIX["setups"].get(cat, PHRASE_MATRIX["setups"]["Base-Reset"])
-    return bank.get("card", "anatomy_base_reset.png"), bank.get("label", "Pattern Anatomy")
+def get_card_info(setup_name):
+    name = (setup_name or "").lower()
+    if "base-reset" in name or "base reset" in name:
+        return "carousel_br.png", "Base-Reset Consolidation"
+    elif "bull flag" in name or "momentum" in name or "htf" in name:
+        return "carousel_htf.png", "Momentum Bull Flag"
+    elif "pocket pivot" in name or "pocket" in name:
+        return "carousel_pp.png", "Pocket Pivot Inflection"
+    elif "liquidity" in name or "sweep" in name or "u&r" in name:
+        return "carousel_ls.png", "Liquidity Sweep (U&R)"
+    return "carousel_br.png", "Technical Setup Chart"
 
 def build_thread_payloads():
     if not os.path.exists(META_FILE):
@@ -590,12 +598,12 @@ def send_dispatch_email(thread_posts):
                 <span style="color:#94a3b8; font-size:12px; margin-left:12px; background:#0f172a; padding:2px 8px; border-radius:4px; border:1px solid #1e293b;">{card_lbl}</span>
             </div>
             {img_html}
-            <div style="background:#0a0e17; border:1px solid #1e293b; border-radius:6px; padding:12px; font-family:Consolas, Monaco, monospace; font-size:12px; color:#cbd5e1; line-height:1.5; margin-bottom:12px; white-space:pre-wrap;">
-{p['text']}
-            </div>
-            <a href="{p['url']}" target="_blank" style="background:#0284c7; color:#ffffff; text-decoration:none; padding:9px 16px; border-radius:6px; font-size:12px; font-weight:bold; display:inline-block;">
-                Open Tweet in X Composer
-            </a>
+            <pre style="background:#0a0e17; border:1px solid #1e293b; border-radius:6px; padding:12px; font-family:Consolas, Monaco, monospace; font-size:12px; color:#cbd5e1; line-height:1.5; margin-bottom:12px; white-space:pre-wrap; word-break:break-word;">{p['text']}</pre>
+            {f'''<a href="{p["url"]}" target="_blank" style="background:#0284c7; color:#ffffff; text-decoration:none; padding:9px 16px; border-radius:6px; font-size:12px; font-weight:bold; display:inline-block;">
+                🚀 Open Thread in X Composer
+            </a>''' if i == 1 else '''<div style="color:#94a3b8; font-size:12px; font-weight:500; padding:4px 0;">
+                📋 Highlight &amp; copy text above &rarr; paste into thread reply slot (+)
+            </div>'''}
         </div>
         """
 
