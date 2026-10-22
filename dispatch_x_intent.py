@@ -619,14 +619,15 @@ def send_dispatch_email(thread_posts):
 
     msg_alt.attach(MIMEText(html_content, "html"))
 
-    # Attach all inline images with Content-ID
+    # Attach each card as an image part with explicit image/png headers
     for cid_name, img_path in images_to_attach:
         try:
             with open(img_path, "rb") as f:
                 img_data = f.read()
-                mime_img = MIMEImage(img_data)
+                fname = os.path.basename(img_path)
+                mime_img = MIMEImage(img_data, _subtype="png")
                 mime_img.add_header("Content-ID", f"<{cid_name}>")
-                mime_img.add_header("Content-Disposition", "inline", filename=os.path.basename(img_path))
+                mime_img.add_header("Content-Disposition", "inline; filename=\"%s\"" % fname)
                 msg_root.attach(mime_img)
         except Exception as img_err:
             print(f"[!] Warning attaching image {img_path}: {img_err}")

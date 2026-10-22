@@ -396,42 +396,46 @@ def analyze_market_regime(total_evaluated, total_above_200, category_counts):
       MacroEventCalendar.evaluate_calendar()
   )
 
-  major_structural_break = (
-      (not spy_above_200) or (not qqq_above_200) or (pct_above_200 < 38.0)
-  )
-  confirmed_bull_alignment = (
-      (spy_above_200 and qqq_above_200)
-      and (spy_above_50 or qqq_above_50)
-      and (pct_above_200 >= 55.0)
-  )
+  # Comprehensive multi-timeframe benchmark alignment
+  both_above_200 = bool(spy_above_200 and qqq_above_200)
+  both_above_50 = bool(spy_above_50 and qqq_above_50)
+  both_above_21 = bool(spy_above_21 and qqq_above_21)
+  
+  both_below_50 = bool(not spy_above_50 and not qqq_above_50)
+  any_below_200 = bool(not spy_above_200 or not qqq_above_200)
 
-  if major_structural_break:
-    regime_status = "RED: CONFIRMED MACRO DOWNTREND"
+  # 1. RED: CONTRACTION / CORRECTION REGIME
+  if any_below_200 or both_below_50 or pct_above_200 < 42.0:
+    regime_status = "RED: STRUCTURAL CONTRACTION"
     action_plan = (
-        "DEFENSIVE SIZING. Structural trend broken. Use extreme caution on"
-        " breakouts."
+        "CAPITAL PRESERVATION POSTURE. Benchmarks trapped below 50 SMA / breadth compressed. "
+        "Breakout failure rates peak here. Stand aside or trade small-sized liquidity sweeps only."
     )
-    max_exposure = "0% - 15%"
-    posture_box = (
-        "■ DOWNTREND DEFENSE: TRADE SELECTIVELY WITH TIGHT RISK ■"
-    )
-  elif confirmed_bull_alignment and not cross_asset_drag:
+    max_exposure = "0% - 20%"
+    posture_box = "[!] DEFENSIVE POSTURE: CASH PRESERVATION / RISK-OFF"
+    regime_code = "CONTRACTION"
+
+  # 2. GREEN: EXPANSION / MOMENTUM REGIME
+  elif both_above_200 and both_above_50 and both_above_21 and pct_above_200 >= 56.0 and not cross_asset_drag:
     regime_status = "GREEN: CONFIRMED EXPANSION"
     action_plan = (
-        "Broad market in confirmed structural uptrend. Green-light to pyramid"
-        " momentum leaders and breakouts."
+        "Broad market in synchronized structural uptrend (Price > 21 EMA > 50 SMA > 200 EMA). "
+        "Full authorization to pyramid momentum flags and stage-2 base resets."
     )
-    max_exposure = f"{int(70 * seasonal_mult)}% - {int(100 * seasonal_mult)}%"
-    posture_box = "▲ EXPANSION BULL: BUY CONTINUATION & BREAKOUTS ▲"
+    max_exposure = f"{int(75 * seasonal_mult)}% - {int(100 * seasonal_mult)}%"
+    posture_box = "[+] EXPANSION POSTURE: BUY LEADING BREAKOUTS & FLAGS"
+    regime_code = "EXPANSION"
+
+  # 3. AMBER: ROTATIONAL ACCUMULATION / DIGESTION
   else:
-    regime_status = "AMBER: ROTATIONAL ACCUMULATION"
+    regime_status = "AMBER: ROTATIONAL DIGESTION"
     action_plan = (
-        f"Indices holding 200 EMA with breadth digesting"
-        f" ({round(pct_above_200, 1)}%). Deploy capital selectively into"
-        " support sweeps and base inflections."
+        f"Benchmarks consolidating (Breadth: {round(pct_above_200, 1)}% > 200 EMA). "
+        "Index chop active; selective capital deployment into high-conviction base-resets and shelf sweeps only."
     )
-    max_exposure = f"{int(30 * seasonal_mult)}% - {int(60 * seasonal_mult)}%"
-    posture_box = "◆ ROTATIONAL ACCUMULATION: BUY HIGH ASYMMETRY PIVOTS ◆"
+    max_exposure = f"{int(30 * seasonal_mult)}% - {int(55 * seasonal_mult)}%"
+    posture_box = "[*] ROTATIONAL POSTURE: SELECTIVE HIGH-ASYMMETRY ENTRIES"
+    regime_code = "ROTATION"
 
   momentum_count = category_counts.get("reset", 0) + category_counts.get(
       "htf", 0
@@ -492,6 +496,7 @@ def analyze_market_regime(total_evaluated, total_above_200, category_counts):
 
   dashboard_data = {
       "regime_status": regime_status,
+      "regime_code": regime_code,
       "posture_box": posture_box,
       "max_exposure": max_exposure,
       "action_plan": action_plan,
@@ -972,50 +977,51 @@ def run_master_screener():
       print("=" * 95)
 
   # ====================================================================================================================
-  # OPTIMAL SETUP SLOT ASSIGNMENT & SMART FALLBACK
+  # REGIME-AWARE OPTIMAL SETUP SLOT ASSIGNMENT & ADAPTIVE ALLOCATION
   # ====================================================================================================================
-  top_br = (
-      sorted(filtered_base_resets, key=lambda x: x.get("Conviction_Score", 0), reverse=True)[0]
-      if filtered_base_resets else None
-  )
-  top_htf = (
-      sorted(filtered_htfs, key=lambda x: x.get("Conviction_Score", 0), reverse=True)[0]
-      if filtered_htfs else None
-  )
-  top_pp = (
-      sorted(filtered_pockets, key=lambda x: x.get("R_Ratio", 0), reverse=True)[0]
-      if filtered_pockets else None
-  )
-  top_ls = (
-      sorted(filtered_sweeps, key=lambda x: x.get("R_Ratio", 0), reverse=True)[0]
-      if filtered_sweeps else None
-  )
+  regime_tag = dashboard.get("regime_code", "ROTATION")
+  is_contraction = regime_tag == "CONTRACTION" or "CONTRACTION" in dashboard.get("regime_status", "")
+  is_expansion = regime_tag == "EXPANSION" or "EXPANSION" in dashboard.get("regime_status", "")
 
-  # Fallback backfill pool from top verified breakouts
-  assigned = {c["Ticker"] for c in [top_br, top_htf, top_pp, top_ls] if c}
-  backfill_pool = [c for c in execution_candidates if c.get("Ticker") not in assigned]
+  cand_br = sorted(filtered_base_resets, key=lambda x: x.get("Conviction_Score", 0), reverse=True)
+  cand_htf = sorted(filtered_htfs, key=lambda x: x.get("Conviction_Score", 0), reverse=True)
+  cand_pp = sorted(filtered_pockets, key=lambda x: x.get("Conviction_Score", 0), reverse=True)
+  cand_ls = sorted(filtered_sweeps, key=lambda x: x.get("Conviction_Score", 0), reverse=True)
 
-  if not top_br and backfill_pool:
-      top_br = backfill_pool.pop(0)
-      assigned.add(top_br["Ticker"])
-
-  if not top_htf and backfill_pool:
-      top_htf = backfill_pool.pop(0)
-      assigned.add(top_htf["Ticker"])
-
-  if not top_pp and backfill_pool:
-      top_pp = backfill_pool.pop(0)
-      assigned.add(top_pp["Ticker"])
-
-  if not top_ls and backfill_pool:
-      top_ls = backfill_pool.pop(0)
-      assigned.add(top_ls["Ticker"])
+  if is_contraction:
+      # CONTRACTION: Breakout failure rate peaks. Suppress offensive continuation & backfill.
+      # Allow strictly a single high-asymmetry structural liquidity sweep (Cat 4) if available.
+      top_br = None
+      top_htf = None
+      top_pp = None
+      top_ls = cand_ls[0] if cand_ls else None
+  elif is_expansion:
+      # EXPANSION: Max offensive posture across momentum flags and base inflections.
+      top_br = cand_br[0] if cand_br else None
+      top_htf = cand_htf[0] if cand_htf else None
+      top_pp = cand_pp[0] if cand_pp else None
+      top_ls = cand_ls[0] if cand_ls else None
+      assigned = {c["Ticker"] for c in [top_br, top_htf, top_pp, top_ls] if c}
+      backfill_pool = [c for c in execution_candidates if c.get("Ticker") not in assigned]
+      if not top_br and backfill_pool: top_br = backfill_pool.pop(0); assigned.add(top_br["Ticker"])
+      if not top_htf and backfill_pool: top_htf = backfill_pool.pop(0); assigned.add(top_htf["Ticker"])
+      if not top_pp and backfill_pool: top_pp = backfill_pool.pop(0); assigned.add(top_pp["Ticker"])
+      if not top_ls and backfill_pool: top_ls = backfill_pool.pop(0); assigned.add(top_ls["Ticker"])
+  else:
+      # ROTATION: Selective organic allocation only. Zero artificial backfilling.
+      top_br = cand_br[0] if cand_br else None
+      top_htf = cand_htf[0] if cand_htf else None
+      top_pp = cand_pp[0] if cand_pp else None
+      top_ls = cand_ls[0] if cand_ls else None
 
   print("\n=== OPTIMAL SETUP SLOTS IDENTIFIED ===")
-  print(f"Slot 1 (Base-Reset / Primary): {top_br.get('Ticker') if top_br else 'None'} ({top_br.get('R_Ratio', 'N/A')}R)")
-  print(f"Slot 2 (HTF / Secondary):      {top_htf.get('Ticker') if top_htf else 'None'} ({top_htf.get('R_Ratio', 'N/A')}R)")
-  print(f"Slot 3 (Pocket / Secondary):   {top_pp.get('Ticker') if top_pp else 'None'} ({top_pp.get('R_Ratio', 'N/A')}R)")
-  print(f"Slot 4 (Sweep / Secondary):    {top_ls.get('Ticker') if top_ls else 'None'} ({top_ls.get('R_Ratio', 'N/A')}R)\n")
+  def _fmt(s):
+      return f"{s['Ticker']} ({s.get('R_Ratio', 'N/A')}R)" if s else "None (Cash / Sidelined)"
+
+  print(f"Slot 1 (Base-Reset / Primary): {_fmt(top_br)}")
+  print(f"Slot 2 (HTF / Secondary):      {_fmt(top_htf)}")
+  print(f"Slot 3 (Pocket / Secondary):   {_fmt(top_pp)}")
+  print(f"Slot 4 (Sweep / Secondary):    {_fmt(top_ls)}\n")
 
   create_linkedin_carousel_pdf(
       filename=CAROUSEL_PDF_FILENAME,
@@ -1051,15 +1057,20 @@ def run_master_screener():
     json.dump(web_terminal_payload, f, indent=2)
   print(f"[TERMINAL] Exported {TERMINAL_FEED_FILENAME}")
 
-  focus_tickers = [c["Ticker"] for c in [top_br, top_htf, top_pp, top_ls] if c]
+  slot_tickers = [c["Ticker"] for c in [top_br, top_htf, top_pp, top_ls] if c]
+  primary_ticker = top_br["Ticker"] if top_br else (slot_tickers[0] if slot_tickers else None)
+
   broadcast_meta = {
       "pdf_path": CAROUSEL_PDF_FILENAME,
       "date": datetime.date.today().isoformat(),
+      "regime_code": dashboard.get("regime_code", "ROTATION"),
       "regime_status": regime,
       "posture_box": dashboard.get("posture_box", "SELECTIVE"),
       "max_exposure": dashboard.get("max_exposure", "N/A"),
       "pct_above_200": dashboard.get("pct_above_200", 0.0),
-      "focus_tickers": focus_tickers[:3],
+      "primary_ticker": primary_ticker,
+      "slot_tickers": slot_tickers,
+      "focus_tickers": slot_tickers[:3],
       "top_runner": top_runner,
       "top_br": top_br,
       "top_htf": top_htf,
