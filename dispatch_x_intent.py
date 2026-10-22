@@ -37,29 +37,29 @@ PHRASE_MATRIX = {
             "high_r": "High asymmetry base-reset coiling with {r}R structural upside.",
             "tight": "Consolidation base tightening with a defined {risk}% risk window.",
             "standard": "Base-Reset continuation clearing multi-week institutional shelf.",
-            "card": "anatomy_base_reset.png",
-            "label": "Base-Reset Anatomy"
+            "card": "carousel_br.png",
+            "label": "Base-Reset Live Setup"
         },
         "Momentum Flag": {
             "high_r": "Momentum Flag coiling after advance, targeting {r}R asymmetry.",
             "tight": "Supply contraction visible across 10-day flag structure.",
             "standard": "Momentum Flag setting up: tight price compression above trend.",
-            "card": "anatomy_momentum_flag.png",
-            "label": "Momentum Flag Anatomy"
+            "card": "carousel_htf.png",
+            "label": "Momentum Flag Live Setup"
         },
         "Pocket Pivot": {
             "high_r": "Pocket pivot continuation offering {r}R reward-to-risk ratio.",
             "tight": "Early accumulation pivot with tight {risk}% invalidation level.",
             "standard": "Pocket pivot surfacing out of constructive basing structure.",
-            "card": "anatomy_pocket_pivot.png",
-            "label": "Pocket Pivot Anatomy"
+            "card": "carousel_pp.png",
+            "label": "Pocket Pivot Live Setup"
         },
         "Liquidity Sweep": {
             "high_r": "Mean-reversion sweep reclaiming structural shelf ({r}R target).",
             "tight": "False breakdown reclaimed: tight {risk}% risk cushion.",
             "standard": "Liquidity sweep confirmation: stops cleared, demand re-entering.",
-            "card": "anatomy_liquidity_sweep.png",
-            "label": "Liquidity Sweep Anatomy"
+            "card": "carousel_ls.png",
+            "label": "Liquidity Sweep Live Setup"
         }
     },
     "questions": [
