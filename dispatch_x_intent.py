@@ -525,8 +525,86 @@ def generate_thread_helper_html(thread_posts):
     print(f"[X INTENT] Generated dispatch helper page: {HELPER_HTML_FILE}")
 
 def send_dispatch_email(thread_posts):
-    pass
+    host = os.environ.get("SMTP_HOST")
+    port = int(os.environ.get("SMTP_PORT", 587))
+    user = os.environ.get("SMTP_USER")
+    password = os.environ.get("SMTP_PASS")
+    recipient = os.environ.get("ALERT_RECIPIENT", "ajmcneilster@gmail.com")
+
+    if not host or not user or not password:
+        print("[!] SMTP credentials missing in environment. Skipping email dispatch.")
+        return
+
+    msg = MIMEMultipart("alternative")
+    msg["Subject"] = "Corp Acuity // Today's X Morning Thread Dispatch"
+    msg["From"] = user
+    msg["To"] = recipient
+
+    # Text fallback
+    text_lines = ["Corp Acuity // X Morning Thread Dispatch\n"]
+    for i, p in enumerate(thread_posts, 1):
+        text_lines.append(f"--- Tweet {i} ({p.get('card_label', 'Text')}) ---")
+        text_lines.append(p["text"])
+        text_lines.append(f"Composer: {p['url']}\n")
+    text_content = "\n".join(text_lines)
+
+    # Rich HTML Email with quick compose buttons
+    html_cards = ""
+    for i, p in enumerate(thread_posts, 1):
+        card_lbl = p.get('card_label', 'No media')
+        text_formatted = p['text'].replace('\n', '<br>')
+        html_cards += f"""
+        <div style="background:#161e2e; border:1px solid #1e293b; border-radius:8px; padding:16px; margin-bottom:16px;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                <strong style="color:#38bdf8; font-size:14px;">{p['title']}</strong>
+                <span style="color:#94a3b8; font-size:12px;">{card_lbl}</span>
+            </div>
+            <div style="background:#0a0e17; border:1px solid #1e293b; border-radius:6px; padding:12px; font-family:monospace; font-size:12px; color:#cbd5e1; line-height:1.5; margin-bottom:12px;">
+                {text_formatted}
+            </div>
+            <a href="{p['url']}" target="_blank" style="background:#0284c7; color:#ffffff; text-decoration:none; padding:8px 14px; border-radius:6px; font-size:12px; font-weight:bold; display:inline-block;">
+                Open Tweet in X Composer
+            </a>
+        </div>
+        """
+
+    html_content = f"""
+    <!DOCTYPE html>
+    <html>
+    <body style="background:#0b0f19; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif; color:#f8fafc; padding:20px;">
+        <div style="max-width:640px; margin:0 auto;">
+            <div style="text-align:center; padding-bottom:16px; margin-bottom:20px; border-bottom:1px solid #1e293b;">
+                <h2 style="color:#38bdf8; margin:0 0 6px 0;">Corp Acuity // X Thread Dispatch</h2>
+                <p style="color:#94a3b8; font-size:13px; margin:0;">Morning scanner setup thread ready for one-click publishing.</p>
+            </div>
+            {html_cards}
+            <div style="text-align:center; font-size:11px; color:#64748b; margin-top:20px;">
+                Corp Acuity Systematic Intelligence &bull; Automated Dispatch Engine
+            </div>
+        </div>
+    </body>
+    </html>
+    """
+
+    msg.attach(MIMEText(text_content, "plain"))
+    msg.attach(MIMEText(html_content, "html"))
+
+    try:
+        print(f"[+] Connecting to SMTP server {host}:{port}...")
+        if port == 465:
+            with smtplib.SMTP_SSL(host, port, timeout=15) as server:
+                server.login(user, password)
+                server.sendmail(user, recipient, msg.as_string())
+        else:
+            with smtplib.SMTP(host, port, timeout=15) as server:
+                server.starttls()
+                server.login(user, password)
+                server.sendmail(user, recipient, msg.as_string())
+        print(f"[SUCCESS] X thread dispatch email successfully sent to {recipient}")
+    except Exception as e:
+        print(f"[!] SMTP dispatch failed: {e}")
 
 if __name__ == "__main__":
     thread = build_thread_payloads()
     generate_thread_helper_html(thread)
+    send_dispatch_email(thread)
