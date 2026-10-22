@@ -1,4 +1,4 @@
-import datetime
+﻿import datetime
 import numpy as np
 import pandas as pd
 # ---------------------------------------------------------
@@ -44,6 +44,22 @@ def calculate_atr(df, window=14):
 
 
 # ---------------------------------------------------------
+def is_buyout_or_flatlined(daily_df, min_adr_pct=1.15):
+    try:
+        tail10 = daily_df.tail(10)
+        if len(tail10) < 5:
+            return False, 'Sufficient history'
+        adr_pct = float(((tail10['High'] - tail10['Low']) / tail10['Close']).mean() * 100)
+        if adr_pct < min_adr_pct:
+            return True, f'Buyout/Arbitrage flatline: 10d ADR% is {adr_pct:.2f}% (< {min_adr_pct}%)'
+        close_cv = float((tail10['Close'].std() / tail10['Close'].mean()) * 100)
+        if close_cv < 0.60:
+            return True, f'Buyout/Arbitrage freeze: 10d close volatility is {close_cv:.2f}% (< 0.60%)'
+        return False, 'Normal organic price action'
+    except Exception:
+        return False, 'Bypass on exception'
+
+
 def check_base_reset(
     ticker,
     daily_df,
@@ -71,9 +87,12 @@ def check_base_reset(
       return None, f"Deep overhead base lag ({dist_from_52w:.1f}% > 28.0% max)"
 
     headroom_calc = ((high_52w - c0) / c0) * 100
-    effective_headroom = (
-        40.0 if headroom_calc < 3.0 else max(15.0, headroom_calc)
-    )
+    # Realistic headroom: true distance to 52w high, capped blue-sky extension
+    # Volatility-scaled headroom: ATR14-based blue-sky cap, true distance if overhead exists
+    if headroom_calc < 3.0:
+        effective_headroom = min(18.0, max(6.0, round(4.0 * atr_pct, 1)))
+    else:
+        effective_headroom = headroom_calc
 
     w_close = w_df["Close"]
     macd, signal, hist = calculate_macd(w_close)
@@ -100,8 +119,12 @@ def check_base_reset(
     tactical_stop = round(daily_df["Low"].tail(3).min(), 2)
     risk_pct = round(((daily_pivot - tactical_stop) / daily_pivot) * 100, 2)
 
-    if risk_pct > 13.0 or risk_pct <= 0:
-      return None, "Stop width invalid or >13.0%"
+    is_flat, flat_reason = is_buyout_or_flatlined(daily_df)
+    if is_flat:
+        return None, flat_reason
+
+    if risk_pct > 6.50 or risk_pct < 1.50:
+        return None, f'Stop width invalid or outside bounds (Risk {risk_pct}% not in 1.5%-13.0%)'
 
     reward_risk = effective_headroom / risk_pct
     if reward_risk < 2.5:
@@ -112,7 +135,7 @@ def check_base_reset(
         (abs(hist_expansion) / max(atr14, 0.01)) * vol_ratio * reward_risk
     )
 
-    if score < 0.12:
+    if score < 0.60:
       return None, f"Conviction Score too low ({score:.3f} < 0.12)"
 
     return {
@@ -201,9 +224,14 @@ def check_htf(ticker, df, c0, daily_ema200, high_52w, adv_20_shares):
           " avg)",
       )
 
+    # Strict momentum alignment: must hold above 50 SMA and 21 EMA
+    sma_50 = close.rolling(50).mean().iloc[-1]
+    if c0 < sma_50:
+        return None, 'Price below 50 SMA (not an active momentum flag)'
+
     ema_21 = close.ewm(span=21, adjust=False).mean().iloc[-1]
-    if c0 < (0.95 * ema_21):
-      return None, "Broken below 21-day EMA"
+    if c0 < (0.99 * ema_21):
+        return None, 'Price below 21-day EMA tolerance (< -1%)'
 
     pivot_trigger = round(peak_price, 2)
     tactical_stop = round(flag_low, 2)
@@ -217,8 +245,15 @@ def check_htf(ticker, df, c0, daily_ema200, high_52w, adv_20_shares):
           f"Risk % invalid or outside executable limits ({risk_pct:.2f}%)",
       )
 
-    projected_run = pole_gain_pct * 0.50
-    reward_risk = projected_run / risk_pct
+    # Grounded target calculation: respect 52w resistance & cap run to realistic bounds
+    base_run = min(pole_gain_pct * 0.50, 18.0)
+    if high_52w > pivot_trigger:
+        headroom_52w = ((high_52w - pivot_trigger) / pivot_trigger) * 100
+        effective_run = min(base_run, max(headroom_52w, 3.0))
+    else:
+        effective_run = base_run
+
+    reward_risk = round(effective_run / risk_pct, 2)
     if reward_risk < 2.0:
       return None, f"Low Asymmetry (R:R {round(reward_risk, 1)} < 2.0)"
 
@@ -251,9 +286,12 @@ def check_pocket_pivot(ticker, df, c0, daily_ema200, high_52w, adv_20_shares):
     volume = df["Volume"]
     v0 = volume.iloc[-1]
     vol_sma50 = volume.rolling(50).mean().iloc[-1]
+    is_flat, flat_reason = is_buyout_or_flatlined(df)
+    if is_flat:
+        return None, flat_reason
 
     sma_50 = close.rolling(50).mean().iloc[-1]
-    if not (c0 > sma_50 and sma_50 > (0.96 * daily_ema200)):
+    if not (c0 > daily_ema200 and c0 > sma_50 and sma_50 > daily_ema200):
       return None, "Trend not aligned (C > SMA50 > EMA200)"
 
     ext_200 = ((c0 - daily_ema200) / daily_ema200) * 100
@@ -261,9 +299,18 @@ def check_pocket_pivot(ticker, df, c0, daily_ema200, high_52w, adv_20_shares):
       return None, "Stretched >45% above 200 EMA"
 
     headroom_calc = ((high_52w - c0) / c0) * 100
-    effective_headroom = (
-        35.0 if headroom_calc < 3.0 else max(15.0, headroom_calc)
-    )
+    tr14 = pd.concat([high - low, (high - close.shift(1)).abs(), (low - close.shift(1)).abs()], axis=1).max(axis=1)
+    pp_atr_pct = float((tr14.rolling(14).mean().iloc[-1] / c0) * 100)
+    if headroom_calc < 3.0:
+        effective_headroom = min(18.0, max(6.0, round(4.0 * pp_atr_pct, 1)))
+    else:
+        effective_headroom = headroom_calc
+    # Realistic headroom: true distance to 52w high, capped blue-sky extension
+    # Volatility-scaled headroom: ATR14-based blue-sky cap, true distance if overhead exists
+    if headroom_calc < 3.0:
+        effective_headroom = min(18.0, max(6.0, round(4.0 * atr_pct, 1)))
+    else:
+        effective_headroom = headroom_calc
 
     ema_10 = close.ewm(span=10, adjust=False).mean()
     ema_21 = close.ewm(span=21, adjust=False).mean()
@@ -356,8 +403,12 @@ def check_liquidity_sweep(
     if c0 < 15.0:
       return None, "Price < $15.00 floor (Anti-Penny Gate)"
 
-    if c0 < (0.95 * daily_ema200):
-      return None, "Price below 200 EMA tolerance (< -5%)"
+    is_flat, flat_reason = is_buyout_or_flatlined(df)
+    if is_flat:
+        return None, flat_reason
+
+    if c0 < (0.99 * daily_ema200):
+        return None, 'Price below 200 EMA baseline (< -1%)'
 
     high = df["High"]
     low = df["Low"]
@@ -365,6 +416,9 @@ def check_liquidity_sweep(
     current_low = low.iloc[-1]
     current_high = high.iloc[-1]
     vol_sma50 = volume.rolling(50).mean().iloc[-1]
+    is_flat, flat_reason = is_buyout_or_flatlined(df)
+    if is_flat:
+        return None, flat_reason
 
     raw_headroom = ((high_52w - c0) / c0) * 100
     shelf_window = low.iloc[-60:-5]

@@ -14966,5 +14966,1421 @@
     "pivot": 115.41,
     "stop": 110.1,
     "r_ratio": 5.86
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "ADP",
+    "category": "Base-Reset",
+    "pivot": 296.14,
+    "stop": 285.28,
+    "r_ratio": 4.9
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "ABNB",
+    "category": "Base-Reset",
+    "pivot": 179.13,
+    "stop": 172.48,
+    "r_ratio": 3.07
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "ARMK",
+    "category": "Base-Reset",
+    "pivot": 56.34,
+    "stop": 55.06,
+    "r_ratio": 5.39
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "APA",
+    "category": "Base-Reset",
+    "pivot": 50.5,
+    "stop": 48.37,
+    "r_ratio": 4.27
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "AR",
+    "category": "Base-Reset",
+    "pivot": 39.25,
+    "stop": 37.92,
+    "r_ratio": 5.55
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "APH",
+    "category": "Base-Reset",
+    "pivot": 82.04,
+    "stop": 77.88,
+    "r_ratio": 2.67
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "ANET",
+    "category": "Base-Reset",
+    "pivot": 188.99,
+    "stop": 177.36,
+    "r_ratio": 2.92
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "BDX",
+    "category": "Base-Reset",
+    "pivot": 195.99,
+    "stop": 189.49,
+    "r_ratio": 5.42
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "CF",
+    "category": "Base-Reset",
+    "pivot": 121.99,
+    "stop": 114.05,
+    "r_ratio": 3.35
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "CDW",
+    "category": "Base-Reset",
+    "pivot": 158.83,
+    "stop": 150.77,
+    "r_ratio": 3.55
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "COP",
+    "category": "Base-Reset",
+    "pivot": 147.42,
+    "stop": 142.8,
+    "r_ratio": 5.75
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "CSCO",
+    "category": "Base-Reset",
+    "pivot": 112.41,
+    "stop": 105.3,
+    "r_ratio": 3.26
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "CVX",
+    "category": "Base-Reset",
+    "pivot": 228.48,
+    "stop": 221.56,
+    "r_ratio": 5.94
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "CXT",
+    "category": "Base-Reset",
+    "pivot": 57.87,
+    "stop": 54.7,
+    "r_ratio": 3.68
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "EBAY",
+    "category": "Base-Reset",
+    "pivot": 124.59,
+    "stop": 119.22,
+    "r_ratio": 4.18
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "ENTG",
+    "category": "Base-Reset",
+    "pivot": 149.78,
+    "stop": 140.38,
+    "r_ratio": 4.21
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "EOG",
+    "category": "Base-Reset",
+    "pivot": 159.93,
+    "stop": 154.3,
+    "r_ratio": 5.11
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "EW",
+    "category": "Base-Reset",
+    "pivot": 89.32,
+    "stop": 86.55,
+    "r_ratio": 2.88
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "EXPD",
+    "category": "Base-Reset",
+    "pivot": 200.66,
+    "stop": 195.99,
+    "r_ratio": 7.73
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "FTI",
+    "category": "Base-Reset",
+    "pivot": 70.7,
+    "stop": 68.55,
+    "r_ratio": 5.03
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "GAP",
+    "category": "Base-Reset",
+    "pivot": 23.82,
+    "stop": 22.68,
+    "r_ratio": 5.5
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "GOOGL",
+    "category": "Base-Reset",
+    "pivot": 352.15,
+    "stop": 330.38,
+    "r_ratio": 3.55
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "HPE",
+    "category": "Base-Reset",
+    "pivot": 60.2,
+    "stop": 54.07,
+    "r_ratio": 2.6
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "HRB",
+    "category": "Base-Reset",
+    "pivot": 49.24,
+    "stop": 47.33,
+    "r_ratio": 5.56
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "HXL",
+    "category": "Base-Reset",
+    "pivot": 93.04,
+    "stop": 89.63,
+    "r_ratio": 6.58
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "IFF",
+    "category": "Base-Reset",
+    "pivot": 92.02,
+    "stop": 90.45,
+    "r_ratio": 10.53
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "KMI",
+    "category": "Base-Reset",
+    "pivot": 34.32,
+    "stop": 33.35,
+    "r_ratio": 6.36
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "MPWR",
+    "category": "Base-Reset",
+    "pivot": 1288.27,
+    "stop": 1222.29,
+    "r_ratio": 6.48
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "MSM",
+    "category": "Base-Reset",
+    "pivot": 133.95,
+    "stop": 127.75,
+    "r_ratio": 3.89
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "MTDR",
+    "category": "Base-Reset",
+    "pivot": 58.14,
+    "stop": 56.19,
+    "r_ratio": 4.2
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "MUSA",
+    "category": "Base-Reset",
+    "pivot": 556.57,
+    "stop": 531.06,
+    "r_ratio": 4.02
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "OVV",
+    "category": "Base-Reset",
+    "pivot": 70.98,
+    "stop": 68.34,
+    "r_ratio": 4.84
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "PCTY",
+    "category": "Base-Reset",
+    "pivot": 171.81,
+    "stop": 164.96,
+    "r_ratio": 4.51
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "PR",
+    "category": "Base-Reset",
+    "pivot": 25.21,
+    "stop": 24.38,
+    "r_ratio": 5.47
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "PKG",
+    "category": "Base-Reset",
+    "pivot": 240.24,
+    "stop": 233.31,
+    "r_ratio": 2.81
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "R",
+    "category": "Base-Reset",
+    "pivot": 242.94,
+    "stop": 230.99,
+    "r_ratio": 3.62
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "ROST",
+    "category": "Base-Reset",
+    "pivot": 241.49,
+    "stop": 233.98,
+    "r_ratio": 3.07
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "ROP",
+    "category": "Base-Reset",
+    "pivot": 398.92,
+    "stop": 378.6,
+    "r_ratio": 5.76
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "RTX",
+    "category": "Base-Reset",
+    "pivot": 197.0,
+    "stop": 188.08,
+    "r_ratio": 4.01
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "RS",
+    "category": "Base-Reset",
+    "pivot": 423.13,
+    "stop": 407.0,
+    "r_ratio": 4.72
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "SBUX",
+    "category": "Base-Reset",
+    "pivot": 100.33,
+    "stop": 96.66,
+    "r_ratio": 2.98
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "TEL",
+    "category": "Base-Reset",
+    "pivot": 216.5,
+    "stop": 209.37,
+    "r_ratio": 5.18
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "TXN",
+    "category": "Base-Reset",
+    "pivot": 289.31,
+    "stop": 272.01,
+    "r_ratio": 2.8
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "TTC",
+    "category": "Base-Reset",
+    "pivot": 103.71,
+    "stop": 99.51,
+    "r_ratio": 4.44
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "VNOM",
+    "category": "Base-Reset",
+    "pivot": 46.13,
+    "stop": 44.95,
+    "r_ratio": 3.36
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "VRSN",
+    "category": "Base-Reset",
+    "pivot": 309.97,
+    "stop": 302.73,
+    "r_ratio": 7.69
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "XPO",
+    "category": "Base-Reset",
+    "pivot": 191.12,
+    "stop": 183.8,
+    "r_ratio": 6.04
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "WST",
+    "category": "Base-Reset",
+    "pivot": 396.0,
+    "stop": 381.98,
+    "r_ratio": 5.08
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "XOM",
+    "category": "Base-Reset",
+    "pivot": 180.26,
+    "stop": 174.92,
+    "r_ratio": 6.08
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "CSL",
+    "category": "Pocket Pivot",
+    "pivot": 345.79,
+    "stop": 330.33,
+    "r_ratio": 5.83
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "DD",
+    "category": "Pocket Pivot",
+    "pivot": 134.99,
+    "stop": 131.05,
+    "r_ratio": 5.59
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "DOV",
+    "category": "Pocket Pivot",
+    "pivot": 200.07,
+    "stop": 193.03,
+    "r_ratio": 5.11
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "EMR",
+    "category": "Pocket Pivot",
+    "pivot": 165.01,
+    "stop": 159.58,
+    "r_ratio": 5.47
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "IR",
+    "category": "Pocket Pivot",
+    "pivot": 79.38,
+    "stop": 77.52,
+    "r_ratio": 11.8
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "ROKU",
+    "category": "Pocket Pivot",
+    "pivot": 158.17,
+    "stop": 154.32,
+    "r_ratio": 7.41
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "TMO",
+    "category": "Pocket Pivot",
+    "pivot": 705.79,
+    "stop": 661.3,
+    "r_ratio": 2.86
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "URI",
+    "category": "Pocket Pivot",
+    "pivot": 1077.03,
+    "stop": 1043.46,
+    "r_ratio": 3.24
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "TKR",
+    "category": "Liquidity Sweep",
+    "pivot": 115.41,
+    "stop": 110.1,
+    "r_ratio": 5.86
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "APA",
+    "category": "Base-Reset",
+    "pivot": 50.5,
+    "stop": 48.37,
+    "r_ratio": 4.27
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "AR",
+    "category": "Base-Reset",
+    "pivot": 39.25,
+    "stop": 37.92,
+    "r_ratio": 5.55
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "ADP",
+    "category": "Base-Reset",
+    "pivot": 296.14,
+    "stop": 285.28,
+    "r_ratio": 4.9
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "ANET",
+    "category": "Base-Reset",
+    "pivot": 188.99,
+    "stop": 177.36,
+    "r_ratio": 2.92
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "COP",
+    "category": "Base-Reset",
+    "pivot": 147.42,
+    "stop": 142.8,
+    "r_ratio": 5.75
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "CXT",
+    "category": "Base-Reset",
+    "pivot": 57.87,
+    "stop": 54.7,
+    "r_ratio": 3.68
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "CVX",
+    "category": "Base-Reset",
+    "pivot": 228.48,
+    "stop": 221.56,
+    "r_ratio": 5.94
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "EBAY",
+    "category": "Base-Reset",
+    "pivot": 124.59,
+    "stop": 119.22,
+    "r_ratio": 4.18
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "EOG",
+    "category": "Base-Reset",
+    "pivot": 159.93,
+    "stop": 154.3,
+    "r_ratio": 5.11
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "GAP",
+    "category": "Base-Reset",
+    "pivot": 23.82,
+    "stop": 22.68,
+    "r_ratio": 5.5
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "HRB",
+    "category": "Base-Reset",
+    "pivot": 49.24,
+    "stop": 47.33,
+    "r_ratio": 5.56
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "HXL",
+    "category": "Base-Reset",
+    "pivot": 93.04,
+    "stop": 89.63,
+    "r_ratio": 6.58
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "IFF",
+    "category": "Base-Reset",
+    "pivot": 92.02,
+    "stop": 90.45,
+    "r_ratio": 10.53
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "KMI",
+    "category": "Base-Reset",
+    "pivot": 34.32,
+    "stop": 33.35,
+    "r_ratio": 6.36
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "MSM",
+    "category": "Base-Reset",
+    "pivot": 133.95,
+    "stop": 127.75,
+    "r_ratio": 3.89
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "MUSA",
+    "category": "Base-Reset",
+    "pivot": 556.57,
+    "stop": 531.06,
+    "r_ratio": 4.02
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "OVV",
+    "category": "Base-Reset",
+    "pivot": 70.98,
+    "stop": 68.34,
+    "r_ratio": 4.84
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "PCTY",
+    "category": "Base-Reset",
+    "pivot": 171.81,
+    "stop": 164.96,
+    "r_ratio": 4.51
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "PR",
+    "category": "Base-Reset",
+    "pivot": 25.21,
+    "stop": 24.38,
+    "r_ratio": 5.47
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "R",
+    "category": "Base-Reset",
+    "pivot": 242.94,
+    "stop": 230.99,
+    "r_ratio": 3.62
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "SBUX",
+    "category": "Base-Reset",
+    "pivot": 100.33,
+    "stop": 96.66,
+    "r_ratio": 2.98
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "VNOM",
+    "category": "Base-Reset",
+    "pivot": 46.13,
+    "stop": 44.95,
+    "r_ratio": 3.36
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "VRSN",
+    "category": "Base-Reset",
+    "pivot": 309.97,
+    "stop": 302.73,
+    "r_ratio": 7.69
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "XOM",
+    "category": "Base-Reset",
+    "pivot": 180.26,
+    "stop": 174.92,
+    "r_ratio": 6.08
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "XPO",
+    "category": "Base-Reset",
+    "pivot": 191.12,
+    "stop": 183.8,
+    "r_ratio": 6.04
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "DD",
+    "category": "Pocket Pivot",
+    "pivot": 134.99,
+    "stop": 131.05,
+    "r_ratio": 5.59
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "EMR",
+    "category": "Pocket Pivot",
+    "pivot": 165.01,
+    "stop": 159.58,
+    "r_ratio": 5.47
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "ROKU",
+    "category": "Pocket Pivot",
+    "pivot": 158.17,
+    "stop": 154.32,
+    "r_ratio": 7.41
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "TMO",
+    "category": "Pocket Pivot",
+    "pivot": 705.79,
+    "stop": 661.3,
+    "r_ratio": 2.86
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "URI",
+    "category": "Pocket Pivot",
+    "pivot": 1077.03,
+    "stop": 1043.46,
+    "r_ratio": 3.24
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "TKR",
+    "category": "Liquidity Sweep",
+    "pivot": 115.41,
+    "stop": 110.1,
+    "r_ratio": 5.86
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "ANET",
+    "category": "Base-Reset",
+    "pivot": 188.99,
+    "stop": 177.36,
+    "r_ratio": 2.92
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "AR",
+    "category": "Base-Reset",
+    "pivot": 39.25,
+    "stop": 37.92,
+    "r_ratio": 5.55
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "COP",
+    "category": "Base-Reset",
+    "pivot": 147.42,
+    "stop": 142.8,
+    "r_ratio": 2.84
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "CXT",
+    "category": "Base-Reset",
+    "pivot": 57.87,
+    "stop": 54.7,
+    "r_ratio": 3.68
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "EBAY",
+    "category": "Base-Reset",
+    "pivot": 124.59,
+    "stop": 119.22,
+    "r_ratio": 2.67
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "EOG",
+    "category": "Base-Reset",
+    "pivot": 159.93,
+    "stop": 154.3,
+    "r_ratio": 2.59
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "GAP",
+    "category": "Base-Reset",
+    "pivot": 23.82,
+    "stop": 22.68,
+    "r_ratio": 5.5
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "HRB",
+    "category": "Base-Reset",
+    "pivot": 49.24,
+    "stop": 47.33,
+    "r_ratio": 5.56
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "HXL",
+    "category": "Base-Reset",
+    "pivot": 93.04,
+    "stop": 89.63,
+    "r_ratio": 6.58
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "IFF",
+    "category": "Base-Reset",
+    "pivot": 92.02,
+    "stop": 90.45,
+    "r_ratio": 4.27
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "KMI",
+    "category": "Base-Reset",
+    "pivot": 34.32,
+    "stop": 33.35,
+    "r_ratio": 3.22
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "MUSA",
+    "category": "Base-Reset",
+    "pivot": 556.57,
+    "stop": 531.06,
+    "r_ratio": 4.02
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "OVV",
+    "category": "Base-Reset",
+    "pivot": 70.98,
+    "stop": 68.34,
+    "r_ratio": 2.8
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "PR",
+    "category": "Base-Reset",
+    "pivot": 25.21,
+    "stop": 24.38,
+    "r_ratio": 3.47
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "R",
+    "category": "Base-Reset",
+    "pivot": 242.94,
+    "stop": 230.99,
+    "r_ratio": 3.62
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "SBUX",
+    "category": "Base-Reset",
+    "pivot": 100.33,
+    "stop": 96.66,
+    "r_ratio": 2.98
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "VNOM",
+    "category": "Base-Reset",
+    "pivot": 46.13,
+    "stop": 44.95,
+    "r_ratio": 3.36
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "XOM",
+    "category": "Base-Reset",
+    "pivot": 180.26,
+    "stop": 174.92,
+    "r_ratio": 2.7
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "XPO",
+    "category": "Base-Reset",
+    "pivot": 191.12,
+    "stop": 183.8,
+    "r_ratio": 6.04
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "DD",
+    "category": "Pocket Pivot",
+    "pivot": 134.99,
+    "stop": 131.05,
+    "r_ratio": 5.59
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "URI",
+    "category": "Pocket Pivot",
+    "pivot": 1077.03,
+    "stop": 1043.46,
+    "r_ratio": 3.24
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "TKR",
+    "category": "Liquidity Sweep",
+    "pivot": 115.41,
+    "stop": 110.1,
+    "r_ratio": 5.86
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "ANET",
+    "category": "Base-Reset",
+    "pivot": 188.99,
+    "stop": 177.36,
+    "r_ratio": 2.92
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "AR",
+    "category": "Base-Reset",
+    "pivot": 39.25,
+    "stop": 37.92,
+    "r_ratio": 5.55
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "COP",
+    "category": "Base-Reset",
+    "pivot": 147.42,
+    "stop": 142.8,
+    "r_ratio": 2.84
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "CXT",
+    "category": "Base-Reset",
+    "pivot": 57.87,
+    "stop": 54.7,
+    "r_ratio": 3.68
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "EBAY",
+    "category": "Base-Reset",
+    "pivot": 124.59,
+    "stop": 119.22,
+    "r_ratio": 2.67
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "EOG",
+    "category": "Base-Reset",
+    "pivot": 159.93,
+    "stop": 154.3,
+    "r_ratio": 2.59
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "GAP",
+    "category": "Base-Reset",
+    "pivot": 23.82,
+    "stop": 22.68,
+    "r_ratio": 5.5
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "HRB",
+    "category": "Base-Reset",
+    "pivot": 49.24,
+    "stop": 47.33,
+    "r_ratio": 5.56
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "HXL",
+    "category": "Base-Reset",
+    "pivot": 93.04,
+    "stop": 89.63,
+    "r_ratio": 6.58
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "IFF",
+    "category": "Base-Reset",
+    "pivot": 92.02,
+    "stop": 90.45,
+    "r_ratio": 4.27
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "KMI",
+    "category": "Base-Reset",
+    "pivot": 34.32,
+    "stop": 33.35,
+    "r_ratio": 3.22
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "MUSA",
+    "category": "Base-Reset",
+    "pivot": 556.57,
+    "stop": 531.06,
+    "r_ratio": 4.02
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "OVV",
+    "category": "Base-Reset",
+    "pivot": 70.98,
+    "stop": 68.34,
+    "r_ratio": 2.8
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "PR",
+    "category": "Base-Reset",
+    "pivot": 25.21,
+    "stop": 24.38,
+    "r_ratio": 3.47
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "R",
+    "category": "Base-Reset",
+    "pivot": 242.94,
+    "stop": 230.99,
+    "r_ratio": 3.62
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "SBUX",
+    "category": "Base-Reset",
+    "pivot": 100.33,
+    "stop": 96.66,
+    "r_ratio": 2.98
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "VNOM",
+    "category": "Base-Reset",
+    "pivot": 46.13,
+    "stop": 44.95,
+    "r_ratio": 3.36
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "XOM",
+    "category": "Base-Reset",
+    "pivot": 180.26,
+    "stop": 174.92,
+    "r_ratio": 2.7
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "XPO",
+    "category": "Base-Reset",
+    "pivot": 191.12,
+    "stop": 183.8,
+    "r_ratio": 6.04
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "DD",
+    "category": "Pocket Pivot",
+    "pivot": 134.99,
+    "stop": 131.05,
+    "r_ratio": 5.59
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "URI",
+    "category": "Pocket Pivot",
+    "pivot": 1077.03,
+    "stop": 1043.46,
+    "r_ratio": 3.24
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "TKR",
+    "category": "Liquidity Sweep",
+    "pivot": 115.41,
+    "stop": 110.1,
+    "r_ratio": 5.86
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "ANET",
+    "category": "Base-Reset",
+    "pivot": 188.99,
+    "stop": 177.36,
+    "r_ratio": 2.92
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "AR",
+    "category": "Base-Reset",
+    "pivot": 39.25,
+    "stop": 37.92,
+    "r_ratio": 5.55
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "COP",
+    "category": "Base-Reset",
+    "pivot": 147.42,
+    "stop": 142.8,
+    "r_ratio": 2.84
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "CXT",
+    "category": "Base-Reset",
+    "pivot": 57.87,
+    "stop": 54.7,
+    "r_ratio": 3.68
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "EBAY",
+    "category": "Base-Reset",
+    "pivot": 124.59,
+    "stop": 119.22,
+    "r_ratio": 2.67
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "EOG",
+    "category": "Base-Reset",
+    "pivot": 159.93,
+    "stop": 154.3,
+    "r_ratio": 2.59
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "GAP",
+    "category": "Base-Reset",
+    "pivot": 23.82,
+    "stop": 22.68,
+    "r_ratio": 5.5
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "HRB",
+    "category": "Base-Reset",
+    "pivot": 49.24,
+    "stop": 47.33,
+    "r_ratio": 5.56
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "HXL",
+    "category": "Base-Reset",
+    "pivot": 93.04,
+    "stop": 89.63,
+    "r_ratio": 6.58
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "IFF",
+    "category": "Base-Reset",
+    "pivot": 92.02,
+    "stop": 90.45,
+    "r_ratio": 4.27
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "KMI",
+    "category": "Base-Reset",
+    "pivot": 34.32,
+    "stop": 33.35,
+    "r_ratio": 3.22
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "MUSA",
+    "category": "Base-Reset",
+    "pivot": 556.57,
+    "stop": 531.06,
+    "r_ratio": 4.02
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "OVV",
+    "category": "Base-Reset",
+    "pivot": 70.98,
+    "stop": 68.34,
+    "r_ratio": 2.8
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "PR",
+    "category": "Base-Reset",
+    "pivot": 25.21,
+    "stop": 24.38,
+    "r_ratio": 3.47
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "R",
+    "category": "Base-Reset",
+    "pivot": 242.94,
+    "stop": 230.99,
+    "r_ratio": 3.62
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "SBUX",
+    "category": "Base-Reset",
+    "pivot": 100.33,
+    "stop": 96.66,
+    "r_ratio": 2.98
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "VNOM",
+    "category": "Base-Reset",
+    "pivot": 46.13,
+    "stop": 44.95,
+    "r_ratio": 3.36
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "XOM",
+    "category": "Base-Reset",
+    "pivot": 180.26,
+    "stop": 174.92,
+    "r_ratio": 2.7
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "XPO",
+    "category": "Base-Reset",
+    "pivot": 191.12,
+    "stop": 183.8,
+    "r_ratio": 6.04
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "DD",
+    "category": "Pocket Pivot",
+    "pivot": 134.99,
+    "stop": 131.05,
+    "r_ratio": 5.59
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "URI",
+    "category": "Pocket Pivot",
+    "pivot": 1077.03,
+    "stop": 1043.46,
+    "r_ratio": 3.24
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "TKR",
+    "category": "Liquidity Sweep",
+    "pivot": 115.41,
+    "stop": 110.1,
+    "r_ratio": 5.86
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "AR",
+    "category": "Base-Reset",
+    "pivot": 39.25,
+    "stop": 37.92,
+    "r_ratio": 5.55
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "ANET",
+    "category": "Base-Reset",
+    "pivot": 188.99,
+    "stop": 177.36,
+    "r_ratio": 2.92
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "COP",
+    "category": "Base-Reset",
+    "pivot": 147.42,
+    "stop": 142.8,
+    "r_ratio": 2.84
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "CXT",
+    "category": "Base-Reset",
+    "pivot": 57.87,
+    "stop": 54.7,
+    "r_ratio": 3.68
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "EBAY",
+    "category": "Base-Reset",
+    "pivot": 124.59,
+    "stop": 119.22,
+    "r_ratio": 2.67
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "EOG",
+    "category": "Base-Reset",
+    "pivot": 159.93,
+    "stop": 154.3,
+    "r_ratio": 2.59
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "GAP",
+    "category": "Base-Reset",
+    "pivot": 23.82,
+    "stop": 22.68,
+    "r_ratio": 5.5
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "HRB",
+    "category": "Base-Reset",
+    "pivot": 49.24,
+    "stop": 47.33,
+    "r_ratio": 5.56
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "HXL",
+    "category": "Base-Reset",
+    "pivot": 93.04,
+    "stop": 89.63,
+    "r_ratio": 6.58
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "IFF",
+    "category": "Base-Reset",
+    "pivot": 92.02,
+    "stop": 90.45,
+    "r_ratio": 4.27
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "KMI",
+    "category": "Base-Reset",
+    "pivot": 34.32,
+    "stop": 33.35,
+    "r_ratio": 3.22
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "MUSA",
+    "category": "Base-Reset",
+    "pivot": 556.57,
+    "stop": 531.06,
+    "r_ratio": 4.02
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "OVV",
+    "category": "Base-Reset",
+    "pivot": 70.98,
+    "stop": 68.34,
+    "r_ratio": 2.8
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "PR",
+    "category": "Base-Reset",
+    "pivot": 25.21,
+    "stop": 24.38,
+    "r_ratio": 3.47
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "R",
+    "category": "Base-Reset",
+    "pivot": 242.94,
+    "stop": 230.99,
+    "r_ratio": 3.62
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "SBUX",
+    "category": "Base-Reset",
+    "pivot": 100.33,
+    "stop": 96.66,
+    "r_ratio": 2.98
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "VNOM",
+    "category": "Base-Reset",
+    "pivot": 46.13,
+    "stop": 44.95,
+    "r_ratio": 3.36
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "XOM",
+    "category": "Base-Reset",
+    "pivot": 180.26,
+    "stop": 174.92,
+    "r_ratio": 2.7
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "XPO",
+    "category": "Base-Reset",
+    "pivot": 191.12,
+    "stop": 183.8,
+    "r_ratio": 6.04
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "DD",
+    "category": "Pocket Pivot",
+    "pivot": 134.99,
+    "stop": 131.05,
+    "r_ratio": 5.59
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "URI",
+    "category": "Pocket Pivot",
+    "pivot": 1077.03,
+    "stop": 1043.46,
+    "r_ratio": 3.24
+  },
+  {
+    "date": "2026-10-22",
+    "ticker": "TKR",
+    "category": "Liquidity Sweep",
+    "pivot": 115.41,
+    "stop": 110.1,
+    "r_ratio": 5.86
   }
 ]
