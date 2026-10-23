@@ -1,2 +1,2 @@
 Ticker,Close,Shelf_Level,Flush_Low,Sweep_Depth_%,Headroom_%,Vol_Ratio,Conviction_Score,Pivot_Trigger,Stop_Loss,Risk_%,R_Ratio,ADV_20,1Min_Vol_Hurdle,Execution_Archetype,Category,Zacks_Rank,Earnings_Risk,Structural_Catalyst,Execution_Protocol
-TKR,114.97,110.99,110.65,0.31,27.0,0.78x,5.86,115.41,110.1,4.6,5.86,803175,2811,MEAN_REVERSION,Liquidity Sweep,#3 (23d),Unknown/TBD,TECHNICAL MOMENTUM,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+SNX,247.08,242.57,237.0,2.3,20.7,1.35x,4.16,248.16,235.82,4.97,4.16,845970,2960,MEAN_REVERSION,Liquidity Sweep,#1 (9d),Unknown/TBD,ZACKS #1 STRONG BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
