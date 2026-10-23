@@ -46,7 +46,27 @@ def axis_flag(draw, x, y, text, bg, fg="#ffffff"):
     draw.rectangle([(x, top_y), (x + box_w, top_y + box_h)], fill=bg, outline="#000000", width=1)
     draw.text((x + 7, top_y + 4), text, fill=fg, font=F_TAG)
 
-def render_ticker_chart(ticker, label, pivot, stop, risk_pct, r_ratio, out_name):
+def calculate_tactical_geometry(pivot, stop, structural_resistance=None):
+    if not pivot or not stop or pivot <= stop:
+        return None, None
+        
+    risk_dollar = pivot - stop
+    target_ceiling = pivot + (3.0 * risk_dollar)
+    
+    if structural_resistance and structural_resistance > pivot:
+        target = min(structural_resistance, target_ceiling)
+    else:
+        target = target_ceiling
+        
+    final_r = (target - pivot) / risk_dollar
+    
+    if final_r < 2.0:
+        target = pivot + (2.0 * risk_dollar)
+        final_r = 2.0
+        
+    return target, final_r
+
+def render_ticker_chart(ticker, label, pivot, stop, risk_pct, r_ratio, target_price, out_name):
     try:
         df = yf.download(ticker, period="8mo", interval="1d", progress=False, auto_adjust=True)
     except Exception as e:
@@ -69,11 +89,7 @@ def render_ticker_chart(ticker, label, pivot, stop, risk_pct, r_ratio, out_name)
     acc = "#38bdf8" if "Base" in label else ("#f59e0b" if "Flag" in label else "#10b981")
     draw.rectangle([(0, 0), (W, 8)], fill=acc)
 
-    target = None
-    if pivot and stop and r_ratio:
-        risk_dollar = pivot - stop
-        if risk_dollar > 0:
-            target = pivot + (risk_dollar * r_ratio)
+    target = target_price
 
     draw.text((45, 20), "CORP ACUITY // LIVE SETUP ANATOMY", fill=TEXT_MUTED, font=F_SUB)
     draw.text((45, 46), f"${ticker} // {label.upper()}", fill=TEXT_MAIN, font=F_TITLE)
@@ -201,9 +217,22 @@ def generate_all():
             t = cand.get('Ticker')
             p = float(cand.get('Pivot_Trigger', 0))
             s = float(cand.get('Stop_Loss', 0))
-            r = float(cand.get('Risk_%', 0))
-            rr = float(cand.get('R_Ratio', 0))
-            render_ticker_chart(t, label, p, s, r, rr, fname)
+            r_pct = float(cand.get('Risk_%', 0))
+            
+            struct_res = cand.get('Structural_Resistance', None)
+            if struct_res:
+                struct_res = float(struct_res)
+                
+            safe_target, safe_r = calculate_tactical_geometry(p, s, struct_res)
+            
+            if safe_target and safe_r:
+                cand['Tactical_Target'] = round(safe_target, 2)
+                cand['Tactical_R_Ratio'] = round(safe_r, 2)
+                
+                render_ticker_chart(t, label, p, s, r_pct, safe_r, safe_target, fname)
+
+    with open(META_FILE, "w", encoding="utf-8") as f:
+        json.dump(meta, f, indent=4)
 
 if __name__ == "__main__":
     generate_all()
