@@ -1,3 +1,2 @@
 Ticker,Close,Headroom_%,Ext_10EMA_%,Above_200EMA_%,Vol_Pocket_Ratio,Conviction_Score,Pivot_Trigger,Stop_Loss,Risk_%,R_Ratio,ADV_20,1Min_Vol_Hurdle,Execution_Archetype,Category,Zacks_Rank,Earnings_Risk,Structural_Catalyst,Execution_Protocol
-APPF,217.33,21.9,2.3,9.4,2.09x,3.51,222.59,208.66,6.26,3.51,388010,1358,BREAKOUT,Pocket Pivot,#2 (1d),Unknown/TBD,ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
-DD,135.1,15.5,2.3,2.6,1.0x,5.33,135.16,131.23,2.91,5.33,817485,2861,BREAKOUT,Pocket Pivot,#3 (2d),Unknown/TBD,TECHNICAL MOMENTUM,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+DD,136.55,14.3,2.8,3.8,0.95x,3.93,136.85,131.88,3.63,3.93,820090,2870,BREAKOUT,Pocket Pivot,#3 (3d),Unknown/TBD,TECHNICAL MOMENTUM,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.

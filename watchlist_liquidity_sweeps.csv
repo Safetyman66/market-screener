@@ -1,2 +1,4 @@
 Ticker,Close,Shelf_Level,Flush_Low,Sweep_Depth_%,Headroom_%,Vol_Ratio,Conviction_Score,Pivot_Trigger,Stop_Loss,Risk_%,R_Ratio,ADV_20,1Min_Vol_Hurdle,Execution_Archetype,Category,Zacks_Rank,Earnings_Risk,Structural_Catalyst,Execution_Protocol
-SNX,247.08,242.57,237.0,2.3,20.7,1.35x,4.16,248.16,235.82,4.97,4.16,845970,2960,MEAN_REVERSION,Liquidity Sweep,#1 (9d),Unknown/TBD,ZACKS #1 STRONG BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+CSCO,106.5,104.11,103.58,0.51,21.5,1.1x,5.89,106.96,103.06,3.65,5.89,15426370,53992,MEAN_REVERSION,Liquidity Sweep,#2 (11d),Unknown/TBD,ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+KEYS,314.77,306.85,305.01,0.6,23.9,1.45x,5.45,317.38,303.48,4.38,5.45,1232500,4313,MEAN_REVERSION,Liquidity Sweep,#3 (2d),Unknown/TBD,TECHNICAL MOMENTUM,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.
+SNX,247.34,242.57,237.0,2.3,20.6,1.34x,3.45,250.77,235.82,5.96,3.45,809420,2832,MEAN_REVERSION,Liquidity Sweep,#1 (10d),Unknown/TBD,ZACKS #1 STRONG BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.

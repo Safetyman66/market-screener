@@ -16830,5 +16830,93 @@
     "pivot": 248.16,
     "stop": 235.82,
     "r_ratio": 4.16
+  },
+  {
+    "date": "2026-10-24",
+    "ticker": "CXT",
+    "category": "Base-Reset",
+    "pivot": 58.52,
+    "stop": 55.06,
+    "r_ratio": 2.79
+  },
+  {
+    "date": "2026-10-24",
+    "ticker": "EBAY",
+    "category": "Base-Reset",
+    "pivot": 123.75,
+    "stop": 119.22,
+    "r_ratio": 3.14
+  },
+  {
+    "date": "2026-10-24",
+    "ticker": "FDX",
+    "category": "Base-Reset",
+    "pivot": 304.84,
+    "stop": 295.73,
+    "r_ratio": 4.93
+  },
+  {
+    "date": "2026-10-24",
+    "ticker": "GMED",
+    "category": "Base-Reset",
+    "pivot": 82.01,
+    "stop": 77.96,
+    "r_ratio": 4.97
+  },
+  {
+    "date": "2026-10-24",
+    "ticker": "HRB",
+    "category": "Base-Reset",
+    "pivot": 50.39,
+    "stop": 47.57,
+    "r_ratio": 3.04
+  },
+  {
+    "date": "2026-10-24",
+    "ticker": "MUSA",
+    "category": "Base-Reset",
+    "pivot": 552.87,
+    "stop": 522.95,
+    "r_ratio": 3.48
+  },
+  {
+    "date": "2026-10-24",
+    "ticker": "UNH",
+    "category": "Base-Reset",
+    "pivot": 426.55,
+    "stop": 415.0,
+    "r_ratio": 3.59
+  },
+  {
+    "date": "2026-10-24",
+    "ticker": "DD",
+    "category": "Pocket Pivot",
+    "pivot": 136.85,
+    "stop": 131.88,
+    "r_ratio": 3.93
+  },
+  {
+    "date": "2026-10-24",
+    "ticker": "CSCO",
+    "category": "Liquidity Sweep",
+    "pivot": 106.96,
+    "stop": 103.06,
+    "r_ratio": 5.89
+  },
+  {
+    "date": "2026-10-24",
+    "ticker": "KEYS",
+    "category": "Liquidity Sweep",
+    "pivot": 317.38,
+    "stop": 303.48,
+    "r_ratio": 5.45
+  },
+  {
+    "date": "2026-10-24",
+    "ticker": "SNX",
+    "category": "Liquidity Sweep",
+    "pivot": 250.77,
+    "stop": 235.82,
+    "r_ratio": 3.45
   }
 ]
