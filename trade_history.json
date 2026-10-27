@@ -17310,5 +17310,213 @@
     "pivot": 279.31,
     "stop": 269.78,
     "r_ratio": 3.03
+  },
+  {
+    "date": "2026-10-27",
+    "ticker": "ALLE",
+    "category": "Base-Reset",
+    "pivot": 180.41,
+    "stop": 176.02,
+    "r_ratio": 3.83
+  },
+  {
+    "date": "2026-10-27",
+    "ticker": "BDX",
+    "category": "Base-Reset",
+    "pivot": 200.47,
+    "stop": 194.62,
+    "r_ratio": 2.74
+  },
+  {
+    "date": "2026-10-27",
+    "ticker": "BILL",
+    "category": "Base-Reset",
+    "pivot": 50.76,
+    "stop": 48.93,
+    "r_ratio": 4.69
+  },
+  {
+    "date": "2026-10-27",
+    "ticker": "CROX",
+    "category": "Base-Reset",
+    "pivot": 122.41,
+    "stop": 117.14,
+    "r_ratio": 4.13
+  },
+  {
+    "date": "2026-10-27",
+    "ticker": "CVX",
+    "category": "Base-Reset",
+    "pivot": 234.08,
+    "stop": 227.98,
+    "r_ratio": 3.22
+  },
+  {
+    "date": "2026-10-27",
+    "ticker": "CXT",
+    "category": "Base-Reset",
+    "pivot": 58.52,
+    "stop": 55.97,
+    "r_ratio": 3.52
+  },
+  {
+    "date": "2026-10-27",
+    "ticker": "EOG",
+    "category": "Base-Reset",
+    "pivot": 165.11,
+    "stop": 158.87,
+    "r_ratio": 2.54
+  },
+  {
+    "date": "2026-10-27",
+    "ticker": "EW",
+    "category": "Base-Reset",
+    "pivot": 91.05,
+    "stop": 88.91,
+    "r_ratio": 3.07
+  },
+  {
+    "date": "2026-10-27",
+    "ticker": "FOXA",
+    "category": "Base-Reset",
+    "pivot": 68.3,
+    "stop": 64.53,
+    "r_ratio": 3.13
+  },
+  {
+    "date": "2026-10-27",
+    "ticker": "GMED",
+    "category": "Base-Reset",
+    "pivot": 82.01,
+    "stop": 80.08,
+    "r_ratio": 11.22
+  },
+  {
+    "date": "2026-10-27",
+    "ticker": "HAS",
+    "category": "Base-Reset",
+    "pivot": 119.0,
+    "stop": 115.22,
+    "r_ratio": 3.58
+  },
+  {
+    "date": "2026-10-27",
+    "ticker": "HRB",
+    "category": "Base-Reset",
+    "pivot": 50.54,
+    "stop": 47.81,
+    "r_ratio": 3.95
+  },
+  {
+    "date": "2026-10-27",
+    "ticker": "IFF",
+    "category": "Base-Reset",
+    "pivot": 94.65,
+    "stop": 92.18,
+    "r_ratio": 3.07
+  },
+  {
+    "date": "2026-10-27",
+    "ticker": "ISRG",
+    "category": "Base-Reset",
+    "pivot": 458.88,
+    "stop": 442.56,
+    "r_ratio": 9.63
+  },
+  {
+    "date": "2026-10-27",
+    "ticker": "ROST",
+    "category": "Base-Reset",
+    "pivot": 238.11,
+    "stop": 227.76,
+    "r_ratio": 2.79
+  },
+  {
+    "date": "2026-10-27",
+    "ticker": "SBUX",
+    "category": "Base-Reset",
+    "pivot": 103.4,
+    "stop": 100.43,
+    "r_ratio": 2.86
+  },
+  {
+    "date": "2026-10-27",
+    "ticker": "RTX",
+    "category": "Base-Reset",
+    "pivot": 198.0,
+    "stop": 189.28,
+    "r_ratio": 3.42
+  },
+  {
+    "date": "2026-10-27",
+    "ticker": "STE",
+    "category": "Base-Reset",
+    "pivot": 234.34,
+    "stop": 227.34,
+    "r_ratio": 5.6
+  },
+  {
+    "date": "2026-10-27",
+    "ticker": "TTC",
+    "category": "Base-Reset",
+    "pivot": 106.87,
+    "stop": 103.84,
+    "r_ratio": 2.78
+  },
+  {
+    "date": "2026-10-27",
+    "ticker": "ULTA",
+    "category": "Base-Reset",
+    "pivot": 637.26,
+    "stop": 617.88,
+    "r_ratio": 4.9
+  },
+  {
+    "date": "2026-10-27",
+    "ticker": "UNH",
+    "category": "Base-Reset",
+    "pivot": 426.55,
+    "stop": 408.35,
+    "r_ratio": 2.7
+  },
+  {
+    "date": "2026-10-27",
+    "ticker": "XOM",
+    "category": "Base-Reset",
+    "pivot": 184.88,
+    "stop": 179.0,
+    "r_ratio": 2.7
+  },
+  {
+    "date": "2026-10-27",
+    "ticker": "ARMK",
+    "category": "Liquidity Sweep",
+    "pivot": 54.44,
+    "stop": 51.52,
+    "r_ratio": 2.81
+  },
+  {
+    "date": "2026-10-27",
+    "ticker": "EAT",
+    "category": "Liquidity Sweep",
+    "pivot": 190.95,
+    "stop": 181.37,
+    "r_ratio": 6.81
+  },
+  {
+    "date": "2026-10-27",
+    "ticker": "ITT",
+    "category": "Liquidity Sweep",
+    "pivot": 194.26,
+    "stop": 182.14,
+    "r_ratio": 2.96
+  },
+  {
+    "date": "2026-10-27",
+    "ticker": "ST",
+    "category": "Liquidity Sweep",
+    "pivot": 41.65,
+    "stop": 39.41,
+    "r_ratio": 5.49
   }
 ]
