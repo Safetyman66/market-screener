@@ -24,13 +24,10 @@ import random
 import re
 import time
 
-from pdf_engine import create_linkedin_carousel_pdf, export_carousel_cards_for_web, CAROUSEL_PDF_FILENAME  # PyMuPDF
 import numpy as np
 import pandas as pd
-from visual_engine import (
-    create_linkedin_carousel_pdf,
-    export_carousel_cards_for_web,
-)
+
+from pdf_engine import create_linkedin_carousel_pdf, export_carousel_cards_for_web, CAROUSEL_PDF_FILENAME  # PyMuPDF
 from setups import (
     calculate_atr,
     calculate_macd,
@@ -55,7 +52,6 @@ from research_engine import (
     generate_kb_execution_protocol,
     determine_structural_catalyst,
 )
-
 
 from reportlab.lib.colors import HexColor
 from reportlab.pdfgen import canvas
@@ -150,7 +146,6 @@ BANNED_INDUSTRY_KEYWORDS = [
 ]
 
 # ---------------------------------------------------------
-
 
 def is_acquisition_freeze(daily_df, lookback=5):
   """Detects stocks pinned in a narrow merger arbitrage / cash buyout spread."""
@@ -878,6 +873,7 @@ def run_master_screener():
   filtered_pockets = universal_quality_filter(pocket_pivots)
   filtered_sweeps = universal_quality_filter(liquidity_sweeps)
 
+
   # ====================================================================================================================
   # WATCHLIST EXPORTS (CSVs) FOR SOCIAL CHARTING ENGINE
   # ====================================================================================================================
@@ -885,6 +881,18 @@ def run_master_screener():
   pd.DataFrame(filtered_htfs).to_csv("watchlist_momentum_flags.csv", index=False)
   pd.DataFrame(filtered_pockets).to_csv("watchlist_pocket_pivots.csv", index=False)
   pd.DataFrame(filtered_sweeps).to_csv("watchlist_liquidity_sweeps.csv", index=False)
+
+
+  # ====================================================================================================================
+  # ASSET GENERATION (CHARTS)
+  # ====================================================================================================================
+  try:
+      print("[*] Generating lovely custom candlestick charts...")
+      import generate_live_charts
+      generate_live_charts.generate_all()
+  except Exception as e:
+      print(f"[!] Chart generation error: {e}")
+
 
   # ====================================================================================================================
   # MASTER SPREADSHEET EXPORT
@@ -911,6 +919,7 @@ def run_master_screener():
       print("[SPREADSHEET] No setups met the quality criteria for export today.")
 
   top_runner = update_and_evaluate_trailing_runners(all_current_setups)
+
 
   # ====================================================================================================================
   # TERMINAL DISPLAY: CATEGORY TABLES 1 - 4
@@ -940,17 +949,6 @@ def run_master_screener():
       else:
           print("No candidates currently meeting quality gates.")
 
-  # ====================================================================================================================
-  # TERMINAL DISPLAY: UNIVERSAL ELIMINATION FUNNEL (If tracked in main scan loop)
-  # ====================================================================================================================
-  if "funnel_stats" in locals() and funnel_stats:
-      print("\n" + "=" * 95)
-      print(f"                 UNIVERSAL ELIMINATION FUNNEL (Evaluated {funnel_stats.get('total_stage2', 0)} Symbols in Stage 2)")
-      print("=" * 95)
-      for stage_name, count in funnel_stats.get("stages", {}).items():
-          pct = (count / funnel_stats.get('total_stage2', 1)) * 100
-          print(f"  {stage_name:<65}: {count:>4} ({pct:>5.1f}%)")
-      print("=" * 95)
 
   # ====================================================================================================================
   # REGIME-AWARE OPTIMAL SETUP SLOT ASSIGNMENT & ADAPTIVE ALLOCATION
@@ -975,7 +973,6 @@ def run_master_screener():
       top_pp = cand_pp[0] if cand_pp else None
       top_ls = cand_ls[0] if cand_ls else None
       assigned = {c["Ticker"] for c in [top_br, top_htf, top_pp, top_ls] if c}
-      # Removed execution_candidates backfill logic that depended on the deleted block
       backfill_pool = [c for c in all_current_setups if c.get("Ticker") not in assigned]
       if not top_br and backfill_pool: top_br = backfill_pool.pop(0); assigned.add(top_br["Ticker"])
       if not top_htf and backfill_pool: top_htf = backfill_pool.pop(0); assigned.add(top_htf["Ticker"])
@@ -996,22 +993,29 @@ def run_master_screener():
   print(f"Slot 3 (Pocket / Secondary):   {_fmt(top_pp)}")
   print(f"Slot 4 (Sweep / Secondary):    {_fmt(top_ls)}\n")
 
-  create_linkedin_carousel_pdf(
-      filename=CAROUSEL_PDF_FILENAME,
-      regime_status=regime,
-      posture_box=dashboard.get("posture_box", "SELECTIVE"),
-      max_exposure=dashboard.get("max_exposure", "N/A"),
-      calendar_alerts=dashboard.get("calendar", []),
-      pct_above_200=dashboard.get("pct_above_200", 0.0),
-      top_runner=top_runner,
-      top_br=top_br,
-      top_htf=top_htf,
-      top_pp=top_pp,
-      top_ls=top_ls,
-      dashboard=dashboard,
-  )
 
-  export_carousel_cards_for_web(CAROUSEL_PDF_FILENAME)
+  # ====================================================================================================================
+  # PDF GENERATION & WEB EXPORT
+  # ====================================================================================================================
+  try:
+      print("[*] Compiling fresh daily market intelligence PDF...")
+      create_linkedin_carousel_pdf(
+          filename=CAROUSEL_PDF_FILENAME,
+          regime_status=regime,
+          posture_box=dashboard.get("posture_box", "SELECTIVE"),
+          max_exposure=dashboard.get("max_exposure", "N/A"),
+          calendar_alerts=dashboard.get("calendar", []),
+          pct_above_200=dashboard.get("pct_above_200", 0.0),
+          top_runner=top_runner,
+          top_br=top_br,
+          top_htf=top_htf,
+          top_pp=top_pp,
+          top_ls=top_ls,
+          dashboard=dashboard,
+      )
+      export_carousel_cards_for_web(CAROUSEL_PDF_FILENAME)
+  except Exception as e:
+      print(f"[!] PDF generation error: {e}")
 
   web_terminal_payload = {
       "generated_at": datetime.datetime.now(datetime.timezone.utc).strftime(
@@ -1061,35 +1065,3 @@ if __name__ == "__main__":
   finally:
     GLOBAL_HTTP_SESSION.close()
     print("\n[COMPLETE] Screener run finished successfully.")
-
-    # ====================================================================================================================
-    # ASSET GENERATION (CHARTS & PDF CAROUSEL)
-    # ====================================================================================================================
-    try:
-        print("[*] Generating lovely custom candlestick charts...")
-        import generate_live_charts
-        generate_live_charts.generate_all()
-    except Exception as e:
-        print(f"[!] Chart generation error: {e}")
-
-    try:
-        print("[*] Compiling fresh daily market intelligence PDF...")
-        import pdf_engine
-        with open("latest_post_meta.json", "r", encoding="utf-8") as f:
-            meta_payload = json.load(f)
-            
-        pdf_engine.create_linkedin_carousel_pdf(
-            regime_status=meta_payload.get('regime_status', 'AMBER: ROTATIONAL ACCUMULATION'),
-            posture_box=meta_payload.get('posture_box', ''),
-            max_exposure=meta_payload.get('max_exposure', '30% - 60%'),
-            pct_above_200=float(meta_payload.get('pct_above_200', 53.1)),
-            top_runner=meta_payload.get('top_runner'),
-            top_br=meta_payload.get('top_br'),
-            top_htf=meta_payload.get('top_htf'),
-            top_pp=meta_payload.get('top_pp'),
-            top_ls=meta_payload.get('top_ls'),
-            dashboard=meta_payload.get('dashboard'),
-            macro_events=meta_payload.get('macro_events')
-        )
-    except Exception as e:
-        print(f"[!] PDF generation error: {e}")
