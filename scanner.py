@@ -879,6 +879,14 @@ def run_master_screener():
   filtered_sweeps = universal_quality_filter(liquidity_sweeps)
 
   # ====================================================================================================================
+  # WATCHLIST EXPORTS (CSVs) FOR SOCIAL CHARTING ENGINE
+  # ====================================================================================================================
+  pd.DataFrame(filtered_base_resets).to_csv("watchlist_base_resets.csv", index=False)
+  pd.DataFrame(filtered_htfs).to_csv("watchlist_momentum_flags.csv", index=False)
+  pd.DataFrame(filtered_pockets).to_csv("watchlist_pocket_pivots.csv", index=False)
+  pd.DataFrame(filtered_sweeps).to_csv("watchlist_liquidity_sweeps.csv", index=False)
+
+  # ====================================================================================================================
   # MASTER SPREADSHEET EXPORT
   # ====================================================================================================================
   all_current_setups = (
@@ -1053,3 +1061,35 @@ if __name__ == "__main__":
   finally:
     GLOBAL_HTTP_SESSION.close()
     print("\n[COMPLETE] Screener run finished successfully.")
+
+    # ====================================================================================================================
+    # ASSET GENERATION (CHARTS & PDF CAROUSEL)
+    # ====================================================================================================================
+    try:
+        print("[*] Generating lovely custom candlestick charts...")
+        import generate_live_charts
+        generate_live_charts.generate_all()
+    except Exception as e:
+        print(f"[!] Chart generation error: {e}")
+
+    try:
+        print("[*] Compiling fresh daily market intelligence PDF...")
+        import pdf_engine
+        with open("latest_post_meta.json", "r", encoding="utf-8") as f:
+            meta_payload = json.load(f)
+            
+        pdf_engine.create_linkedin_carousel_pdf(
+            regime_status=meta_payload.get('regime_status', 'AMBER: ROTATIONAL ACCUMULATION'),
+            posture_box=meta_payload.get('posture_box', ''),
+            max_exposure=meta_payload.get('max_exposure', '30% - 60%'),
+            pct_above_200=float(meta_payload.get('pct_above_200', 53.1)),
+            top_runner=meta_payload.get('top_runner'),
+            top_br=meta_payload.get('top_br'),
+            top_htf=meta_payload.get('top_htf'),
+            top_pp=meta_payload.get('top_pp'),
+            top_ls=meta_payload.get('top_ls'),
+            dashboard=meta_payload.get('dashboard'),
+            macro_events=meta_payload.get('macro_events')
+        )
+    except Exception as e:
+        print(f"[!] PDF generation error: {e}")

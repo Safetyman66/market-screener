@@ -190,7 +190,7 @@ def build_thread_payloads():
     thread_posts.append({
         "title": "Tweet 1: Root Anchor Post",
         "role": f"Main tweet (Card: {card_lbl})",
-        "card_asset": f"x_cards/{card_file}",
+        "card_asset": f"assets/cards/{card_file}",   
         "card_label": card_lbl,
         "text": t1_text,
         "url": f"https://x.com/intent/tweet?text={urllib.parse.quote(t1_text)}"
@@ -222,7 +222,7 @@ def build_thread_payloads():
         thread_posts.append({
             "title": f"Tweet {i}: Thread Reply (Setup #{i})",
             "role": f"Reply (Card: {sub_lbl})",
-            "card_asset": f"x_cards/{sub_card}",
+            "card_asset": f"assets/cards/{sub_card}",
             "card_label": sub_lbl,
             "text": reply_text,
             "url": f"https://x.com/intent/tweet?text={urllib.parse.quote(reply_text)}"
@@ -566,7 +566,7 @@ def send_dispatch_email(thread_posts):
         resolved_card = card_path
         if resolved_card and resolved_card != "None":
             if not os.path.exists(resolved_card):
-                alt_p = os.path.join("x_cards", os.path.basename(resolved_card))
+                alt_p = os.path.join("assets", "cards", os.path.basename(resolved_card))
                 if os.path.exists(alt_p):
                     resolved_card = alt_p
 
