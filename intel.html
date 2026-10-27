@@ -1,228 +1,747 @@
-[33mcommit ff273716d4dd26df45388de99ae8bbe5d8bc0c3b[m
-Author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
-Date:   Mon Oct 19 17:48:30 2026 +0100
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Market Intelligence Terminal | Corp Acuity</title>
+  <link rel="icon" type="image/png" href="logo.png" />
+  
+  <!-- EmailJS SDK & Initialization -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>
+    (function(){
+      emailjs.init({
+        publicKey: "4UwWioU7Are22Ah_O",
+      });
+    })();
+  </script>
 
-    Deploy Risk Protocols module, global nav.js engine, and updated execution directives
+  <style>
+    :root {
+      --bg: #070a12;
+      --card-bg: #0f172a;
+      --card-inner: #1e293b;
+      --border: #334155;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --green: #4ade80;
+      --amber: #fbbf24;
+      --red: #f87171;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.85);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(8px);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+    .brand img {
+      height: 28px;
+      width: auto;
+    }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .nav-badge {
+      font-size: 0.75rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: 9999px;
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      font-weight: 600;
+    }
+    .nav-badge.unlocked {
+      background: rgba(74, 222, 128, 0.1);
+      color: var(--green);
+      border-color: rgba(74, 222, 128, 0.3);
+    }
+    main {
+      flex: 1;
+      max-width: 1300px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+    .hero-header {
+      margin-bottom: 1.5rem;
+    }
+    .hero-header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 0.35rem;
+    }
+    .hero-header p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+    .plain-english-explainer {
+      display: inline-block;
+      font-size: 0.9rem;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.08);
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      border-radius: 6px;
+      padding: 0.5rem 1rem;
+      margin-top: 0.25rem;
+      margin-bottom: 1rem;
+    }
+    .posture-banner {
+      width: 100%;
+      padding: 0.75rem 1.25rem;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      border: 1px solid transparent;
+    }
+    .posture-banner.green {
+      background: rgba(74, 222, 128, 0.1);
+      border-color: rgba(74, 222, 128, 0.3);
+      color: var(--green);
+    }
+    .posture-banner.amber {
+      background: rgba(251, 191, 36, 0.1);
+      border-color: rgba(251, 191, 36, 0.3);
+      color: var(--amber);
+    }
+    .posture-banner.red {
+      background: rgba(248, 113, 113, 0.1);
+      border-color: rgba(248, 113, 113, 0.3);
+      color: var(--red);
+    }
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .dash-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .dash-card-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+    .dash-card-val {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.5rem;
+      overflow-x: auto;
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-weight: 600;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+    .tab-btn.active {
+      background: var(--card-inner);
+      color: var(--accent);
+      border: 1px solid var(--border);
+    }
+    .table-container {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow-x: auto;
+      position: relative;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.85rem;
+    }
+    th {
+      background: var(--card-inner);
+      padding: 0.85rem 1rem;
+      color: var(--muted);
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+      cursor: help;
+    }
+    th[title] {
+      text-decoration: underline dotted var(--muted);
+    }
+    td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+      white-space: nowrap;
+    }
+    tr.locked-row td {
+      filter: blur(5px);
+      user-select: none;
+      pointer-events: none;
+    }
+    .ticker-pill {
+      font-weight: 700;
+      color: var(--accent);
+      background: rgba(56, 189, 248, 0.1);
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+    }
+    .r-pill {
+      color: var(--green);
+      font-weight: 700;
+    }
+    .zacks-pill {
+      color: var(--amber);
+      font-weight: 600;
+    }
+    .gate-overlay {
+      position: absolute;
+      top: 140px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.1) 0%, rgba(15, 23, 42, 0.95) 40%, #0f172a 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+      backdrop-filter: blur(2px);
+    }
+    .gate-overlay h3 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+    .gate-overlay p {
+      color: var(--muted);
+      max-width: 520px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      margin-bottom: 1.25rem;
+    }
+    .btn-unlock {
+      background: var(--accent);
+      color: #04101e;
+      border: none;
+      padding: 0.85rem 1.75rem;
+      font-weight: 700;
+      font-size: 0.95rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .btn-unlock:hover {
+      transform: translateY(-2px);
+      background: #7dd3fc;
+    }
+    /* Modal Styles */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(7, 10, 18, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+    .modal-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      max-width: 500px;
+      width: 100%;
+      padding: 2rem;
+      position: relative;
+    }
+    .modal-card h2 {
+      font-size: 1.4rem;
+      margin-bottom: 0.4rem;
+    }
+    .modal-card p {
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+    .close-btn {
+      position: absolute;
+      top: 1.25rem;
+      right: 1.25rem;
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-size: 1.4rem;
+      cursor: pointer;
+    }
+    .form-group {
+      margin-bottom: 1.15rem;
+      text-align: left;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.35rem;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 0.75rem;
+      border-radius: 6px;
+      background: var(--card-inner);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.9rem;
+      outline: none;
+    }
+    .form-group input:focus {
+      border-color: var(--accent);
+    }
+    .submit-btn {
+      width: 100%;
+      background: var(--accent);
+      color: #04101e;
+      border: none;
+      padding: 0.85rem;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      margin-top: 0.5rem;
+      transition: background 0.2s;
+    }
+    .submit-btn:hover {
+      background: #7dd3fc;
+    }
+    .micro-notice {
+      margin-top: 1rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      line-height: 1.4;
+      text-align: left;
+      border-top: 1px solid var(--border);
+      padding-top: 0.85rem;
+    }
+    .success-container {
+      text-align: center;
+      padding: 1rem 0;
+    }
+    .success-container .icon {
+      font-size: 2.8rem;
+      margin-bottom: 0.8rem;
+    }
+    .success-container h3 {
+      font-size: 1.35rem;
+      color: var(--green);
+      margin-bottom: 0.5rem;
+    }
+    .success-container p {
+      font-size: 0.9rem;
+      color: var(--text);
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      align-items: center;
+      margin-top: 3rem;
+    }
+    footer a {
+      color: var(--muted);
+      text-decoration: underline;
+    }
+    footer a:hover {
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="/" class="brand">
+      <img src="logo.png" alt="Corp Acuity Logo" onerror="this.style.display='none'" />
+      <span>CORP ACUITY TERMINAL</span>
+    </a>
+    <div class="nav-actions">
+      <a href="daily_market_intelligence.pdf" target="_blank" style="color:var(--muted); text-decoration:none; font-size:0.85rem;">View PDF Carousel ➔</a>
+      <div id="navBadge" class="nav-badge">Beta Access</div>
+    </div>
+  </header>
 
-[1mdiff --git a/intel.html b/intel.html[m
-[1mindex da333af..bca858c 100644[m
-[1m--- a/intel.html[m
-[1m+++ b/intel.html[m
-[36m@@ -1,21 +1,10 @@[m
- <!DOCTYPE html>[m
- <html lang="en">[m
- <head>[m
-[31m-  <meta charset="UTF-8" />[m
-[31m-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />[m
-[31m-  <title>Daily Market Intelligence Terminal | Corp Acuity</title>[m
-[32m+[m[32m  <meta charset="UTF-8">[m
-[32m+[m[32m  <meta name="viewport" content="width=device-width, initial-scale=1.0">[m
-[32m+[m[32m  <title>Corp Acuity // Daily Institutional Screener & Alpha Engine</title>[m
-   <link rel="icon" type="image/png" href="logo.png" />[m
-[31m-  [m
-[31m-  <!-- EmailJS SDK & Initialization -->[m
-[31m-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>[m
-[31m-  <script>[m
-[31m-    (function(){[m
-[31m-      emailjs.init({[m
-[31m-        publicKey: "4UwWioU7Are22Ah_O",[m
-[31m-      });[m
-[31m-    })();[m
-[31m-  </script>[m
-[31m-[m
-   <style>[m
-     :root {[m
-       --bg: #070a12;[m
-[36m@@ -29,719 +18,327 @@[m
-       --amber: #fbbf24;[m
-       --red: #f87171;[m
-     }[m
-[31m-    * {[m
-[31m-      box-sizing: border-box;[m
-[31m-      margin: 0;[m
-[31m-      padding: 0;[m
-[31m-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;[m
-[31m-    }[m
-[31m-    body {[m
-[31m-      background-color: var(--bg);[m
-[31m-      color: var(--text);[m
-[31m-      min-height: 100vh;[m
-[31m-      display: flex;[m
-[31m-      flex-direction: column;[m
-[31m-    }[m
-[31m-    header {[m
-[31m-      border-bottom: 1px solid var(--border);[m
-[31m-      padding: 1rem 2rem;[m
-[31m-      display: flex;[m
-[31m-      justify-content: space-between;[m
-[31m-      align-items: center;[m
-[31m-      background: rgba(15, 23, 42, 0.85);[m
-[31m-      position: sticky;[m
-[31m-      top: 0;[m
-[31m-      z-index: 50;[m
-[31m-      backdrop-filter: blur(8px);[m
-[31m-    }[m
-[31m-    .brand {[m
-[31m-      display: flex;[m
-[31m-      align-items: center;[m
-[31m-      gap: 0.75rem;[m
-[31m-      text-decoration: none;[m
-[31m-      color: var(--text);[m
-[31m-      font-weight: 700;[m
-[31m-      letter-spacing: 0.05em;[m
-[31m-    }[m
-[31m-    .brand img {[m
-[31m-      height: 28px;[m
-[31m-      width: auto;[m
-[31m-    }[m
-[31m-    .nav-actions {[m
-[31m-      display: flex;[m
-[31m-      align-items: center;[m
-[31m-      gap: 1rem;[m
-[31m-    }[m
-[31m-    .nav-badge {[m
-[31m-      font-size: 0.75rem;[m
-[31m-      padding: 0.3rem 0.65rem;[m
-[31m-      border-radius: 9999px;[m
-[31m-      background: rgba(56, 189, 248, 0.1);[m
-[31m-      color: var(--accent);[m
-[31m-      border: 1px solid rgba(56, 189, 248, 0.3);[m
-[31m-      font-weight: 600;[m
-[31m-    }[m
-[31m-    .nav-badge.unlocked {[m
-[31m-      background: rgba(74, 222, 128, 0.1);[m
-[31m-      color: var(--green);[m
-[31m-      border-color: rgba(74, 222, 128, 0.3);[m
-[31m-    }[m
-[31m-    main {[m
-[31m-      flex: 1;[m
-[31m-      max-width: 1300px;[m
-[31m-      width: 100%;[m
-[31m-      margin: 0 auto;[m
-[31m-      padding: 2rem 1.5rem;[m
-[31m-    }[m
-[31m-    .hero-header {[m
-[31m-      margin-bottom: 1.5rem;[m
-[32m+[m[32m    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }[m
-[32m+[m[32m    body { background-color: var(--bg); color: var(--text); line-height: 1.6; }[m
-[32m+[m
-[32m+[m[32m    .container {[m
-[32m+[m[32m      max-width: 1400px;[m
-[32m+[m[32m      margin: 1.5rem auto 2rem;[m
-[32m+[m[32m      padding: 0 1rem 4rem;[m
-     }[m
-[31m-    .hero-header h1 {[m
-[31m-      font-size: 2rem;[m
-[32m+[m
-[32m+[m[32m    h1 {[m
-[32m+[m[32m      font-size: clamp(1.8rem, 3vw, 2.4rem);[m
-       font-weight: 800;[m
-       margin-bottom: 0.35rem;[m
-[32m+[m[32m      letter-spacing: -0.02em;[m
-     }[m
-[31m-    .hero-header p {[m
-[32m+[m[32m    .subtitle {[m
-       color: var(--muted);[m
-       font-size: 0.95rem;[m
-[31m-      margin-bottom: 0.5rem;[m
-[31m-    }[m
-[31m-    .plain-english-explainer {[m
-[31m-      display: inline-block;[m
-[31m-      font-size: 0.9rem;[m
-[31m-      color: var(--accent);[m
-[31m-      background: rgba(56, 189, 248, 0.08);[m
-[31m-      border: 1px solid rgba(56, 189, 248, 0.2);[m
-[31m-      border-radius: 6px;[m
-[31m-      padding: 0.5rem 1rem;[m
-[31m-      margin-top: 0.25rem;[m
-[31m-      margin-bottom: 1rem;[m
-[32m+[m[32m      margin-bottom: 1.25rem;[m
-     }[m
-[31m-    .posture-banner {[m
-[31m-      width: 100%;[m
-[31m-      padding: 0.75rem 1.25rem;[m
-[32m+[m[32m    .plain-terms-box {[m
-[32m+[m[32m      background: var(--card-bg);[m
-[32m+[m[32m      border: 1px solid var(--border);[m
-[32m+[m[32m      border-left: 4px solid var(--accent);[m
-       border-radius: 8px;[m
-[31m-      font-weight: 600;[m
-[31m-      font-size: 0.95rem;[m
-[32m+[m[32m      padding: 0.85rem 1.15rem;[m
-       margin-bottom: 1.5rem;[m
-[31m-      display: flex;[m
-[31m-      align-items: center;[m
-[31m-      gap: 0.75rem;[m
-[31m-      border: 1px solid transparent;[m
-[31m-    }[m
-[31m-    .posture-banner.green {[m
-[31m-      background: rgba(74, 222, 128, 0.1);[m
-[31m-      border-color: rgba(74, 222, 128, 0.3);[m
-[31m-      color: var(--green);[m
-[32m+[m[32m      font-size: 0.88rem;[m
-[32m+[m[32m      color: var(--muted);[m
-     }[m
-[31m-    .posture-banner.amber {[m
-[31m-      background: rgba(251, 191, 36, 0.1);[m
-[31m-      border-color: rgba(251, 191, 36, 0.3);[m
-[32m+[m[32m    .plain-terms-box strong { color: var(--text); }[m
-[32m+[m
-[32m+[m[32m    .market-health-bar {[m
-[32m+[m[32m      background: linear-gradient(135deg, rgba(251, 191, 36, 0.12), rgba(15, 23, 42, 0.8));[m
-[32m+[m[32m      border: 1px solid var(--amber);[m
-[32m+[m[32m      border-radius: 8px;[m
-[32m+[m[32m      padding: 0.85rem 1.25rem;[m
-[32m+[m[32m      margin-bottom: 1.5rem;[m
-[32m+[m[32m      font-weight: 600;[m
-       color: var(--amber);[m
-[32m+[m[32m      font-size: 0.92rem;[m
-     }[m
-[31m-    .posture-banner.red {[m
-[31m-      background: rgba(248, 113, 113, 0.1);[m
-[31m-      border-color: rgba(248, 113, 113, 0.3);[m
-[31m-      color: var(--red);[m
-[31m-    }[m
-[31m-    .dashboard-grid {[m
-[32m+[m
-[32m+[m[32m    .metrics-grid {[m
-       display: grid;[m
-       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));[m
-       gap: 1rem;[m
-       margin-bottom: 2rem;[m
-     }[m
-[31m-    .dash-card {[m
-[32m+[m[32m    .metric-box {[m
-       background: var(--card-bg);[m
-       border: 1px solid var(--border);[m
-[31m-      border-radius: 10px;[m
-[31m-      padding: 1.25rem;[m
-[32m+[m[32m      border-radius: 8px;[m
-[32m+[m[32m      padding: 1.15rem;[m
-     }[m
-[31m-    .dash-card-label {[m
-[32m+[m[32m    .metric-label {[m
-       font-size: 0.75rem;[m
-[31m-      text-transform: uppercase;[m
-[31m-      font-weight: 700;[m
-       color: var(--muted);[m
-[31m-      margin-bottom: 0.5rem;[m
-[32m+[m[32m      text-transform: uppercase;[m
-[32m+[m[32m      letter-spacing: 0.05em;[m
-[32m+[m[32m      margin-bottom: 0.4rem;[m
-     }[m
-[31m-    .dash-card-val {[m
-[31m-      font-size: 1.4rem;[m
-[32m+[m[32m    .metric-value {[m
-[32m+[m[32m      font-size: 1.25rem;[m
-       font-weight: 700;[m
-       color: var(--text);[m
-     }[m
-[32m+[m
-     .tabs {[m
-       display: flex;[m
-       gap: 0.5rem;[m
-[31m-      margin-bottom: 1rem;[m
-[32m+[m[32m      margin-bottom: 1.5rem;[m
-       border-bottom: 1px solid var(--border);[m
-[31m-      padding-bottom: 0.5rem;[m
-[31m-      overflow
+  <main>
+    <div class="hero-header">
+      <h1>Daily Institutional Screener & Alpha Engine</h1>
+      <p>Systematic screening with strict 2.0R asymmetry floors and 200 EMA breadth filters.</p>
+      <div class="plain-english-explainer">
+        💡 <strong>In plain terms:</strong> We scan 1,600+ liquid US stocks every morning to isolate high-probability momentum setups where the mathematical upside is at least double the risk.
+      </div>
+    </div>
+
+    <!-- Plain English Posture Banner -->
+    <div id="postureBanner" class="posture-banner amber">
+      <span id="postureIcon">🟡</span>
+      <span id="postureText">Market Health: Defensive (Trim exposure, protect capital)</span>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="dash-card">
+        <div class="dash-card-label">Regime Status</div>
+        <div id="regimeStatus" class="dash-card-val" style="color:var(--amber);">AMBER</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-label">Breadth (> 200 EMA)</div>
+        <div id="breadthVal" class="dash-card-val">52.4%</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-label">Allowed Exposure</div>
+        <div id="exposureVal" class="dash-card-val">30% - 60%</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-label">10Y Yield / WTI</div>
+        <div id="crossAssetVal" class="dash-card-val">4.24% / $73.80</div>
+      </div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchCategory('base_resets')">1. Base-Reset Inflections</button>
+      <button class="tab-btn" onclick="switchCategory('momentum_flags')">2. Momentum Flags (HTF)</button>
+      <button class="tab-btn" onclick="switchCategory('pocket_pivots')">3. Pocket Pivots</button>
+      <button class="tab-btn" onclick="switchCategory('liquidity_sweeps')">4. Liquidity Sweeps</button>
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th title="Security ticker symbol">Ticker</th>
+            <th title="Latest market closing price">Close</th>
+            <th title="The exact price level that confirms the breakout entry">Trigger Pivot</th>
+            <th title="The risk management exit level if the trade moves against you">Tactical Stop</th>
+            <th title="Distance to stop loss">Risk %</th>
+            <th title="Reward-to-risk ratio (all setups require >= 2.0R)">Asymmetry</th>
+            <th title="Institutional earnings estimate revision strength (Rank 1 = Strong Buy)">Zacks Rank</th>
+            <th title="Days until next earnings report">Earnings Proximity</th>
+          </tr>
+        </thead>
+        <tbody id="screenerTableBody">
+          <!-- Populated dynamically via JS -->
+        </tbody>
+      </table>
+
+      <!-- Gating Overlay -->
+      <div id="gateOverlay" class="gate-overlay">
+        <h3>Unlock Today's Full Institutional Scan</h3>
+        <p>You are viewing candidate #1. Unlock all remaining verified setups across Base-Resets, Momentum Flags, Pocket Pivots, and Liquidity Sweeps.</p>
+        <button class="btn-unlock" onclick="openModal()">Unlock Complete Watchlist (Free Beta)</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Lead Capture Modal -->
+  <div id="leadModal" class="modal-backdrop">
+    <div class="modal-card">
+      <button class="close-btn" onclick="closeModal()">&times;</button>
+      <div id="modalFormContent">
+        <h2>Institutional Terminal Access</h2>
+        <p>Instant access to all verified setups, Zacks rank tenures, and nightly screening CSV feeds.</p>
+
+        <form id="leadForm" onsubmit="handleLeadSubmit(event)">
+          <div class="form-group">
+            <label for="leadName">Full Name</label>
+            <input type="text" id="leadName" name="name" required placeholder="e.g. Andrew McNeil" />
+          </div>
+
+          <div class="form-group">
+            <label for="leadEmail">Business / Trade Email</label>
+            <input type="email" id="leadEmail" name="email" required placeholder="name@company.com" />
+          </div>
+
+          <div class="form-group">
+            <label for="leadLocation">Location / Region (Optional)</label>
+            <input type="text" id="leadLocation" name="location" placeholder="e.g. London, UK or New York, US" />
+          </div>
+
+          <button type="submit" id="submitBtn" class="submit-btn">Unlock Full Terminal Now</button>
+
+          <div class="micro-notice">
+            🔒 <strong>Early Beta Access:</strong> Free during our introductory phase. Advanced intraday scans and real-time execution alerts will move behind a premium tier in the future. By signing up, you lock in early-bird consideration.
+          </div>
+        </form>
+      </div>
+
+      <!-- Confirmation / Success UX State -->
+      <div id="modalSuccessContent" class="success-container" style="display:none;">
+        <div class="icon">🔓</div>
+        <h3>Access Granted</h3>
+        <p>You are now viewing today's full institutional scan. A link and daily intelligence update has been routed to your email.</p>
+        <button class="btn-unlock" style="width:100%;" onclick="confirmSuccessAndContinue()">Continue to Terminal ➔</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div>&copy; 2026 Corp Acuity Ltd. Quantitative Market Intelligence. All rights reserved.</div>
+    <div>
+      <a href="legal.html">Legal Disclaimer, Privacy Policy & Terms</a>
+    </div>
+  </footer>
+
+  <script>
+    let screenerData = null;
+    let currentCategory = 'base_resets';
+
+    // 1. Initial State Check
+    function isUnlocked() {
+      return localStorage.getItem('corpacuity_unlocked') === 'true';
+    }
+
+    function syncNavBadge() {
+      const b = document.getElementById('navBadge');
+      if (b && isUnlocked()) {
+        b.innerText = "Status: Beta Access Unlocked";
+        b.classList.add("unlocked");
+      }
+    }
+
+    // 2. Fetch Terminal Data Feed
+    async function loadTerminalData() {
+      try {
+        const res = await fetch('terminal_feed.json?cache_bust=' + Date.now());
+        if (!res.ok) throw new Error("Feed not found");
+        screenerData = await res.json();
+        renderMacroDashboard(screenerData.macro);
+        renderTable();
+      } catch (err) {
+        console.warn("Using baseline fallback data:", err);
+        renderFallback();
+      }
+    }
+
+    function renderMacroDashboard(macro) {
+      if (!macro) return;
+      const statusEl = document.getElementById('regimeStatus');
+      const breadthEl = document.getElementById('breadthVal');
+      const expEl = document.getElementById('exposureVal');
+      const caEl = document.getElementById('crossAssetVal');
+      const banner = document.getElementById('postureBanner');
+      const bannerText = document.getElementById('postureText');
+      const bannerIcon = document.getElementById('postureIcon');
+
+      const isGreen = macro.regime_status && macro.regime_status.includes('GREEN');
+      const isRed = macro.regime_status && macro.regime_status.includes('RED');
+
+      if (isGreen) {
+        statusEl.innerText = "GREEN";
+        statusEl.style.color = "var(--green)";
+        banner.className = "posture-banner green";
+        bannerIcon.innerText = "🟢";
+        bannerText.innerText = "Market Health: Risk-On (Focus on momentum breakouts and continuation)";
+      } else if (isRed) {
+        statusEl.innerText = "RED";
+        statusEl.style.color = "var(--red)";
+        banner.className = "posture-banner red";
+        bannerIcon.innerText = "🔴";
+        bannerText.innerText = "Market Health: Bearish Distribution (Strict capital preservation, minimal exposure)";
+      } else {
+        statusEl.innerText = "AMBER";
+        statusEl.style.color = "var(--amber)";
+        banner.className = "posture-banner amber";
+        bannerIcon.innerText = "🟡";
+        bannerText.innerText = "Market Health: Defensive (Trim exposure, protect capital, buy high asymmetry pivots only)";
+      }
+
+      breadthEl.innerText = (macro.pct_above_200 || 0) + "%";
+      expEl.innerText = macro.max_exposure || "30% - 60%";
+      caEl.innerText = `${macro.tnx || 4.25}% / $${macro.oil || 75.0}`;
+    }
+
+    function switchCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('onclick').includes(cat));
+      });
+      renderTable();
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('screenerTableBody');
+      const overlay = document.getElementById('gateOverlay');
+      tbody.innerHTML = '';
+
+      const rows = (screenerData && screenerData.watchlists && screenerData.watchlists[currentCategory]) ? screenerData.watchlists[currentCategory] : [];
+
+      if (!rows || rows.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--muted);">No setups currently met strict mathematical asymmetry and risk gates. Cash is a valid position.</td></tr>`;
+        overlay.style.display = 'none';
+        return;
+      }
+
+      const unlocked = isUnlocked();
+
+      rows.forEach((r, idx) => {
+        const isLocked = !unlocked && idx > 0;
+        const tr = document.createElement('tr');
+        if (isLocked) tr.className = 'locked-row';
+
+        tr.innerHTML = `
+          <td><span class="ticker-pill">$${r.Ticker}</span></td>
+          <td>$${Number(r.Close).toFixed(2)}</td>
+          <td><strong>$${Number(r.Pivot_Trigger).toFixed(2)}</strong></td>
+          <td style="color:var(--red);">$${Number(r.Stop_Loss).toFixed(2)}</td>
+          <td>${r['Risk_%']}%</td>
+          <td><span class="r-pill">${r.R_Ratio}R</span></td>
+          <td><span class="zacks-pill">${r.Zacks_Rank || 'N/A'}</span></td>
+          <td>${r.Earnings_Risk || 'SAFE (>14d)'}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      overlay.style.display = (unlocked || rows.length <= 1) ? 'none' : 'flex';
+      syncNavBadge();
+    }
+
+    function renderFallback() {
+      screenerData = {
+        macro: { regime_status: "AMBER", pct_above_200: 51.8, max_exposure: "30% - 60%", tnx: 4.24, oil: 74.5 },
+        watchlists: {
+          base_resets: [
+            { Ticker: "LITE", Close: 84.50, Pivot_Trigger: 86.20, Stop_Loss: 80.50, 'Risk_%': 6.6, R_Ratio: 3.2, Zacks_Rank: "#1 (New)", Earnings_Risk: "SAFE (>14d)" },
+            { Ticker: "POET", Close: 4.85, Pivot_Trigger: 5.10, Stop_Loss: 4.60, 'Risk_%': 9.8, R_Ratio: 2.8, Zacks_Rank: "#2 (12d)", Earnings_Risk: "SAFE (>14d)" }
+          ]
+        }
+      };
+      renderMacroDashboard(screenerData.macro);
+      renderTable();
+    }
+
+    // Modal & Form Handling
+    function openModal() {
+      document.getElementById('modalFormContent').style.display = 'block';
+      document.getElementById('modalSuccessContent').style.display = 'none';
+      document.getElementById('leadModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+      document.getElementById('leadModal').style.display = 'none';
+    }
+
+    async function handleLeadSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      const originalText = btn.innerText;
+      btn.disabled = true;
+      btn.innerText = "Unlocking terminal...";
+
+      const leadName = document.getElementById('leadName').value;
+      const leadEmail = document.getElementById('leadEmail').value;
+      const leadLocation = document.getElementById('leadLocation').value || "Not Specified";
+
+      const payload = {
+        name: leadName,
+        email: leadEmail,
+        location: leadLocation,
+        timestamp: new Date().toISOString(),
+        source: "Daily Screener Terminal Lead Gate"
+      };
+
+      // 1. Submit lead record to Formspree dashboard
+      try {
+        await fetch("https://formspree.io/f/maeqyzoj", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Accept": "application/json" },
+          body: JSON.stringify(payload)
+        });
+      } catch (err) {
+        console.error("Formspree transmission notice:", err);
+      }
+
+      // 2. Dispatch instant confirmation email to user via EmailJS
+      try {
+        await emailjs.send("service_7ftmqeu", "template_3njnkmf", {
+          user_name: leadName,
+          user_email: leadEmail,
+        });
+        console.log("[EMAIL] Confirmation sent to user successfully.");
+      } catch (err) {
+        console.error("[EMAIL] EmailJS dispatch notice:", err);
+      }
+
+      // 3. Display success screen
+      document.getElementById('modalFormContent').style.display = 'none';
+      document.getElementById('modalSuccessContent').style.display = 'block';
+      btn.disabled = false;
+      btn.innerText = originalText;
+    }
+
+    function confirmSuccessAndContinue() {
+      localStorage.setItem('corpacuity_unlocked', 'true');
+      closeModal();
+      renderTable();
+    }
+
+    // Run on startup
+    window.addEventListener('DOMContentLoaded', () => {
+      syncNavBadge();
+      loadTerminalData();
+    });
+  </script>
+</body>
+</html>
