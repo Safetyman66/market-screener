@@ -12,7 +12,12 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib.colors import HexColor
 
-CAROUSEL_PDF_FILENAME = "corp_acuity_linkedin_carousel.pdf"
+try:
+    import fitz  # PyMuPDF for slicing web images
+except ImportError:
+    fitz = None
+
+CAROUSEL_PDF_FILENAME = "daily_market_intelligence.pdf"
 
 def draw_wrapped_text(c, text, x, y, max_w, font_name, font_size, line_height, text_color, max_lines=4):
     c.setFont(font_name, font_size)
@@ -172,7 +177,6 @@ def create_linkedin_carousel_pdf(
     c.setFillColor(accent_cyan)
     c.drawString(60, h - 110, "SYSTEM REGIME POSTURE")
 
-    # Top Status Card
     c.setFillColor(card_bg)
     c.roundRect(60, h - 325, w - 120, 185, 16, fill=True, stroke=False)
     
@@ -189,17 +193,14 @@ def create_linkedin_carousel_pdf(
     c.setFillColor(text_white)
     c.drawString(90, h - 240, f"System Model Exposure Band: {max_exposure}")
 
-    # Remove advisory imperative words like 'BUY'
     clean_posture = posture_box.replace("â– ", "").replace("â–²", "").replace("â—†", "").strip()
     clean_posture = clean_posture.replace("BUY HIGH ASYMMETRY PIVOTS", "FOCUS: HIGH ASYMMETRY BREAKOUT CANDIDATES")
     clean_posture = clean_posture.replace("BUY", "OBSERVE")
     draw_wrapped_text(c, f"Framework Note: {clean_posture}", 90, h - 275, w - 180, "Helvetica", 15, 22, text_muted, max_lines=2)
 
-    # Middle 2 KPI Cards
     tile_w = (w - 150) / 2
     tile_h = 160
 
-    # Universe Breadth
     c.setFillColor(card_bg)
     c.roundRect(60, h - 515, tile_w, tile_h, 14, fill=True, stroke=False)
     c.setFont("Helvetica-Bold", 15)
@@ -216,7 +217,6 @@ def create_linkedin_carousel_pdf(
     c.setFillColor(text_muted)
     c.drawString(85, h - 485, "Consolidating above 38.0% historical panic floor")
 
-    # Cross-Asset Radar
     c.setFillColor(card_bg)
     c.roundRect(60 + tile_w + 30, h - 515, tile_w, tile_h, 14, fill=True, stroke=False)
     c.setFont("Helvetica-Bold", 15)
@@ -234,7 +234,6 @@ def create_linkedin_carousel_pdf(
     c.setFillColor(text_muted)
     c.drawString(85 + tile_w + 30, h - 488, "Monitored macro liquidity baselines")
 
-    # Structural Health
     c.setFillColor(card_bg)
     c.roundRect(60, h - 700, tile_w, 160, 14, fill=True, stroke=False)
     c.setFont("Helvetica-Bold", 15)
@@ -250,7 +249,6 @@ def create_linkedin_carousel_pdf(
     c.setFillColor(text_muted)
     c.drawString(85, h - 670, "Primary trend baselines remain intact")
 
-    # Quantitative Regime Mechanics
     c.setFillColor(card_bg)
     c.roundRect(60 + tile_w + 30, h - 700, tile_w, 160, 14, fill=True, stroke=False)
     c.setFont("Helvetica-Bold", 15)
@@ -263,7 +261,6 @@ def create_linkedin_carousel_pdf(
     )
     draw_wrapped_text(c, mech_text, 85 + tile_w + 30, h - 588, tile_w - 50, "Helvetica", 13, 20, text_white, max_lines=4)
 
-    # Macro Releases
     c.setFillColor(accent_navy)
     c.roundRect(60, h - 945, w - 120, 220, 16, fill=True, stroke=False)
     
@@ -391,7 +388,6 @@ def create_linkedin_carousel_pdf(
     def draw_setup_slide_with_chart(title, subtitle, candidate, chart_filename, slide_idx):
         draw_base(title, slide_idx, 8)
         
-        # Header strip
         c.setFont("Helvetica-Bold", 28)
         c.setFillColor(accent_cyan)
         c.drawString(60, h - 110, title)
@@ -412,7 +408,6 @@ def create_linkedin_carousel_pdf(
             c.showPage()
             return
 
-        # Top Bar with Ticker & Close
         c.setFont("Helvetica-Bold", 42)
         c.setFillColor(accent_green)
         c.drawString(60, h - 215, f"${candidate['Ticker']}")
@@ -420,19 +415,23 @@ def create_linkedin_carousel_pdf(
         c.setFillColor(text_white)
         c.drawString(300, h - 210, f"Last Close: ${candidate['Close']:.2f}")
 
-        # Embedded Candlestick Chart (500px Height)
-        chart_path = os.path.join("assets", "cards", chart_filename)
+        # AGGRESSIVE CHART FINDER
         chart_w, chart_h = w - 120, 500
         chart_x, chart_y = 60, h - 735
+        
+        possible_paths = [
+            os.path.join("assets", "cards", chart_filename),
+            chart_filename,
+            os.path.join("assets", chart_filename)
+        ]
+        
+        resolved_chart = None
+        for p in possible_paths:
+            if os.path.exists(p):
+                resolved_chart = p
+                break
 
-        # Check root or assets/cards/ subfolder
-        resolved_chart = chart_path
-        if not os.path.exists(resolved_chart):
-            alt_path = os.path.join("assets", "cards", chart_path)
-            if os.path.exists(alt_path):
-                resolved_chart = alt_path
-
-        if os.path.exists(resolved_chart):
+        if resolved_chart:
             c.drawImage(resolved_chart, chart_x, chart_y, width=chart_w, height=chart_h, preserveAspectRatio=True)
             c.setStrokeColor(card_border)
             c.setLineWidth(1.5)
@@ -444,7 +443,6 @@ def create_linkedin_carousel_pdf(
             c.setFillColor(text_muted)
             c.drawCentredString(w / 2, chart_y + chart_h / 2, f"Live Setup Chart: {chart_filename}")
 
-        # Bottom 4-Tile Risk Metric Strip
         tile_box_y = h - 930
         t_w = (w - 120 - 45) / 4
         t_h = 100
@@ -467,7 +465,6 @@ def create_linkedin_carousel_pdf(
             c.setFillColor(col)
             c.drawString(cur_tx + 14, tile_box_y + 24, kpi_val)
 
-        # Context Footnote
         z_str = format_zacks(candidate.get("Zacks_Rank"))
         e_str = format_earnings(candidate.get("Earnings_Risk"))
         c.setFont("Helvetica", 12)
@@ -513,7 +510,6 @@ def create_linkedin_carousel_pdf(
     c.setFillColor(accent_cyan)
     c.drawString(60, h - 120, "DAILY MARKET INTELLIGENCE TERMINAL")
 
-    # Card 1: Core Mathematical Execution Disciplines
     c.setFillColor(card_bg)
     c.roundRect(60, h - 340, w - 120, 200, 16, fill=True, stroke=False)
 
@@ -531,7 +527,6 @@ def create_linkedin_carousel_pdf(
     c.setFillColor(text_muted)
     c.drawString(90, h - 260, "Stops represent non-negotiable exit points. Sizing throttles to macro regime health.")
 
-    # Card 2: What Is Unlocked on the Web Terminal
     c.setFillColor(card_bg)
     c.roundRect(60, h - 640, w - 120, 275, 16, fill=True, stroke=False)
 
@@ -556,7 +551,6 @@ def create_linkedin_carousel_pdf(
         c.drawString(350, tf_y, feat_desc)
         tf_y -= 45
 
-    # Card 3: High-Contrast Hero Call to Action
     c.setFillColor(card_inner)
     c.roundRect(60, h - 915, w - 120, 250, 18, fill=True, stroke=False)
 
@@ -568,7 +562,6 @@ def create_linkedin_carousel_pdf(
     c.setFillColor(text_white)
     c.drawCentredString(w / 2.0, h - 735, "Receive daily algorithmic market screening and full CSV datasets before US market open.")
 
-    # Action Pill Button
     c.setFillColor(accent_green)
     c.roundRect(w / 2.0 - 240, h - 845, 480, 72, 36, fill=True, stroke=False)
     c.setFont("Helvetica-Bold", 28)
@@ -584,15 +577,26 @@ def create_linkedin_carousel_pdf(
     print(f"\n[CAROUSEL] Successfully compiled compliant 8-slide PDF with embedded charts: {filename}")
 
 def export_carousel_cards_for_web(pdf_path=CAROUSEL_PDF_FILENAME):
-    print(f"[*] Carousel cards ready from {pdf_path}")
+    if not fitz:
+        print("[!] PyMuPDF (fitz) is not installed. Carousel cards cannot be sliced for the website.")
+        return
+        
+    try:
+        doc = fitz.open(pdf_path)
+        out_dir = os.path.join("assets", "cards")
+        os.makedirs(out_dir, exist_ok=True)
+        
+        for i in range(len(doc)):
+            page = doc.load_page(i)
+            pix = page.get_pixmap(dpi=150)
+            img_path = os.path.join(out_dir, f"card_{i+1}.png")
+            pix.save(img_path)
+            
+        print(f"[*] Successfully sliced {len(doc)} carousel cards to {out_dir} for the web.")
+    except Exception as e:
+        print(f"[!] Error exporting web cards from PDF: {e}")
 
 if __name__ == "__main__":
-    try:
-        import generate_live_charts
-        generate_live_charts.generate_all()
-    except Exception as e:
-        pass
-        
     if os.path.exists("latest_post_meta.json"):
         with open("latest_post_meta.json", "r", encoding="utf-8") as f:
             meta = json.load(f)
