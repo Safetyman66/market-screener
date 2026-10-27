@@ -882,6 +882,22 @@ def run_master_screener():
   pd.DataFrame(filtered_pockets).to_csv("watchlist_pocket_pivots.csv", index=False)
   pd.DataFrame(filtered_sweeps).to_csv("watchlist_liquidity_sweeps.csv", index=False)
 
+  breakout_pool = filtered_htfs + filtered_pockets + filtered_base_resets + filtered_sweeps
+  execution_candidates = sorted(breakout_pool, key=lambda x: x.get("Conviction_Score", 0), reverse=True)[:10]
+  execution_df = pd.DataFrame(execution_candidates)
+  
+  if not execution_df.empty:
+      export_cols = [
+          c for c in [
+              "Ticker", "Close", "Headroom_%", "Above_200_%", "Hist_Now", "Vol_Ratio",
+              "Conviction_Score", "Pivot_Trigger", "Stop_Loss", "Risk_%", "R_Ratio",
+              "ADV_20", "1Min_Vol_Hurdle", "Execution_Archetype", "Category",
+              "Zacks_Rank", "Earnings_Risk", "Structural_Catalyst", "Execution_Protocol"
+          ] if c in execution_df.columns
+      ]
+      execution_df = execution_df[export_cols]
+
+  execution_df.to_csv("breakouts_for_execution.csv", index=False)
 
   # ====================================================================================================================
   # ASSET GENERATION (CHARTS)
