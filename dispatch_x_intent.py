@@ -1,15 +1,11 @@
-﻿try:
-    import generate_live_charts
-    generate_live_charts.generate_all()
-except Exception as e:
-    print(f"[!] Chart generation note: {e}")
-import os
+﻿import os
 import sys
 import json
 import urllib.parse
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from email.mime.image import MIMEImage
 
 META_FILE = "latest_post_meta.json"
 HELPER_HTML_FILE = "thread_helper.html"
@@ -194,7 +190,7 @@ def build_thread_payloads():
     thread_posts.append({
         "title": "Tweet 1: Root Anchor Post",
         "role": f"Main tweet (Card: {card_lbl})",
-        "card_asset": f"assets/cards/{card_file}",
+        "card_asset": f"x_cards/{card_file}",
         "card_label": card_lbl,
         "text": t1_text,
         "url": f"https://x.com/intent/tweet?text={urllib.parse.quote(t1_text)}"
@@ -226,7 +222,7 @@ def build_thread_payloads():
         thread_posts.append({
             "title": f"Tweet {i}: Thread Reply (Setup #{i})",
             "role": f"Reply (Card: {sub_lbl})",
-            "card_asset": f"assets/cards/{sub_card}",
+            "card_asset": f"x_cards/{sub_card}",
             "card_label": sub_lbl,
             "text": reply_text,
             "url": f"https://x.com/intent/tweet?text={urllib.parse.quote(reply_text)}"
@@ -533,8 +529,6 @@ def generate_thread_helper_html(thread_posts):
     print(f"[X INTENT] Generated dispatch helper page: {HELPER_HTML_FILE}")
 
 def send_dispatch_email(thread_posts):
-    from email.mime.image import MIMEImage
-
     host = os.environ.get("SMTP_HOST")
     port = int(os.environ.get("SMTP_PORT", 587))
     user = os.environ.get("SMTP_USER")
@@ -545,7 +539,6 @@ def send_dispatch_email(thread_posts):
         print("[!] SMTP credentials missing in environment. Skipping email dispatch.")
         return
 
-    # Root container: related so inline images display alongside HTML
     msg_root = MIMEMultipart("related")
     msg_root["Subject"] = "Corp Acuity // Today's X Morning Thread Dispatch"
     msg_root["From"] = user
@@ -554,7 +547,6 @@ def send_dispatch_email(thread_posts):
     msg_alt = MIMEMultipart("alternative")
     msg_root.attach(msg_alt)
 
-    # Text fallback
     text_lines = ["Corp Acuity // X Morning Thread Dispatch\n"]
     for i, p in enumerate(thread_posts, 1):
         text_lines.append(f"--- Tweet {i} ({p.get('card_label', 'Text')}) ---")
@@ -563,21 +555,18 @@ def send_dispatch_email(thread_posts):
     text_content = "\n".join(text_lines)
     msg_alt.attach(MIMEText(text_content, "plain"))
 
-    # Rich HTML & Embedded Cards
     images_to_attach = []
     html_cards = ""
 
     for i, p in enumerate(thread_posts, 1):
         card_lbl = p.get('card_label', 'No media')
         card_path = p.get('card_asset', 'None')
-        text_formatted = p['text'].replace('\n', '<br>')
 
         img_html = ""
-        # Check if card image exists on disk
         resolved_card = card_path
         if resolved_card and resolved_card != "None":
             if not os.path.exists(resolved_card):
-                alt_p = os.path.join("assets", "cards", os.path.basename(resolved_card))
+                alt_p = os.path.join("x_cards", os.path.basename(resolved_card))
                 if os.path.exists(alt_p):
                     resolved_card = alt_p
 
@@ -627,7 +616,6 @@ def send_dispatch_email(thread_posts):
 
     msg_alt.attach(MIMEText(html_content, "html"))
 
-    # Attach each card as an image part with explicit image/png headers
     for cid_name, img_path in images_to_attach:
         try:
             with open(img_path, "rb") as f:
