@@ -1020,7 +1020,7 @@ def run_master_screener():
           regime_status=regime,
           posture_box=dashboard.get("posture_box", "SELECTIVE"),
           max_exposure=dashboard.get("max_exposure", "N/A"),
-          calendar_alerts=dashboard.get("calendar", []),
+          macro_events=dashboard.get("calendar", []),
           pct_above_200=dashboard.get("pct_above_200", 0.0),
           top_runner=top_runner,
           top_br=top_br,
