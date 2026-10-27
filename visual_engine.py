@@ -1,4 +1,4 @@
-import os
+﻿import os
 import pymupdf as fitz
 from reportlab.lib.colors import HexColor
 from reportlab.pdfgen import canvas
@@ -533,4 +533,3 @@ def export_carousel_cards_for_web(pdf_path=CAROUSEL_PDF_FILENAME):
       " (Stamped Card 1 of 4 to 4 of 4)"
   )
   return card_paths
-

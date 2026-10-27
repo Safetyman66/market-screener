@@ -12,13 +12,6 @@ from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from reportlab.lib.colors import HexColor
 
-# Ensure charts exist before compilation
-try:
-    import generate_live_charts
-    generate_live_charts.generate_all()
-except Exception as e:
-    pass
-
 CAROUSEL_PDF_FILENAME = "corp_acuity_linkedin_carousel.pdf"
 
 def draw_wrapped_text(c, text, x, y, max_w, font_name, font_size, line_height, text_color, max_lines=4):
@@ -594,6 +587,12 @@ def export_carousel_cards_for_web(pdf_path=CAROUSEL_PDF_FILENAME):
     print(f"[*] Carousel cards ready from {pdf_path}")
 
 if __name__ == "__main__":
+    try:
+        import generate_live_charts
+        generate_live_charts.generate_all()
+    except Exception as e:
+        pass
+        
     if os.path.exists("latest_post_meta.json"):
         with open("latest_post_meta.json", "r", encoding="utf-8") as f:
             meta = json.load(f)

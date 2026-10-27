@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """Corp Acuity // Master Market Screener & Alpha Engine.
 
 Author: Corp Acuity Ltd
@@ -11,7 +11,7 @@ Architecture:
   - Knowledge Base Integration: Synthesizes Zacks tenure, earnings proximity, OpEx gamma,
     and TOM calendar cycles into operational Execution Protocols for each setup.
   - Multi-Output: Produces standard watchlists, LinkedIn carousel PDF, X cards, terminal JSON,
-    and 'breakouts_for_execution.csv' with pre-calculated ADV_20 & 1-minute hurdles.
+    and a unified 'master_screener_results.csv' spreadsheet.
 """
 
 from collections import Counter
@@ -72,7 +72,6 @@ HISTORY_TRACKER_FILE = "trade_history.json"
 CAROUSEL_PDF_FILENAME = "daily_market_intelligence.pdf"
 POST_META_FILENAME = "latest_post_meta.json"
 TERMINAL_FEED_FILENAME = "terminal_feed.json"
-EXECUTION_EXPORT_FILENAME = "breakouts_for_execution.csv"
 
 GLOBAL_HTTP_SESSION = requests.Session()
 GLOBAL_HTTP_SESSION.headers.update({
@@ -154,17 +153,12 @@ BANNED_INDUSTRY_KEYWORDS = [
 
 
 def is_acquisition_freeze(daily_df, lookback=5):
-  """Detects stocks pinned in a narrow merger arbitrage / cash buyout spread.
-  
-  Guards against filtering out legitimate low-volatility bases by requiring
-  BOTH extreme intraday range death AND near-zero multi-day net drift.
-  """
+  """Detects stocks pinned in a narrow merger arbitrage / cash buyout spread."""
   if daily_df is None or len(daily_df) < lookback + 1:
     return False
 
   try:
     df = daily_df.tail(lookback).copy()
-    # Flatten MultiIndex columns if present from yf.download
     if hasattr(df.columns, 'nlevels') and df.columns.nlevels > 1:
       df.columns = df.columns.get_level_values(0)
 
@@ -190,7 +184,6 @@ def is_acquisition_freeze(daily_df, lookback=5):
       return False
     max_dev = (float(close.max()) - float(close.min())) / mean_close * 100.0
 
-    # Cash buyout pin signature: median ADR < 0.50%, net drift < 0.60%, total range < 0.85%
     if median_adr_5d < 0.50 and net_drift_5d < 0.60 and max_dev < 0.85:
       return True
   except Exception:
@@ -200,7 +193,6 @@ def is_acquisition_freeze(daily_df, lookback=5):
 
 
 def evaluate_all_setups(ticker, daily_df, spy_1m_perf, sector_map):
-  # Prune cash merger / acquisition peg false positives
   if is_acquisition_freeze(daily_df):
     return {
       "diagnostics": "Acquisition freeze / cash buyout pin",
@@ -396,7 +388,6 @@ def analyze_market_regime(total_evaluated, total_above_200, category_counts):
       MacroEventCalendar.evaluate_calendar()
   )
 
-  # Comprehensive multi-timeframe benchmark alignment
   both_above_200 = bool(spy_above_200 and qqq_above_200)
   both_above_50 = bool(spy_above_50 and qqq_above_50)
   both_above_21 = bool(spy_above_21 and qqq_above_21)
@@ -404,7 +395,6 @@ def analyze_market_regime(total_evaluated, total_above_200, category_counts):
   both_below_50 = bool(not spy_above_50 and not qqq_above_50)
   any_below_200 = bool(not spy_above_200 or not qqq_above_200)
 
-  # 1. RED: CONTRACTION / CORRECTION REGIME
   if any_below_200 or both_below_50 or pct_above_200 < 42.0:
     regime_status = "RED: STRUCTURAL CONTRACTION"
     action_plan = (
@@ -415,7 +405,6 @@ def analyze_market_regime(total_evaluated, total_above_200, category_counts):
     posture_box = "[!] DEFENSIVE POSTURE: CASH PRESERVATION / RISK-OFF"
     regime_code = "CONTRACTION"
 
-  # 2. GREEN: EXPANSION / MOMENTUM REGIME
   elif both_above_200 and both_above_50 and both_above_21 and pct_above_200 >= 56.0 and not cross_asset_drag:
     regime_status = "GREEN: CONFIRMED EXPANSION"
     action_plan = (
@@ -426,7 +415,6 @@ def analyze_market_regime(total_evaluated, total_above_200, category_counts):
     posture_box = "[+] EXPANSION POSTURE: BUY LEADING BREAKOUTS & FLAGS"
     regime_code = "EXPANSION"
 
-  # 3. AMBER: ROTATIONAL ACCUMULATION / DIGESTION
   else:
     regime_status = "AMBER: ROTATIONAL DIGESTION"
     action_plan = (
@@ -634,12 +622,6 @@ def update_and_evaluate_trailing_runners(todays_candidates):
         f"{best_runner['ticker']} (+{best_runner['max_gain_pct']}%)"
     )
   return best_runner
-
-
-# ---------------------------------------------------------
-# 9. 8-SLIDE LINKEDIN CAROUSEL PDF GENERATOR
-# ---------------------------------------------------------
-# [REFACTORED] create_linkedin_carousel_pdf & export_carousel_cards_for_web moved to pdf_engine.py
 
 
 def run_master_screener():
@@ -897,43 +879,29 @@ def run_master_screener():
   filtered_sweeps = universal_quality_filter(liquidity_sweeps)
 
   # ====================================================================================================================
-  # WATCHLIST EXPORTS (CSVs)
+  # MASTER SPREADSHEET EXPORT
   # ====================================================================================================================
-  pd.DataFrame(filtered_base_resets).to_csv("watchlist_base_resets.csv", index=False)
-  pd.DataFrame(filtered_htfs).to_csv("watchlist_momentum_flags.csv", index=False)
-  pd.DataFrame(filtered_pockets).to_csv("watchlist_pocket_pivots.csv", index=False)
-  pd.DataFrame(filtered_sweeps).to_csv("watchlist_liquidity_sweeps.csv", index=False)
-
-  breakout_pool = filtered_htfs + filtered_pockets + filtered_base_resets
-
-  # Format execution export dataframe
-  execution_candidates = sorted(
-      breakout_pool,
-      key=lambda x: x.get("Conviction_Score", 0),
-      reverse=True,
-  )[:10]
-
-  execution_df = pd.DataFrame(execution_candidates)
-  if not execution_df.empty:
-      export_cols = [
-          c for c in [
-              "Ticker", "Close", "Headroom_%", "Above_200_%", "Hist_Now", "Vol_Ratio",
-              "Conviction_Score", "Pivot_Trigger", "Stop_Loss", "Risk_%", "R_Ratio",
-              "ADV_20", "1Min_Vol_Hurdle", "Execution_Archetype", "Category",
-              "Zacks_Rank", "Earnings_Risk", "Structural_Catalyst", "Execution_Protocol"
-          ] if c in execution_df.columns
-      ]
-      execution_df = execution_df[export_cols]
-
-  execution_df.to_csv(EXECUTION_EXPORT_FILENAME, index=False)
-  print(f"[EXECUTION ENGINE] Exported top {len(execution_df)} verified breakout candidates to {EXECUTION_EXPORT_FILENAME}")
-
   all_current_setups = (
       filtered_base_resets
       + filtered_htfs
       + filtered_pockets
       + filtered_sweeps
   )
+  
+  if all_current_setups:
+      master_df = pd.DataFrame(all_current_setups)
+      
+      front_cols = ["Ticker", "Category", "Close", "Pivot_Trigger", "Stop_Loss", "Risk_%", "R_Ratio", "Conviction_Score"]
+      export_cols = front_cols + [c for c in master_df.columns if c not in front_cols]
+      master_df = master_df[[c for c in export_cols if c in master_df.columns]]
+      
+      master_df.sort_values(by=["Category", "Conviction_Score"], ascending=[True, False], inplace=True)
+      
+      master_df.to_csv("master_screener_results.csv", index=False)
+      print(f"[SPREADSHEET] Exported {len(master_df)} consolidated setups to master_screener_results.csv")
+  else:
+      print("[SPREADSHEET] No setups met the quality criteria for export today.")
+
   top_runner = update_and_evaluate_trailing_runners(all_current_setups)
 
   # ====================================================================================================================
@@ -989,26 +957,23 @@ def run_master_screener():
   cand_ls = sorted(filtered_sweeps, key=lambda x: x.get("Conviction_Score", 0), reverse=True)
 
   if is_contraction:
-      # CONTRACTION: Breakout failure rate peaks. Suppress offensive continuation & backfill.
-      # Allow strictly a single high-asymmetry structural liquidity sweep (Cat 4) if available.
       top_br = None
       top_htf = None
       top_pp = None
       top_ls = cand_ls[0] if cand_ls else None
   elif is_expansion:
-      # EXPANSION: Max offensive posture across momentum flags and base inflections.
       top_br = cand_br[0] if cand_br else None
       top_htf = cand_htf[0] if cand_htf else None
       top_pp = cand_pp[0] if cand_pp else None
       top_ls = cand_ls[0] if cand_ls else None
       assigned = {c["Ticker"] for c in [top_br, top_htf, top_pp, top_ls] if c}
-      backfill_pool = [c for c in execution_candidates if c.get("Ticker") not in assigned]
+      # Removed execution_candidates backfill logic that depended on the deleted block
+      backfill_pool = [c for c in all_current_setups if c.get("Ticker") not in assigned]
       if not top_br and backfill_pool: top_br = backfill_pool.pop(0); assigned.add(top_br["Ticker"])
       if not top_htf and backfill_pool: top_htf = backfill_pool.pop(0); assigned.add(top_htf["Ticker"])
       if not top_pp and backfill_pool: top_pp = backfill_pool.pop(0); assigned.add(top_pp["Ticker"])
       if not top_ls and backfill_pool: top_ls = backfill_pool.pop(0); assigned.add(top_ls["Ticker"])
   else:
-      # ROTATION: Selective organic allocation only. Zero artificial backfilling.
       top_br = cand_br[0] if cand_br else None
       top_htf = cand_htf[0] if cand_htf else None
       top_pp = cand_pp[0] if cand_pp else None
