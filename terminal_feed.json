@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-27 10:51 UTC",
+  "generated_at": "2026-10-27 11:10 UTC",
   "macro": {
     "regime_status": "RED: STRUCTURAL CONTRACTION",
     "regime_code": "CONTRACTION",
@@ -16,15 +16,15 @@
     "qqq_above_200": true,
     "tnx": 4.99,
     "tnx_5d_chg": -2.6,
-    "oil": 101.73,
-    "oil_5d_chg": 4.7,
+    "oil": 101.16,
+    "oil_5d_chg": 4.1,
     "pct_above_200": 54.3,
     "pct_below_200": 45.7,
     "momentum_count": 60,
     "sweep_count": 3,
     "warnings": [
       "\u26a1 YIELD SURGE: 10-Yr Yield at 4.99% (-2.6% 5d). Multiple drag active.",
-      "\ud83d\udee2\ufe0f OIL PRICE SPIKE: WTI Crude at $101.73/bbl (+4.7% 5d). Inflation expectations repricing."
+      "\ud83d\udee2\ufe0f OIL PRICE SPIKE: WTI Crude at $101.16/bbl (+4.1% 5d). Inflation expectations repricing."
     ],
     "calendar": [
       "IN 3 DAY(S): CORE PCE PRICE INDEX (8:30 AM ET): Benchmark Fed inflation print. (2026-10-30)",
@@ -50,27 +50,6 @@
   "watchlists": {
     "base_resets": [
       {
-        "Ticker": "BDX",
-        "Close": 196.39,
-        "Headroom_%": 2.1,
-        "Above_200_%": 18.2,
-        "Hist_Now": 1.817,
-        "Vol_Ratio": "1.84x",
-        "Conviction_Score": 0.952,
-        "Pivot_Trigger": 200.47,
-        "Stop_Loss": 194.71,
-        "Risk_%": 2.87,
-        "R_Ratio": 2.93,
-        "ADV_20": 1516075,
-        "1Min_Vol_Hurdle": 5306,
-        "Execution_Archetype": "BREAKOUT",
-        "Category": "Base-Reset",
-        "Zacks_Rank": "#2 (New)",
-        "Earnings_Risk": "Unknown/TBD",
-        "Structural_Catalyst": "ZACKS #2 BUY",
-        "Execution_Protocol": "STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot."
-      },
-      {
         "Ticker": "BILL",
         "Close": 49.93,
         "Headroom_%": 14.6,
@@ -89,6 +68,27 @@
         "Zacks_Rank": "#1 (8d)",
         "Earnings_Risk": "Unknown/TBD",
         "Structural_Catalyst": "ZACKS #1 STRONG BUY",
+        "Execution_Protocol": "STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot."
+      },
+      {
+        "Ticker": "BDX",
+        "Close": 196.39,
+        "Headroom_%": 2.1,
+        "Above_200_%": 18.2,
+        "Hist_Now": 1.817,
+        "Vol_Ratio": "1.84x",
+        "Conviction_Score": 0.952,
+        "Pivot_Trigger": 200.47,
+        "Stop_Loss": 194.71,
+        "Risk_%": 2.87,
+        "R_Ratio": 2.93,
+        "ADV_20": 1516075,
+        "1Min_Vol_Hurdle": 5306,
+        "Execution_Archetype": "BREAKOUT",
+        "Category": "Base-Reset",
+        "Zacks_Rank": "#2 (New)",
+        "Earnings_Risk": "Unknown/TBD",
+        "Structural_Catalyst": "ZACKS #2 BUY",
         "Execution_Protocol": "STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot."
       },
       {
@@ -191,7 +191,7 @@
         "1Min_Vol_Hurdle": 15365,
         "Execution_Archetype": "BREAKOUT",
         "Category": "Base-Reset",
-        "Zacks_Rank": "#1 (1d)",
+        "Zacks_Rank": "#1 (New)",
         "Earnings_Risk": "Unknown/TBD",
         "Structural_Catalyst": "ZACKS #1 STRONG BUY",
         "Execution_Protocol": "PEAK DIFFUSION: Fresh Rank 1 revision. Full swing leeway to 3.0R+ expansion."
@@ -296,7 +296,7 @@
         "1Min_Vol_Hurdle": 101430,
         "Execution_Archetype": "BREAKOUT",
         "Category": "Base-Reset",
-        "Zacks_Rank": "#2 (1d)",
+        "Zacks_Rank": "#2 (New)",
         "Earnings_Risk": "Unknown/TBD",
         "Structural_Catalyst": "ZACKS #2 BUY",
         "Execution_Protocol": "STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot."
