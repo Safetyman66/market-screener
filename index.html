@@ -25,21 +25,32 @@
       --amber: #fbbf24;
       --red: #f87171;
     }
+    
+    /* FLUID TYPOGRAPHY: Scales up the entire site automatically on large monitors */
+    html { font-size: 16px; }
+    @media (min-width: 1440px) { html { font-size: 18px; } }
+    @media (min-width: 1920px) { html { font-size: 20px; } }
+    
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background-color: var(--bg); color: var(--text); line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh;}
 
-    /* Sticky Navigation */
+    /* Sticky Navigation - Now constrained to match main content width */
     header {
-      border-bottom: 1px solid var(--border);
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       background: rgba(15, 23, 42, 0.85);
+      border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
       z-index: 50;
       backdrop-filter: blur(8px);
+    }
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.25rem 2rem;
     }
     .brand {
       display: flex;
@@ -49,13 +60,14 @@
       color: var(--text);
       font-weight: 700;
       letter-spacing: 0.05em;
+      font-size: 1.1rem;
     }
-    .brand img { height: 28px; width: auto; }
-    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+    .brand img { height: 32px; width: auto; }
+    .nav-links { display: flex; gap: 1.75rem; align-items: center; }
     .nav-links a {
       color: var(--muted);
       text-decoration: none;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       font-weight: 600;
       transition: color 0.2s;
     }
@@ -64,31 +76,32 @@
       background: rgba(56, 189, 248, 0.1);
       border: 1px solid rgba(56, 189, 248, 0.3);
       color: var(--accent);
-      font-size: 0.75rem;
+      font-size: 0.85rem;
       font-weight: 600;
-      padding: 0.35rem 0.75rem;
+      padding: 0.4rem 1rem;
       border-radius: 6px;
     }
 
     main {
       flex: 1;
-      max-width: 1200px;
+      max-width: 1400px;
       width: 100%;
       margin: 0 auto;
-      padding: 2.5rem 1.5rem;
+      padding: 3.5rem 1.5rem;
     }
 
     /* Hero Section */
-    .hero { text-align: center; margin-bottom: 3rem; }
-    .hero h1 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.75rem; }
-    .hero p { color: var(--muted); font-size: 1.1rem; max-width: 700px; margin: 0 auto 1.5rem; }
+    .hero { text-align: center; margin-bottom: 4rem; }
+    .hero h1 { font-size: clamp(2.2rem, 5vw, 4rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 1rem; }
+    .hero p { color: var(--muted); font-size: 1.2rem; max-width: 850px; margin: 0 auto 2rem; line-height: 1.7; }
     .hero-btn {
       display: inline-block;
       background: var(--accent);
       color: #04101e;
       text-decoration: none;
       font-weight: 700;
-      padding: 0.85rem 2rem;
+      font-size: 1.1rem;
+      padding: 1rem 2.5rem;
       border-radius: 8px;
       transition: transform 0.2s, background 0.2s;
     }
@@ -97,29 +110,29 @@
     /* The Corp Acuity Edge (Features) */
     .features-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 3.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.75rem;
+      margin-bottom: 4.5rem;
     }
     .feature-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 1.75rem;
+      padding: 2rem;
     }
-    .feature-icon { font-size: 1.75rem; margin-bottom: 1rem; }
-    .feature-card h3 { font-size: 1.15rem; color: var(--accent); margin-bottom: 0.5rem; }
-    .feature-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.5; }
+    .feature-icon { font-size: 2rem; margin-bottom: 1.25rem; }
+    .feature-card h3 { font-size: 1.25rem; color: var(--accent); margin-bottom: 0.75rem; }
+    .feature-card p { font-size: 1.05rem; color: var(--muted); line-height: 1.6; }
 
     /* Macro Dashboard */
-    .section-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 1rem; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;}
+    .section-title { font-size: 1.6rem; font-weight: 700; margin-bottom: 1.25rem; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 0.75rem;}
     
     .charts-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 1.5rem;
-      height: 200px;
+      gap: 1.75rem;
+      margin-bottom: 1.75rem;
+      height: 280px; /* Taller charts for desktop */
     }
     .chart-container {
       background: var(--card-bg);
@@ -131,27 +144,27 @@
 
     .dashboard-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin-bottom: 3.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 4.5rem;
     }
     .dash-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 1.25rem;
+      padding: 1.5rem;
     }
-    .dash-label { font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--muted); margin-bottom: 0.5rem; }
-    .dash-val { font-size: 1.2rem; font-weight: 700; color: var(--text); }
-    .dash-sub { font-size: 0.8rem; color: var(--muted); margin-top: 0.35rem; }
+    .dash-label { font-size: 0.85rem; text-transform: uppercase; font-weight: 700; color: var(--muted); margin-bottom: 0.5rem; letter-spacing: 0.05em; }
+    .dash-val { font-size: 1.5rem; font-weight: 700; color: var(--text); }
+    .dash-sub { font-size: 0.95rem; color: var(--muted); margin-top: 0.35rem; }
 
     /* PDF Viewer */
     .carousel-section {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 3rem;
+      padding: 2rem;
+      margin-bottom: 4.5rem;
     }
     .carousel-header {
       display: flex;
@@ -159,16 +172,16 @@
       align-items: center;
       flex-wrap: wrap;
       gap: 1rem;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
     }
-    .carousel-controls { display: flex; align-items: center; gap: 0.75rem; }
+    .carousel-controls { display: flex; align-items: center; gap: 1rem; }
     .carousel-btn {
       background: var(--card-inner);
       color: var(--text);
       border: 1px solid var(--border);
       border-radius: 6px;
-      padding: 0.4rem 0.85rem;
-      font-size: 0.85rem;
+      padding: 0.5rem 1rem;
+      font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
     }
@@ -181,7 +194,7 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 500px;
+      min-height: 600px;
       overflow: hidden;
     }
     #pdf-canvas { max-width: 100%; height: auto; display: block; }
@@ -189,33 +202,37 @@
     /* Footer */
     footer {
       border-top: 1px solid var(--border);
-      padding: 2rem 1.5rem;
+      padding: 2.5rem 1.5rem;
       text-align: center;
       color: var(--muted);
-      font-size: 0.85rem;
+      font-size: 0.95rem;
       background: var(--card-bg);
     }
     footer a { color: var(--muted); text-decoration: underline; margin: 0 0.5rem; }
     footer a:hover { color: var(--accent); }
 
     @media (max-width: 768px) {
+      .header-inner { padding: 1rem; }
       .nav-links { display: none; }
-      header { padding: 1rem; }
+      .charts-grid { height: 200px; }
+      .hero { margin-bottom: 2.5rem; }
     }
   </style>
 </head>
 <body>
 
   <header>
-    <a href="/" class="brand">
-      <img src="logo.png" alt="Corp Acuity" onerror="this.style.display='none'" />
-      <span>CORP ACUITY</span>
-    </a>
-    <div class="nav-links" style="display: flex;">
-      <a href="index.html">Home</a>
-      <a href="intel.html">Live Screener</a>
-      <a href="daily_market_intelligence.pdf" target="_blank">PDF Download</a>
-      <a href="intel.html" class="nav-badge">Access Terminal &rarr;</a>
+    <div class="header-inner">
+      <a href="/" class="brand">
+        <img src="logo.png" alt="Corp Acuity" onerror="this.style.display='none'" />
+        <span>CORP ACUITY</span>
+      </a>
+      <div class="nav-links" style="display: flex;">
+        <a href="index.html">Home</a>
+        <a href="intel.html">Live Screener</a>
+        <a href="daily_market_intelligence.pdf" target="_blank">PDF Download</a>
+        <a href="intel.html" class="nav-badge">Access Terminal &rarr;</a>
+      </div>
     </div>
   </header>
 
@@ -310,7 +327,7 @@
       </div>
       <div class="dash-card">
         <div class="dash-label">Structural Catalyst</div>
-        <div id="dash-opex" class="dash-val" style="font-size: 1rem;">--</div>
+        <div id="dash-opex" class="dash-val" style="font-size: 1.2rem;">--</div>
         <div class="dash-sub">Forward Horizon</div>
       </div>
     </div>
@@ -320,10 +337,10 @@
     <!-- PDF Viewer -->
     <div class="carousel-section">
       <div class="carousel-header">
-        <div style="font-weight: 600; color: var(--muted);">Swipe to view full structural breakdowns</div>
+        <div style="font-weight: 600; color: var(--muted); font-size: 1.05rem;">Swipe to view full structural breakdowns</div>
         <div class="carousel-controls">
           <button id="prev-page" class="carousel-btn" onclick="onPrevPage()" disabled>&larr; Prev</button>
-          <span style="font-size: 0.85rem; color: var(--muted);">Slide <span id="page-num">1</span> of <span id="page-count">--</span></span>
+          <span style="font-size: 0.95rem; color: var(--muted);">Slide <span id="page-num">1</span> of <span id="page-count">--</span></span>
           <button id="next-page" class="carousel-btn" onclick="onNextPage()" disabled>Next &rarr;</button>
         </div>
       </div>
@@ -338,17 +355,17 @@
       <div class="feature-card">
         <h3>Live Screener Terminal</h3>
         <p style="margin-bottom: 1rem;">Access active momentum flags, base resets, pocket pivots, and liquidity sweeps filtered by regime exposure directives.</p>
-        <a href="intel.html" style="color: var(--accent); text-decoration: none; font-weight: 600; font-size: 0.9rem;">Launch Terminal Gateway &rarr;</a>
+        <a href="intel.html" style="color: var(--accent); text-decoration: none; font-weight: 600; font-size: 1rem;">Launch Terminal Gateway &rarr;</a>
       </div>
       <div class="feature-card">
         <h3>Institutional Knowledge Base</h3>
         <p style="margin-bottom: 1rem;">Explore the full quantitative library of structural mechanics, gamma regimes, and systematic risk governance directives.</p>
-        <a href="knowledge/execution-protocols-risk-governance.html" style="color: var(--accent); text-decoration: none; font-weight: 600; font-size: 0.9rem;">Read Execution Protocols &rarr;</a>
+        <a href="knowledge/execution-protocols-risk-governance.html" style="color: var(--accent); text-decoration: none; font-weight: 600; font-size: 1rem;">Read Execution Protocols &rarr;</a>
       </div>
       <div class="feature-card">
         <h3>Setup Archetypes & Mechanics</h3>
         <p style="margin-bottom: 1rem;">Detailed breakdown of pivot validation, volume exhaustion, cheat entries, and high-tight flag consolidations.</p>
-        <a href="knowledge/setup-archetypes-mechanics.html" style="color: var(--accent); text-decoration: none; font-weight: 600; font-size: 0.9rem;">Read Archetype Guide &rarr;</a>
+        <a href="knowledge/setup-archetypes-mechanics.html" style="color: var(--accent); text-decoration: none; font-weight: 600; font-size: 1rem;">Read Archetype Guide &rarr;</a>
       </div>
     </div>
 
@@ -400,7 +417,7 @@
         pageNum = 1,
         pageRendering = false,
         pageNumPending = null,
-        scale = 1.6,
+        scale = 1.8, // Increased scale for crisper rendering on large screens
         canvas = document.getElementById('pdf-canvas'),
         ctx = canvas ? canvas.getContext('2d') : null;
 
