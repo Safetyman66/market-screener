@@ -509,12 +509,12 @@
       </div>
       <div class="dash-card">
         <div class="dash-card-label">Structural Catalyst</div>
-        <div id="dash-opex" class="dash-card-val" style="font-size:1.15rem;">Monitoring Horizon...</div>
-        <div class="dash-card-sub">Forward Pipeline</div>
+        <div id="dash-opex" class="dash-card-val" style="font-size: 1.05rem; line-height: 1.35; margin-bottom: 0.25rem;">Monitoring Horizon...</div>
+        <div id="dash-opex-sub" class="dash-card-sub" style="color: var(--accent); font-weight: 700;">Forward Pipeline</div>
       </div>
       <div class="dash-card">
         <div class="dash-card-label">Macro Seasonality</div>
-        <div id="dash-seasonality" class="dash-card-val" style="font-size:1.15rem; color:var(--accent);">Neutral</div>
+        <div id="dash-seasonality" class="dash-card-val" style="font-size: 1.05rem; line-height: 1.35; color: var(--text);">Neutral</div>
         <div class="dash-card-sub">Historical Baseline</div>
       </div>
     </div>
@@ -677,18 +677,30 @@
       expEl.innerText = `Exposure: ${macro.max_exposure || "30% - 60%"}`;
       caEl.innerText = `${macro.tnx || "--"}% / $${macro.oil || "--"}`;
 
-      // Correctly parse and map the Structural Catalyst / Calendar Event
+      // Parse Structural Catalyst safely
       let eventStr = "Monitoring Horizon...";
+      let eventSub = "Forward Pipeline";
       if (macro.calendar && macro.calendar.length > 0) {
          let nextEvent = macro.calendar[0];
-         if(Array.isArray(nextEvent) && nextEvent.length > 1) {
-             eventStr = nextEvent[1].split('(')[0].trim();
-         } else if (typeof nextEvent === 'string') {
-             eventStr = nextEvent.split('(')[0].trim();
+         let rawStr = typeof nextEvent === 'string' ? nextEvent : (Array.isArray(nextEvent) ? nextEvent[1] : "");
+         
+         // Strip out the trailing date like "(2026-10-30)" using regex
+         rawStr = rawStr.replace(/\s*\(\d{4}-\d{2}-\d{2}\)/g, '').trim();
+         
+         // Split the countdown from the event name
+         if (rawStr.includes(':')) {
+             let parts = rawStr.split(':');
+             eventSub = parts[0].trim().replace('(S)', 'S'); 
+             eventStr = parts[1].trim(); 
+         } else {
+             eventStr = rawStr;
          }
       }
+      
       const opexEl = document.getElementById('dash-opex');
+      const opexSubEl = document.getElementById('dash-opex-sub');
       if (opexEl) opexEl.innerText = eventStr;
+      if (opexSubEl) opexSubEl.innerText = eventSub;
       
       // Parse Macro Seasonality
       let seasonStr = macro.seasonal_context || macro.seasonality || "Neutral";
