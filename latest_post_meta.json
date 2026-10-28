@@ -115,15 +115,15 @@
         "qqq_above_200": true,
         "tnx": 4.99,
         "tnx_5d_chg": -3.0,
-        "oil": 101.62,
-        "oil_5d_chg": 2.2,
+        "oil": 101.78,
+        "oil_5d_chg": 2.3,
         "pct_above_200": 54.0,
         "pct_below_200": 46.0,
         "momentum_count": 55,
         "sweep_count": 5,
         "warnings": [
             "\u26a1 YIELD SURGE: 10-Yr Yield at 4.99% (-3.0% 5d). Multiple drag active.",
-            "\ud83d\udee2\ufe0f OIL PRICE SPIKE: WTI Crude at $101.62/bbl (+2.2% 5d). Inflation expectations repricing."
+            "\ud83d\udee2\ufe0f OIL PRICE SPIKE: WTI Crude at $101.78/bbl (+2.3% 5d). Inflation expectations repricing."
         ],
         "calendar": [
             "IN 2 DAY(S): CORE PCE PRICE INDEX (8:30 AM ET): Benchmark Fed inflation print. (2026-10-30)",
