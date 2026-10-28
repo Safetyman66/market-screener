@@ -26,86 +26,132 @@
       --red: #f87171;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: var(--bg); color: var(--text); line-height: 1.6; }
+    body { background-color: var(--bg); color: var(--text); line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh;}
 
-    .container {
-      max-width: 1400px;
-      margin: 1.5rem auto 2rem;
-      padding: 0 1.25rem 4rem;
-    }
-
-    .hero-header {
+    /* Sticky Navigation */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: wrap;
-      gap: 1.25rem;
-      margin-bottom: 1.25rem;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.85);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(8px);
     }
-    h1 {
-      font-size: clamp(1.8rem, 3vw, 2.4rem);
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.35rem;
-    }
-    .subtitle {
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    .header-actions {
+    .brand {
       display: flex;
       align-items: center;
       gap: 0.75rem;
-      padding-top: 0.25rem;
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 700;
+      letter-spacing: 0.05em;
     }
-    .pdf-link-btn {
+    .brand img { height: 28px; width: auto; }
+    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+    .nav-links a {
       color: var(--muted);
       text-decoration: none;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       font-weight: 600;
-      border: 1px solid var(--border);
-      padding: 0.45rem 0.9rem;
-      border-radius: 6px;
-      background: var(--card-bg);
-      transition: all 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
+      transition: color 0.2s;
     }
-    .pdf-link-btn:hover {
-      border-color: var(--accent);
-      color: var(--text);
-    }
-    .beta-badge {
+    .nav-links a:hover { color: var(--accent); }
+    .nav-badge {
       background: rgba(56, 189, 248, 0.1);
       border: 1px solid rgba(56, 189, 248, 0.3);
       color: var(--accent);
       font-size: 0.75rem;
       font-weight: 600;
-      padding: 0.45rem 0.75rem;
+      padding: 0.35rem 0.75rem;
       border-radius: 6px;
     }
 
-    .plain-terms-box {
+    main {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem;
+    }
+
+    /* Hero Section */
+    .hero { text-align: center; margin-bottom: 3rem; }
+    .hero h1 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 0.75rem; }
+    .hero p { color: var(--muted); font-size: 1.1rem; max-width: 700px; margin: 0 auto 1.5rem; }
+    .hero-btn {
+      display: inline-block;
+      background: var(--accent);
+      color: #04101e;
+      text-decoration: none;
+      font-weight: 700;
+      padding: 0.85rem 2rem;
+      border-radius: 8px;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .hero-btn:hover { transform: translateY(-2px); background: #7dd3fc; }
+
+    /* The Corp Acuity Edge (Features) */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3.5rem;
+    }
+    .feature-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
-      border-left: 4px solid var(--accent);
-      border-radius: 8px;
-      padding: 0.9rem 1.2rem;
-      margin-bottom: 2rem;
-      font-size: 0.88rem;
-      color: var(--muted);
+      border-radius: 12px;
+      padding: 1.75rem;
     }
-    .plain-terms-box strong { color: var(--text); }
+    .feature-icon { font-size: 1.75rem; margin-bottom: 1rem; }
+    .feature-card h3 { font-size: 1.15rem; color: var(--accent); margin-bottom: 0.5rem; }
+    .feature-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.5; }
 
-    /* PDF Carousel Container */
+    /* Macro Dashboard */
+    .section-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 1rem; color: var(--text); border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;}
+    
+    .charts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      height: 200px;
+    }
+    .chart-container {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      height: 100%;
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 3.5rem;
+    }
+    .dash-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+    .dash-label { font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--muted); margin-bottom: 0.5rem; }
+    .dash-val { font-size: 1.2rem; font-weight: 700; color: var(--text); }
+    .dash-sub { font-size: 0.8rem; color: var(--muted); margin-top: 0.35rem; }
+
+    /* PDF Viewer */
     .carousel-section {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 12px;
       padding: 1.5rem;
-      margin-bottom: 2.5rem;
+      margin-bottom: 3rem;
     }
     .carousel-header {
       display: flex;
@@ -114,19 +160,8 @@
       flex-wrap: wrap;
       gap: 1rem;
       margin-bottom: 1rem;
-      padding-bottom: 0.75rem;
-      border-bottom: 1px solid var(--border);
     }
-    .carousel-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--text);
-    }
-    .carousel-controls {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
+    .carousel-controls { display: flex; align-items: center; gap: 0.75rem; }
     .carousel-btn {
       background: var(--card-inner);
       color: var(--text);
@@ -136,21 +171,9 @@
       font-size: 0.85rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s;
     }
-    .carousel-btn:hover:not(:disabled) {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-    .carousel-btn:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
-    }
-    .page-indicator {
-      font-size: 0.85rem;
-      color: var(--muted);
-      font-variant-numeric: tabular-nums;
-    }
+    .carousel-btn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+    .carousel-btn:disabled { opacity: 0.4; cursor: not-allowed; }
     .carousel-viewer {
       background: #020617;
       border: 1px solid var(--border);
@@ -158,143 +181,201 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 480px;
+      min-height: 500px;
       overflow: hidden;
-      position: relative;
     }
-    #pdf-canvas {
-      max-width: 100%;
-      height: auto;
-      display: block;
-    }
-    .viewer-loading {
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
+    #pdf-canvas { max-width: 100%; height: auto; display: block; }
 
-    .grid-section {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.25rem;
-      margin-bottom: 2.5rem;
-    }
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: border-color 0.2s ease;
-    }
-    .card:hover { border-color: var(--accent); }
-    .card h3 {
-      font-size: 1.15rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      color: var(--text);
-    }
-    .card p {
-      color: var(--muted);
-      font-size: 0.88rem;
-      line-height: 1.5;
-      margin-bottom: 1.25rem;
-    }
-    .card-link {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 0.85rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.25rem;
-    }
-    .card-link:hover { text-decoration: underline; }
-
+    /* Footer */
     footer {
       border-top: 1px solid var(--border);
-      padding: 2rem 0;
+      padding: 2rem 1.5rem;
       text-align: center;
       color: var(--muted);
       font-size: 0.85rem;
+      background: var(--card-bg);
+    }
+    footer a { color: var(--muted); text-decoration: underline; margin: 0 0.5rem; }
+    footer a:hover { color: var(--accent); }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; } /* Hide text links on mobile, keep terminal button */
+      header { padding: 1rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Dynamic Global Nav Header (Injected by nav.js) -->
-  <script src="nav.js?v=4"></script>
+  <header>
+    <a href="/" class="brand">
+      <img src="logo.png" alt="Corp Acuity" onerror="this.style.display='none'" />
+      <span>CORP ACUITY</span>
+    </a>
+    <div class="nav-links" style="display: flex;">
+      <a href="index.html">Home</a>
+      <a href="intel.html">Live Screener</a>
+      <a href="daily_market_intelligence.pdf" target="_blank">PDF Download</a>
+      <a href="intel.html" class="nav-badge">Access Terminal &rarr;</a>
+    </div>
+  </header>
 
-  <div class="container">
+  <main>
+    <div class="hero">
+      <h1>Institutional Market Intelligence</h1>
+      <p>We scan 1,600+ liquid US equities every morning to isolate high-probability momentum setups where the mathematical upside is at least double the risk.</p>
+      <a href="intel.html" class="hero-btn">Enter the Screener Terminal</a>
+    </div>
+
+    <!-- The Brilliance / Edge Section -->
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📐</div>
+        <h3>Quantitative Asymmetry</h3>
+        <p>Every setup must mathematically clear a strict 2.0R prospective reward-to-risk floor. We define the invalidation stop and the profit target before capital is ever committed.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🛡️</div>
+        <h3>Macro Regime Governance</h3>
+        <p>Market exposure is dynamically throttled based on the percentage of stocks holding above their 200-day EMA. When breadth collapses, cash becomes our active position.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Systematic Execution</h3>
+        <p>Eliminate narrative bias. We trade pure price action, focusing exclusively on Base-Resets, High-Tight Flags, Pocket Pivots, and institutional Liquidity Sweeps.</p>
+      </div>
+    </div>
+
+    <div class="section-title">Live Macro Environment</div>
     
-    <div class="hero-header">
-      <div>
-        <h1>Daily Institutional Screener & Alpha Engine</h1>
-        <div class="subtitle">Systematic screening with strict 2.0R asymmetry floors and 200 EMA breadth filters.</div>
+    <!-- TradingView Mini Charts -->
+    <div class="charts-grid">
+      <div class="chart-container">
+        <!-- TradingView Widget BEGIN -->
+        <div class="tradingview-widget-container">
+          <div class="tradingview-widget-container__widget"></div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+          {
+          "symbol": "AMEX:SPY",
+          "width": "100%",
+          "height": "100%",
+          "locale": "en",
+          "dateRange": "1M",
+          "colorTheme": "dark",
+          "isTransparent": true,
+          "autosize": true,
+          "largeChartUrl": ""
+          }
+          </script>
+        </div>
+        <!-- TradingView Widget END -->
       </div>
-      
-      <div class="header-actions">
-        <a href="daily_market_intelligence.pdf" target="_blank" class="pdf-link-btn">
-          Direct PDF Download &rarr;
-        </a>
-        <span class="beta-badge">Beta Access</span>
+      <div class="chart-container">
+        <!-- TradingView Widget BEGIN -->
+        <div class="tradingview-widget-container">
+          <div class="tradingview-widget-container__widget"></div>
+          <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+          {
+          "symbol": "NASDAQ:QQQ",
+          "width": "100%",
+          "height": "100%",
+          "locale": "en",
+          "dateRange": "1M",
+          "colorTheme": "dark",
+          "isTransparent": true,
+          "autosize": true,
+          "largeChartUrl": ""
+          }
+          </script>
+        </div>
+        <!-- TradingView Widget END -->
       </div>
     </div>
 
-    <div class="plain-terms-box">
-      <strong>💡 In plain terms:</strong> We scan 1,600+ liquid US equities every morning to isolate high-probability momentum setups where the mathematical upside is at least double the risk.
+    <!-- Data Feed Dashboard -->
+    <div class="dashboard-grid">
+      <div class="dash-card">
+        <div class="dash-label">Regime Posture</div>
+        <div id="dash-regime" class="dash-val">Loading...</div>
+        <div id="dash-exposure" class="dash-sub">--</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-label">Universe Breadth</div>
+        <div id="dash-breadth" class="dash-val" style="color: var(--accent);">--</div>
+        <div class="dash-sub">Equities > 200 EMA</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-label">Cross-Asset Radar</div>
+        <div id="dash-yield" class="dash-val">--</div>
+        <div class="dash-sub">10Y Yield / WTI Crude</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-label">Structural Catalyst</div>
+        <div id="dash-opex" class="dash-val" style="font-size: 1rem;">--</div>
+        <div class="dash-sub">Forward Horizon</div>
+      </div>
     </div>
 
-    <!-- Active PDF Carousel / Slide Deck Viewer -->
+    <div class="section-title">Daily Setup Archetypes & Market Briefing</div>
+
+    <!-- PDF Viewer -->
     <div class="carousel-section">
       <div class="carousel-header">
-        <div class="carousel-title">📊 Daily Chart Package & Market Posture Deck</div>
+        <div style="font-weight: 600; color: var(--muted);">Swipe to view full structural breakdowns</div>
         <div class="carousel-controls">
-          <button id="prev-page" class="carousel-btn" onclick="onPrevPage()" disabled>&larr; Previous</button>
-          <span class="page-indicator">Slide <span id="page-num">1</span> of <span id="page-count">--</span></span>
+          <button id="prev-page" class="carousel-btn" onclick="onPrevPage()" disabled>&larr; Prev</button>
+          <span style="font-size: 0.85rem; color: var(--muted);">Slide <span id="page-num">1</span> of <span id="page-count">--</span></span>
           <button id="next-page" class="carousel-btn" onclick="onNextPage()" disabled>Next &rarr;</button>
         </div>
       </div>
       <div class="carousel-viewer" id="viewer-container">
-        <div id="viewer-status" class="viewer-loading">Loading market deck slides...</div>
         <canvas id="pdf-canvas" style="display: none;"></canvas>
       </div>
     </div>
 
-    <div class="grid-section">
-      <div class="card">
-        <div>
-          <h3>Live Screener Terminal</h3>
-          <p>Access active momentum flags, base resets, pocket pivots, and liquidity sweeps filtered by regime exposure directives.</p>
-        </div>
-        <a href="intel.html" class="card-link">Launch Terminal Gateway &rarr;</a>
-      </div>
-
-      <div class="card">
-        <div>
-          <h3>Institutional Knowledge Base</h3>
-          <p>Explore the full quantitative library of structural mechanics, gamma regimes, and systematic risk governance directives.</p>
-        </div>
-        <a href="knowledge/execution-protocols-risk-governance.html" class="card-link">Read Execution Protocols &rarr;</a>
-      </div>
-
-      <div class="card">
-        <div>
-          <h3>Setup Archetypes & Mechanics</h3>
-          <p>Detailed breakdown of pivot validation, volume exhaustion, cheat entries, and high-tight flag consolidations.</p>
-        </div>
-        <a href="knowledge/setup-archetypes-mechanics.html" class="card-link">Read Archetype Guide &rarr;</a>
-      </div>
-    </div>
-
-  </div>
+  </main>
 
   <footer>
-    &copy; 2026 Corp Acuity Ltd. Institutional Market Intelligence & Research Lab.
+    <div style="margin-bottom: 0.75rem;">&copy; 2026 Corp Acuity Ltd. Quantitative Market Intelligence. All rights reserved.</div>
+    <div>
+      <a href="legal.html">Legal Disclaimers, Privacy Policy & Terms of Access</a>
+    </div>
   </footer>
 
   <script>
+    // 1. Fetch Terminal JSON for Dashboard
+    async function loadMacroDashboard() {
+      try {
+        const res = await fetch('terminal_feed.json?cache_bust=' + Date.now());
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data && data.macro) {
+          const m = data.macro;
+          
+          // Regime
+          const regEl = document.getElementById('dash-regime');
+          regEl.innerText = m.regime_status ? m.regime_status.split(':')[0] : "AMBER";
+          if(regEl.innerText.includes("GREEN")) regEl.style.color = "var(--green)";
+          if(regEl.innerText.includes("RED")) regEl.style.color = "var(--red)";
+          if(regEl.innerText.includes("AMBER")) regEl.style.color = "var(--amber)";
+          
+          document.getElementById('dash-exposure').innerText = `Exposure: ${m.max_exposure || "30% - 60%"}`;
+          document.getElementById('dash-breadth').innerText = `${m.pct_above_200 || "--"}%`;
+          document.getElementById('dash-yield').innerText = `${m.tnx || "--"}% / $${m.oil || "--"}`;
+          
+          // Pull next calendar event or Opex string
+          let eventStr = "Monitoring...";
+          if (m.calendar && m.calendar.length > 0) {
+             eventStr = m.calendar[0][0] + ": " + m.calendar[0][1].split('(')[0];
+          }
+          document.getElementById('dash-opex').innerText = eventStr;
+        }
+      } catch (err) {
+        console.warn("Could not load terminal feed for macro dashboard.");
+      }
+    }
+    loadMacroDashboard();
+
+    // 2. PDF.js Viewer Logic
     var pdfDoc = null,
         pageNum = 1,
         pageRendering = false,
@@ -309,11 +390,7 @@
         var viewport = page.getViewport({ scale: scale });
         canvas.height = viewport.height;
         canvas.width = viewport.width;
-
-        var renderContext = {
-          canvasContext: ctx,
-          viewport: viewport
-        };
+        var renderContext = { canvasContext: ctx, viewport: viewport };
         var renderTask = page.render(renderContext);
 
         renderTask.promise.then(function() {
@@ -324,51 +401,26 @@
           }
         });
       });
-
       document.getElementById('page-num').textContent = num;
       document.getElementById('prev-page').disabled = (num <= 1);
       document.getElementById('next-page').disabled = (num >= pdfDoc.numPages);
     }
 
     function queueRenderPage(num) {
-      if (pageRendering) {
-        pageNumPending = num;
-      } else {
-        renderPage(num);
-      }
+      if (pageRendering) { pageNumPending = num; } else { renderPage(num); }
     }
+    function onPrevPage() { if (pageNum <= 1) return; pageNum--; queueRenderPage(pageNum); }
+    function onNextPage() { if (pageNum >= pdfDoc.numPages) return; pageNum++; queueRenderPage(pageNum); }
 
-    function onPrevPage() {
-      if (pageNum <= 1) return;
-      pageNum--;
-      queueRenderPage(pageNum);
-    }
-
-    function onNextPage() {
-      if (pageNum >= pdfDoc.numPages) return;
-      pageNum++;
-      queueRenderPage(pageNum);
-    }
-
-    // Load PDF Document
     var url = 'daily_market_intelligence.pdf?t=' + Date.now();
     pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
       pdfDoc = pdfDoc_;
       document.getElementById('page-count').textContent = pdfDoc.numPages;
-      
-      var statusEl = document.getElementById('viewer-status');
-      if (statusEl) statusEl.style.display = 'none';
-      if (canvas) canvas.style.display = 'block';
-
+      canvas.style.display = 'block';
       renderPage(pageNum);
     }).catch(function(error) {
-      console.error('PDF.js Error:', error);
-      var statusEl = document.getElementById('viewer-status');
-      if (statusEl) {
-        statusEl.innerHTML = 'PDF Preview unavailable. <a href="daily_market_intelligence.pdf" target="_blank" style="color: var(--accent);">Click here to download/view the PDF directly &rarr;</a>';
-      }
+      document.getElementById('viewer-container').innerHTML = '<a href="daily_market_intelligence.pdf" target="_blank" style="color: var(--accent);">PDF preview unavailable. Click here to download directly.</a>';
     });
   </script>
-
 </body>
 </html>

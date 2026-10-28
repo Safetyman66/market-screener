@@ -9,6 +9,8 @@ import random
 import re
 import time
 import requests
+import pandas as pd
+import yfinance as yf
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from universe import load_json_cache, save_json_cache
 
@@ -330,7 +332,8 @@ def profile_zacks_with_local_tenure(tickers):
 
 def evaluate_earnings_proximity(ticker):
   try:
-    tk = yf.Ticker(ticker)
+    # Route through the stealth global session to bypass Yahoo rate-limiting
+    tk = yf.Ticker(ticker, session=GLOBAL_HTTP_SESSION)
     cal = tk.calendar
     today = pd.Timestamp.now().tz_localize(None).date()
     earnings_dates = []
@@ -338,12 +341,10 @@ def evaluate_earnings_proximity(ticker):
     if cal is not None:
       if isinstance(cal, dict) and "Earnings Date" in cal:
         earnings_dates = cal["Earnings Date"]
-      elif (
-          hasattr(cal, "empty")
-          and not cal.empty
-          and "Earnings Date" in cal.index
-      ):
+      elif hasattr(cal, "empty") and not cal.empty and "Earnings Date" in cal.index:
         earnings_dates = cal.loc["Earnings Date"].tolist()
+      elif hasattr(cal, "empty") and not cal.empty and "Earnings Date" in cal.columns:
+        earnings_dates = cal["Earnings Date"].tolist()
 
     if earnings_dates:
       target_date = pd.to_datetime(earnings_dates[0]).tz_localize(None).date()
@@ -361,21 +362,12 @@ def evaluate_earnings_proximity(ticker):
         return "SAFE (>14d)"
   except Exception:
     pass
+  
   return "Unknown/TBD"
 
 
 # ---------------------------------------------------------
 # 4.1 KNOWLEDGE BASE CATALYST & EXECUTION DIRECTIVE ENGINES
-
-
-
-
-
-
-
-
-
-
 
 def generate_kb_execution_protocol(item, days_to_opx):
   """Synthesizes Knowledge Base research modules into strict, actionable execution rules.
@@ -412,7 +404,6 @@ def generate_kb_execution_protocol(item, days_to_opx):
 
 # 6. MASTER EVALUATION WRAPPER
 
-
 def determine_structural_catalyst(item, days_to_opx):
     """Synthesizes structural catalyst tags based on technical setup, Zacks tenure, and calendar."""
     catalysts = []
@@ -437,4 +428,3 @@ def determine_structural_catalyst(item, days_to_opx):
         catalysts.append("TECHNICAL MOMENTUM")
         
     return " | ".join(catalysts)
-

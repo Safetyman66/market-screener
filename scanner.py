@@ -1011,28 +1011,8 @@ def run_master_screener():
 
 
   # ====================================================================================================================
-  # PDF GENERATION & WEB EXPORT
+  # JSON METADATA EXPORT (MUST HAPPEN BEFORE CHARTS ARE DRAWN)
   # ====================================================================================================================
-  try:
-      print("[*] Compiling fresh daily market intelligence PDF...")
-      create_linkedin_carousel_pdf(
-          filename=CAROUSEL_PDF_FILENAME,
-          regime_status=regime,
-          posture_box=dashboard.get("posture_box", "SELECTIVE"),
-          max_exposure=dashboard.get("max_exposure", "N/A"),
-          macro_events=dashboard.get("calendar", []),
-          pct_above_200=dashboard.get("pct_above_200", 0.0),
-          top_runner=top_runner,
-          top_br=top_br,
-          top_htf=top_htf,
-          top_pp=top_pp,
-          top_ls=top_ls,
-          dashboard=dashboard,
-      )
-      export_carousel_cards_for_web(CAROUSEL_PDF_FILENAME)
-  except Exception as e:
-      print(f"[!] PDF generation error: {e}")
-
   web_terminal_payload = {
       "generated_at": datetime.datetime.now(datetime.timezone.utc).strftime(
           "%Y-%m-%d %H:%M UTC"
@@ -1057,7 +1037,7 @@ def run_master_screener():
       "pdf_path": CAROUSEL_PDF_FILENAME,
       "date": datetime.date.today().isoformat(),
       "regime_code": dashboard.get("regime_code", "ROTATION"),
-      "regime_status": regime,
+      "regime_status": dashboard.get("regime_status", "AMBER: ROTATIONAL ACCUMULATION"),
       "posture_box": dashboard.get("posture_box", "SELECTIVE"),
       "max_exposure": dashboard.get("max_exposure", "N/A"),
       "pct_above_200": dashboard.get("pct_above_200", 0.0),
@@ -1069,10 +1049,49 @@ def run_master_screener():
       "top_htf": top_htf,
       "top_pp": top_pp,
       "top_ls": top_ls,
+      "dashboard": dashboard,
+      "macro_events": dashboard.get("calendar", [])
   }
   with open(POST_META_FILENAME, "w", encoding="utf-8") as f:
     json.dump(broadcast_meta, f, indent=2)
   print(f"[METADATA] Saved {POST_META_FILENAME}")
+
+
+  # ====================================================================================================================
+  # ASSET GENERATION (CHARTS)
+  # ====================================================================================================================
+  try:
+      print("[*] Generating lovely custom candlestick charts...")
+      import generate_live_charts
+      generate_live_charts.generate_all()
+  except Exception as e:
+      print(f"[!] Chart generation error: {e}")
+
+
+  # ====================================================================================================================
+  # PDF GENERATION & WEB EXPORT
+  # ====================================================================================================================
+  try:
+      print("[*] Compiling fresh daily market intelligence PDF...")
+      import pdf_engine
+      pdf_engine.create_linkedin_carousel_pdf(
+          filename=CAROUSEL_PDF_FILENAME,
+          regime_status=dashboard.get("regime_status", "AMBER: ROTATIONAL ACCUMULATION"),
+          posture_box=dashboard.get("posture_box", "SELECTIVE"),
+          max_exposure=dashboard.get("max_exposure", "N/A"),
+          calendar_alerts=dashboard.get("calendar", []),
+          pct_above_200=dashboard.get("pct_above_200", 0.0),
+          top_runner=top_runner,
+          top_br=top_br,
+          top_htf=top_htf,
+          top_pp=top_pp,
+          top_ls=top_ls,
+          dashboard=dashboard,
+          macro_events=dashboard.get("calendar", [])
+      )
+      pdf_engine.export_carousel_cards_for_web(CAROUSEL_PDF_FILENAME)
+  except Exception as e:
+      print(f"[!] PDF generation error: {e}")
 
 
 if __name__ == "__main__":
