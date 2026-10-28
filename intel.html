@@ -70,7 +70,17 @@
     .nav-actions {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 1.5rem;
+    }
+    .nav-actions a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+    .nav-actions a:hover {
+      color: var(--accent);
     }
     .nav-badge {
       font-size: 0.75rem;
@@ -412,15 +422,21 @@
     footer a:hover {
       color: var(--accent);
     }
+
+    @media (max-width: 768px) {
+      .nav-actions a.home-link { display: none; }
+      header { padding: 1rem; }
+    }
   </style>
 </head>
 <body>
   <header>
-    <a href="/" class="brand">
+    <a href="index.html" class="brand">
       <img src="logo.png" alt="Corp Acuity Logo" onerror="this.style.display='none'" />
       <span>CORP ACUITY TERMINAL</span>
     </a>
     <div class="nav-actions">
+      <a href="index.html" class="home-link">Home</a>
       <a href="daily_market_intelligence.pdf" target="_blank" style="color:var(--muted); text-decoration:none; font-size:0.85rem;">View PDF Carousel ➔</a>
       <div id="navBadge" class="nav-badge">Beta Access</div>
     </div>
@@ -465,6 +481,12 @@
       <button class="tab-btn" onclick="switchCategory('momentum_flags')">2. Momentum Flags (HTF)</button>
       <button class="tab-btn" onclick="switchCategory('pocket_pivots')">3. Pocket Pivots</button>
       <button class="tab-btn" onclick="switchCategory('liquidity_sweeps')">4. Liquidity Sweeps</button>
+    </div>
+    
+    <div id="archetypeLinkContainer" style="margin-bottom: 1.5rem; font-size: 0.85rem;">
+      <a id="archetypeDocLink" href="knowledge/setup-archetypes-mechanics.html#base-resets" style="color: var(--accent); text-decoration: none; font-weight: 600; background: rgba(56, 189, 248, 0.1); padding: 0.4rem 0.75rem; border-radius: 4px; border: 1px solid rgba(56, 189, 248, 0.2);">
+        📖 Read the Base-Reset Archetype Documentation &rarr;
+      </a>
     </div>
 
     <div class="table-container">
@@ -618,6 +640,19 @@
       document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.classList.toggle('active', btn.getAttribute('onclick').includes(cat));
       });
+      
+      // Update dynamic knowledge base link
+      const docLink = document.getElementById('archetypeDocLink');
+      const labels = {
+        'base_resets': { text: 'Base-Reset Archetype', anchor: '#base-resets' },
+        'momentum_flags': { text: 'Momentum Flag Archetype', anchor: '#momentum-flags' },
+        'pocket_pivots': { text: 'Pocket Pivot Archetype', anchor: '#pocket-pivots' },
+        'liquidity_sweeps': { text: 'Liquidity Sweep Archetype', anchor: '#liquidity-sweeps' }
+      };
+      const mapping = labels[cat];
+      docLink.href = `knowledge/setup-archetypes-mechanics.html${mapping.anchor}`;
+      docLink.innerHTML = `📖 Read the ${mapping.text} Documentation &rarr;`;
+      
       renderTable();
     }
 

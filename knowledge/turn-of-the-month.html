@@ -21,8 +21,30 @@
       --red: #f87171;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { background-color: var(--bg); color: var(--text); line-height: 1.7; padding: 2rem 1rem; }
-    .container { max-width: 850px; margin: 0 auto; }
+    body { background-color: var(--bg); color: var(--text); line-height: 1.7; display: flex; flex-direction: column; min-height: 100vh; }
+    
+    /* Unified Sticky Header */
+    header {
+      border-bottom: 1px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(15, 23, 42, 0.85);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(8px);
+    }
+    .brand { display: flex; align-items: center; gap: 0.75rem; text-decoration: none; color: var(--text); font-weight: 700; letter-spacing: 0.05em; }
+    .brand img { height: 28px; width: auto; }
+    .nav-links { display: flex; gap: 1.5rem; align-items: center; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; font-weight: 600; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--accent); }
+    .nav-badge { background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); color: var(--accent); font-size: 0.75rem; font-weight: 600; padding: 0.35rem 0.75rem; border-radius: 6px; }
+    @media (max-width: 768px) { .nav-links { display: none; } header { padding: 1rem; } }
+
+    .container { max-width: 850px; margin: 0 auto; padding: 3rem 1.5rem; flex: 1; }
     h1 { font-size: clamp(2rem, 4vw, 2.75rem); font-weight: 800; margin-bottom: 0.75rem; letter-spacing: -0.02em; }
     .meta { color: var(--muted); font-size: 0.9rem; margin-bottom: 2.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; }
     h2 { font-size: 1.4rem; font-weight: 700; color: var(--text); margin-top: 2.5rem; margin-bottom: 1rem; }
@@ -31,24 +53,30 @@
     ul { color: var(--muted); padding-left: 1.5rem; margin-bottom: 1.25rem; }
     li { margin-bottom: 0.6rem; }
     .math-block { background: var(--card-inner); border: 1px solid var(--border); border-radius: 8px; padding: 1.25rem 1.5rem; margin: 1.5rem 0; overflow-x: auto; text-align: center; }
-    .chart-box { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin: 2rem 0; }
-    .chart-title { font-size: 0.95rem; font-weight: 700; color: var(--text); margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; }
-    .chart-legend { display: flex; gap: 1rem; font-size: 0.75rem; color: var(--muted); }
-    .legend-item { display: flex; align-items: center; gap: 0.35rem; }
-    .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
     blockquote { background: var(--card-inner); border-left: 4px solid var(--amber); padding: 1.25rem 1.5rem; border-radius: 0 8px 8px 0; margin: 1.5rem 0; color: var(--text); font-style: italic; }
     blockquote cite { display: block; margin-top: 0.5rem; font-size: 0.85rem; color: var(--muted); font-style: normal; }
     .references { font-size: 0.88rem; border-top: 1px solid var(--border); padding-top: 1.5rem; margin-top: 3rem; }
     .references ol { padding-left: 1.2rem; color: var(--muted); }
     .references li { margin-bottom: 0.5rem; }
-    footer { margin-top: 3rem; border-top: 1px solid var(--border); padding-top: 1.5rem; text-align: center; color: var(--muted); font-size: 0.85rem; }
+    footer { margin-top: 3rem; border-top: 1px solid var(--border); padding: 2rem 1.5rem; text-align: center; color: var(--muted); font-size: 0.85rem; background: var(--card-bg); }
   </style>
 </head>
 <body>
+
+  <header>
+    <a href="../index.html" class="brand">
+      <img src="../logo.png" alt="Corp Acuity" onerror="this.style.display='none'" />
+      <span>CORP ACUITY</span>
+    </a>
+    <div class="nav-links" style="display: flex;">
+      <a href="../index.html">Home</a>
+      <a href="../intel.html">Live Screener</a>
+      <a href="../daily_market_intelligence.pdf" target="_blank">PDF Download</a>
+      <a href="../intel.html" class="nav-badge">Access Terminal &rarr;</a>
+    </div>
+  </header>
+
   <div class="container">
-
-    <script src="../nav.js"></script>
-
     <h1>Turn-of-the-Month (TOM) Inflows</h1>
     <div class="meta">Corp Acuity Research Lab // Structural Calendar Flows & Liquidity Mechanics</div>
 
@@ -60,7 +88,7 @@
       <div class="math-block">
         $$E[R_{TOM}] = \delta + \gamma_{flow} \cdot \Psi_{inflow}$$
       </div>
-      <p>Where \(\Psi_{inflow}</p> represents the structural liquidity injection vector executed by institutional fund managers.</p>
+      <p>Where \(\Psi_{inflow}\) represents the structural liquidity injection vector executed by institutional fund managers.</p>
 
       <h2>2. Empirical Dynamics & Portfolio Surveillance</h2>
       <p>During TOM windows, high-momentum growth equities and index components experience consistent buying pressure independent of short-term news flow. Recognizing this repetitive liquidity injection allows systematic operators to align swing entries with structural tailwinds.</p>
@@ -79,10 +107,10 @@
         </ol>
       </div>
     </section>
-
-    <footer>
-      &copy; 2026 Corp Acuity Ltd. Quantitative Market Intelligence. For educational and research purposes only.
-    </footer>
   </div>
+
+  <footer>
+    &copy; 2026 Corp Acuity Ltd. Quantitative Market Intelligence. For educational and research purposes only.
+  </footer>
 </body>
 </html>
