@@ -34,7 +34,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body { background-color: var(--bg); color: var(--text); line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh;}
 
-    /* Sticky Navigation - Now constrained to match main content width */
+    /* Sticky Navigation - Constrained to match main content width */
     header {
       background: rgba(15, 23, 42, 0.85);
       border-bottom: 1px solid var(--border);
@@ -132,7 +132,7 @@
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 1.75rem;
       margin-bottom: 1.75rem;
-      height: 280px; /* Taller charts for desktop */
+      height: 280px;
     }
     .chart-container {
       background: var(--card-bg);
@@ -144,7 +144,7 @@
 
     .dashboard-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 1.25rem;
       margin-bottom: 4.5rem;
     }
@@ -155,7 +155,7 @@
       padding: 1.5rem;
     }
     .dash-label { font-size: 0.85rem; text-transform: uppercase; font-weight: 700; color: var(--muted); margin-bottom: 0.5rem; letter-spacing: 0.05em; }
-    .dash-val { font-size: 1.5rem; font-weight: 700; color: var(--text); }
+    .dash-val { font-size: 1.35rem; font-weight: 700; color: var(--text); }
     .dash-sub { font-size: 0.95rem; color: var(--muted); margin-top: 0.35rem; }
 
     /* PDF Viewer */
@@ -327,8 +327,13 @@
       </div>
       <div class="dash-card">
         <div class="dash-label">Structural Catalyst</div>
-        <div id="dash-opex" class="dash-val" style="font-size: 1.2rem;">--</div>
-        <div class="dash-sub">Forward Horizon</div>
+        <div id="dash-opex" class="dash-val" style="font-size: 1.15rem;">Monitoring Horizon...</div>
+        <div class="dash-sub">Forward Pipeline</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-label">Macro Seasonality</div>
+        <div id="dash-seasonality" class="dash-val" style="font-size:1.15rem; color:var(--accent);">Neutral</div>
+        <div class="dash-sub">Historical Baseline</div>
       </div>
     </div>
 
@@ -399,12 +404,24 @@
           document.getElementById('dash-breadth').innerText = `${m.pct_above_200 || "--"}%`;
           document.getElementById('dash-yield').innerText = `${m.tnx || "--"}% / $${m.oil || "--"}`;
           
-          // Pull next calendar event or Opex string
-          let eventStr = "Monitoring...";
+          // Pull next calendar event or Opex string (Fixed parser)
+          let eventStr = "Monitoring Horizon...";
           if (m.calendar && m.calendar.length > 0) {
-             eventStr = m.calendar[0][0] + ": " + m.calendar[0][1].split('(')[0];
+             let nextEvent = m.calendar[0];
+             if(Array.isArray(nextEvent) && nextEvent.length > 1) {
+                 eventStr = nextEvent[1].split('(')[0].trim();
+             } else if (typeof nextEvent === 'string') {
+                 eventStr = nextEvent.split('(')[0].trim();
+             }
           }
-          document.getElementById('dash-opex').innerText = eventStr;
+          const opexEl = document.getElementById('dash-opex');
+          if (opexEl) opexEl.innerText = eventStr;
+          
+          // Parse Macro Seasonality
+          let seasonStr = m.seasonal_context || m.seasonality || "Neutral";
+          let shortSeason = seasonStr.split(':')[0].trim();
+          const seasonEl = document.getElementById('dash-seasonality');
+          if (seasonEl) seasonEl.innerText = shortSeason;
         }
       } catch (err) {
         console.warn("Could not load terminal feed for macro dashboard.");
@@ -417,7 +434,7 @@
         pageNum = 1,
         pageRendering = false,
         pageNumPending = null,
-        scale = 1.8, // Increased scale for crisper rendering on large screens
+        scale = 1.8,
         canvas = document.getElementById('pdf-canvas'),
         ctx = canvas ? canvas.getContext('2d') : null;
 

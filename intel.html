@@ -29,6 +29,12 @@
       --amber: #fbbf24;
       --red: #f87171;
     }
+    
+    /* FLUID TYPOGRAPHY: Scales up the entire site automatically on large monitors */
+    html { font-size: 16px; }
+    @media (min-width: 1440px) { html { font-size: 18px; } }
+    @media (min-width: 1920px) { html { font-size: 20px; } }
+    
     * {
       box-sizing: border-box;
       margin: 0;
@@ -42,17 +48,24 @@
       display: flex;
       flex-direction: column;
     }
+    
+    /* Unified Sticky Navigation */
     header {
-      border-bottom: 1px solid var(--border);
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       background: rgba(15, 23, 42, 0.85);
+      border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
       z-index: 50;
       backdrop-filter: blur(8px);
+    }
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.25rem 2rem;
     }
     .brand {
       display: flex;
@@ -62,20 +75,21 @@
       color: var(--text);
       font-weight: 700;
       letter-spacing: 0.05em;
+      font-size: 1.1rem;
     }
     .brand img {
-      height: 28px;
+      height: 32px;
       width: auto;
     }
     .nav-actions {
       display: flex;
       align-items: center;
-      gap: 1.5rem;
+      gap: 1.75rem;
     }
     .nav-actions a {
       color: var(--muted);
       text-decoration: none;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       font-weight: 600;
       transition: color 0.2s;
     }
@@ -83,9 +97,9 @@
       color: var(--accent);
     }
     .nav-badge {
-      font-size: 0.75rem;
-      padding: 0.3rem 0.65rem;
-      border-radius: 9999px;
+      font-size: 0.85rem;
+      padding: 0.4rem 1rem;
+      border-radius: 6px;
       background: rgba(56, 189, 248, 0.1);
       color: var(--accent);
       border: 1px solid rgba(56, 189, 248, 0.3);
@@ -96,44 +110,46 @@
       color: var(--green);
       border-color: rgba(74, 222, 128, 0.3);
     }
+    
     main {
       flex: 1;
-      max-width: 1300px;
+      max-width: 1400px;
       width: 100%;
       margin: 0 auto;
-      padding: 2rem 1.5rem;
+      padding: 3rem 1.5rem;
     }
     .hero-header {
       margin-bottom: 1.5rem;
     }
     .hero-header h1 {
-      font-size: 2rem;
+      font-size: clamp(2rem, 3.5vw, 2.5rem);
       font-weight: 800;
-      margin-bottom: 0.35rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.02em;
     }
     .hero-header p {
       color: var(--muted);
-      font-size: 0.95rem;
-      margin-bottom: 0.5rem;
+      font-size: 1.05rem;
+      margin-bottom: 0.75rem;
     }
     .plain-english-explainer {
       display: inline-block;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       color: var(--accent);
       background: rgba(56, 189, 248, 0.08);
       border: 1px solid rgba(56, 189, 248, 0.2);
       border-radius: 6px;
-      padding: 0.5rem 1rem;
+      padding: 0.75rem 1.25rem;
       margin-top: 0.25rem;
-      margin-bottom: 1rem;
+      margin-bottom: 1.5rem;
     }
     .posture-banner {
       width: 100%;
-      padding: 0.75rem 1.25rem;
+      padding: 1rem 1.5rem;
       border-radius: 8px;
       font-weight: 600;
-      font-size: 0.95rem;
-      margin-bottom: 1.5rem;
+      font-size: 1.05rem;
+      margin-bottom: 2rem;
       display: flex;
       align-items: center;
       gap: 0.75rem;
@@ -154,36 +170,44 @@
       border-color: rgba(248, 113, 113, 0.3);
       color: var(--red);
     }
+    
     .dashboard-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1rem;
-      margin-bottom: 2rem;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 3rem;
     }
     .dash-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 1.25rem;
+      padding: 1.5rem;
     }
     .dash-card-label {
-      font-size: 0.75rem;
+      font-size: 0.85rem;
       text-transform: uppercase;
       font-weight: 700;
       color: var(--muted);
       margin-bottom: 0.5rem;
+      letter-spacing: 0.05em;
     }
     .dash-card-val {
-      font-size: 1.4rem;
+      font-size: 1.35rem;
       font-weight: 700;
       color: var(--text);
     }
+    .dash-card-sub {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-top: 0.35rem;
+    }
+
     .tabs {
       display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
       border-bottom: 1px solid var(--border);
-      padding-bottom: 0.5rem;
+      padding-bottom: 0.75rem;
       overflow-x: auto;
     }
     .tab-btn {
@@ -191,17 +215,19 @@
       border: none;
       color: var(--muted);
       font-weight: 600;
-      padding: 0.5rem 1rem;
+      padding: 0.6rem 1.25rem;
       cursor: pointer;
       border-radius: 6px;
       transition: all 0.2s;
       white-space: nowrap;
+      font-size: 0.95rem;
     }
     .tab-btn.active {
       background: var(--card-inner);
       color: var(--accent);
       border: 1px solid var(--border);
     }
+    
     .table-container {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -213,11 +239,11 @@
       width: 100%;
       border-collapse: collapse;
       text-align: left;
-      font-size: 0.85rem;
+      font-size: 0.95rem;
     }
     th {
       background: var(--card-inner);
-      padding: 0.85rem 1rem;
+      padding: 1rem 1.25rem;
       color: var(--muted);
       font-weight: 600;
       border-bottom: 1px solid var(--border);
@@ -228,7 +254,7 @@
       text-decoration: underline dotted var(--muted);
     }
     td {
-      padding: 0.85rem 1rem;
+      padding: 1rem 1.25rem;
       border-bottom: 1px solid rgba(51, 65, 85, 0.4);
       white-space: nowrap;
     }
@@ -241,7 +267,7 @@
       font-weight: 700;
       color: var(--accent);
       background: rgba(56, 189, 248, 0.1);
-      padding: 0.25rem 0.5rem;
+      padding: 0.35rem 0.6rem;
       border-radius: 4px;
     }
     .r-pill {
@@ -252,9 +278,11 @@
       color: var(--amber);
       font-weight: 600;
     }
+    
+    /* Gating Overlay */
     .gate-overlay {
       position: absolute;
-      top: 140px;
+      top: 150px;
       left: 0;
       right: 0;
       bottom: 0;
@@ -263,37 +291,38 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 2rem;
+      padding: 2.5rem;
       text-align: center;
       backdrop-filter: blur(2px);
     }
     .gate-overlay h3 {
-      font-size: 1.4rem;
+      font-size: 1.6rem;
       font-weight: 800;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
     }
     .gate-overlay p {
       color: var(--muted);
-      max-width: 520px;
-      font-size: 0.9rem;
-      line-height: 1.5;
-      margin-bottom: 1.25rem;
+      max-width: 550px;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
     }
     .btn-unlock {
       background: var(--accent);
       color: #04101e;
       border: none;
-      padding: 0.85rem 1.75rem;
+      padding: 1rem 2rem;
       font-weight: 700;
-      font-size: 0.95rem;
+      font-size: 1.05rem;
       border-radius: 8px;
       cursor: pointer;
-      transition: transform 0.2s;
+      transition: transform 0.2s, background 0.2s;
     }
     .btn-unlock:hover {
       transform: translateY(-2px);
       background: #7dd3fc;
     }
+    
     /* Modal Styles */
     .modal-backdrop {
       display: none;
@@ -310,20 +339,20 @@
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 14px;
-      max-width: 500px;
+      max-width: 550px;
       width: 100%;
-      padding: 2rem;
+      padding: 2.5rem;
       position: relative;
     }
     .modal-card h2 {
-      font-size: 1.4rem;
-      margin-bottom: 0.4rem;
+      font-size: 1.6rem;
+      margin-bottom: 0.5rem;
     }
     .modal-card p {
       color: var(--muted);
-      font-size: 0.88rem;
+      font-size: 0.95rem;
       line-height: 1.5;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.75rem;
     }
     .close-btn {
       position: absolute;
@@ -332,28 +361,28 @@
       background: transparent;
       border: none;
       color: var(--muted);
-      font-size: 1.4rem;
+      font-size: 1.6rem;
       cursor: pointer;
     }
     .form-group {
-      margin-bottom: 1.15rem;
+      margin-bottom: 1.25rem;
       text-align: left;
     }
     .form-group label {
       display: block;
-      font-size: 0.8rem;
+      font-size: 0.9rem;
       font-weight: 600;
       color: var(--text);
-      margin-bottom: 0.35rem;
+      margin-bottom: 0.4rem;
     }
     .form-group input {
       width: 100%;
-      padding: 0.75rem;
+      padding: 0.85rem;
       border-radius: 6px;
       background: var(--card-inner);
       border: 1px solid var(--border);
       color: var(--text);
-      font-size: 0.9rem;
+      font-size: 1rem;
       outline: none;
     }
     .form-group input:focus {
@@ -364,11 +393,11 @@
       background: var(--accent);
       color: #04101e;
       border: none;
-      padding: 0.85rem;
+      padding: 1rem;
       font-weight: 700;
       border-radius: 6px;
       cursor: pointer;
-      font-size: 0.95rem;
+      font-size: 1.05rem;
       margin-top: 0.5rem;
       transition: background 0.2s;
     }
@@ -376,44 +405,47 @@
       background: #7dd3fc;
     }
     .micro-notice {
-      margin-top: 1rem;
-      font-size: 0.75rem;
+      margin-top: 1.25rem;
+      font-size: 0.85rem;
       color: var(--muted);
-      line-height: 1.4;
+      line-height: 1.5;
       text-align: left;
       border-top: 1px solid var(--border);
-      padding-top: 0.85rem;
+      padding-top: 1rem;
     }
     .success-container {
       text-align: center;
       padding: 1rem 0;
     }
     .success-container .icon {
-      font-size: 2.8rem;
-      margin-bottom: 0.8rem;
+      font-size: 3rem;
+      margin-bottom: 1rem;
     }
     .success-container h3 {
-      font-size: 1.35rem;
+      font-size: 1.5rem;
       color: var(--green);
       margin-bottom: 0.5rem;
     }
     .success-container p {
-      font-size: 0.9rem;
+      font-size: 1rem;
       color: var(--text);
-      line-height: 1.5;
-      margin-bottom: 1.5rem;
+      line-height: 1.6;
+      margin-bottom: 1.75rem;
     }
+    
+    /* Footer */
     footer {
       border-top: 1px solid var(--border);
-      padding: 2rem;
+      padding: 2.5rem 1.5rem;
       text-align: center;
       color: var(--muted);
-      font-size: 0.85rem;
+      font-size: 0.95rem;
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
       align-items: center;
       margin-top: 3rem;
+      background: var(--card-bg);
     }
     footer a {
       color: var(--muted);
@@ -425,20 +457,22 @@
 
     @media (max-width: 768px) {
       .nav-actions a.home-link { display: none; }
-      header { padding: 1rem; }
+      .header-inner { padding: 1rem; }
     }
   </style>
 </head>
 <body>
   <header>
-    <a href="index.html" class="brand">
-      <img src="logo.png" alt="Corp Acuity Logo" onerror="this.style.display='none'" />
-      <span>CORP ACUITY TERMINAL</span>
-    </a>
-    <div class="nav-actions">
-      <a href="index.html" class="home-link">Home</a>
-      <a href="daily_market_intelligence.pdf" target="_blank" style="color:var(--muted); text-decoration:none; font-size:0.85rem;">View PDF Carousel ➔</a>
-      <div id="navBadge" class="nav-badge">Beta Access</div>
+    <div class="header-inner">
+      <a href="index.html" class="brand">
+        <img src="logo.png" alt="Corp Acuity Logo" onerror="this.style.display='none'" />
+        <span>CORP ACUITY TERMINAL</span>
+      </a>
+      <div class="nav-actions">
+        <a href="index.html" class="home-link">Home</a>
+        <a href="daily_market_intelligence.pdf" target="_blank" style="color:var(--muted); text-decoration:none;">View PDF Carousel ➔</a>
+        <div id="navBadge" class="nav-badge">Beta Access</div>
+      </div>
     </div>
   </header>
 
@@ -461,18 +495,27 @@
       <div class="dash-card">
         <div class="dash-card-label">Regime Status</div>
         <div id="regimeStatus" class="dash-card-val" style="color:var(--amber);">AMBER</div>
+        <div id="exposureVal" class="dash-card-sub">Exposure: 30% - 60%</div>
       </div>
       <div class="dash-card">
-        <div class="dash-card-label">Breadth (> 200 EMA)</div>
+        <div class="dash-card-label">Universe Breadth</div>
         <div id="breadthVal" class="dash-card-val">52.4%</div>
+        <div class="dash-card-sub">Equities > 200 EMA</div>
       </div>
       <div class="dash-card">
-        <div class="dash-card-label">Allowed Exposure</div>
-        <div id="exposureVal" class="dash-card-val">30% - 60%</div>
-      </div>
-      <div class="dash-card">
-        <div class="dash-card-label">10Y Yield / WTI</div>
+        <div class="dash-card-label">Cross-Asset Radar</div>
         <div id="crossAssetVal" class="dash-card-val">4.24% / $73.80</div>
+        <div class="dash-card-sub">10Y Yield / WTI Crude</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-label">Structural Catalyst</div>
+        <div id="dash-opex" class="dash-card-val" style="font-size:1.15rem;">Monitoring Horizon...</div>
+        <div class="dash-card-sub">Forward Pipeline</div>
+      </div>
+      <div class="dash-card">
+        <div class="dash-card-label">Macro Seasonality</div>
+        <div id="dash-seasonality" class="dash-card-val" style="font-size:1.15rem; color:var(--accent);">Neutral</div>
+        <div class="dash-card-sub">Historical Baseline</div>
       </div>
     </div>
 
@@ -483,8 +526,8 @@
       <button class="tab-btn" onclick="switchCategory('liquidity_sweeps')">4. Liquidity Sweeps</button>
     </div>
     
-    <div id="archetypeLinkContainer" style="margin-bottom: 1.5rem; font-size: 0.85rem;">
-      <a id="archetypeDocLink" href="knowledge/setup-archetypes-mechanics.html#base-resets" style="color: var(--accent); text-decoration: none; font-weight: 600; background: rgba(56, 189, 248, 0.1); padding: 0.4rem 0.75rem; border-radius: 4px; border: 1px solid rgba(56, 189, 248, 0.2);">
+    <div id="archetypeLinkContainer" style="margin-bottom: 2rem; font-size: 0.95rem;">
+      <a id="archetypeDocLink" href="knowledge/setup-archetypes-mechanics.html#base-resets" style="color: var(--accent); text-decoration: none; font-weight: 600; background: rgba(56, 189, 248, 0.1); padding: 0.5rem 1rem; border-radius: 6px; border: 1px solid rgba(56, 189, 248, 0.2); display: inline-block;">
         📖 Read the Base-Reset Archetype Documentation &rarr;
       </a>
     </div>
@@ -560,7 +603,7 @@
   </div>
 
   <footer>
-    <div>&copy; 2026 Corp Acuity Ltd. Quantitative Market Intelligence. All rights reserved.</div>
+    <div style="margin-bottom: 0.75rem;">&copy; 2026 Corp Acuity Ltd. Quantitative Market Intelligence. All rights reserved.</div>
     <div>
       <a href="legal.html">Legal Disclaimer, Privacy Policy & Terms</a>
     </div>
@@ -630,9 +673,28 @@
         bannerText.innerText = "Market Health: Defensive (Trim exposure, protect capital, buy high asymmetry pivots only)";
       }
 
-      breadthEl.innerText = (macro.pct_above_200 || 0) + "%";
-      expEl.innerText = macro.max_exposure || "30% - 60%";
-      caEl.innerText = `${macro.tnx || 4.25}% / $${macro.oil || 75.0}`;
+      breadthEl.innerText = (macro.pct_above_200 || "--") + "%";
+      expEl.innerText = `Exposure: ${macro.max_exposure || "30% - 60%"}`;
+      caEl.innerText = `${macro.tnx || "--"}% / $${macro.oil || "--"}`;
+
+      // Correctly parse and map the Structural Catalyst / Calendar Event
+      let eventStr = "Monitoring Horizon...";
+      if (macro.calendar && macro.calendar.length > 0) {
+         let nextEvent = macro.calendar[0];
+         if(Array.isArray(nextEvent) && nextEvent.length > 1) {
+             eventStr = nextEvent[1].split('(')[0].trim();
+         } else if (typeof nextEvent === 'string') {
+             eventStr = nextEvent.split('(')[0].trim();
+         }
+      }
+      const opexEl = document.getElementById('dash-opex');
+      if (opexEl) opexEl.innerText = eventStr;
+      
+      // Parse Macro Seasonality
+      let seasonStr = macro.seasonal_context || macro.seasonality || "Neutral";
+      let shortSeason = seasonStr.split(':')[0].trim();
+      const seasonEl = document.getElementById('dash-seasonality');
+      if (seasonEl) seasonEl.innerText = shortSeason;
     }
 
     function switchCategory(cat) {
@@ -664,7 +726,7 @@
       const rows = (screenerData && screenerData.watchlists && screenerData.watchlists[currentCategory]) ? screenerData.watchlists[currentCategory] : [];
 
       if (!rows || rows.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:2rem; color:var(--muted);">No setups currently met strict mathematical asymmetry and risk gates. Cash is a valid position.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:2.5rem; color:var(--muted);">No setups currently met strict mathematical asymmetry and risk gates. Cash is a valid position.</td></tr>`;
         overlay.style.display = 'none';
         return;
       }
