@@ -19486,5 +19486,69 @@
     "pivot": 66.55,
     "stop": 63.68,
     "r_ratio": 4.97
+  },
+  {
+    "date": "2026-10-29",
+    "ticker": "ALLE",
+    "category": "Base-Reset",
+    "pivot": 182.66,
+    "stop": 176.33,
+    "r_ratio": 2.65
+  },
+  {
+    "date": "2026-10-29",
+    "ticker": "BBWI",
+    "category": "Base-Reset",
+    "pivot": 22.02,
+    "stop": 20.77,
+    "r_ratio": 2.99
+  },
+  {
+    "date": "2026-10-29",
+    "ticker": "HAS",
+    "category": "Base-Reset",
+    "pivot": 121.04,
+    "stop": 116.57,
+    "r_ratio": 3.22
+  },
+  {
+    "date": "2026-10-29",
+    "ticker": "ISRG",
+    "category": "Base-Reset",
+    "pivot": 458.88,
+    "stop": 437.51,
+    "r_ratio": 7.72
+  },
+  {
+    "date": "2026-10-29",
+    "ticker": "MEDP",
+    "category": "Base-Reset",
+    "pivot": 693.97,
+    "stop": 663.61,
+    "r_ratio": 2.88
+  },
+  {
+    "date": "2026-10-29",
+    "ticker": "RTX",
+    "category": "Base-Reset",
+    "pivot": 198.75,
+    "stop": 191.99,
+    "r_ratio": 4.59
+  },
+  {
+    "date": "2026-10-29",
+    "ticker": "UNH",
+    "category": "Base-Reset",
+    "pivot": 426.55,
+    "stop": 405.0,
+    "r_ratio": 2.51
+  },
+  {
+    "date": "2026-10-29",
+    "ticker": "FCX",
+    "category": "Liquidity Sweep",
+    "pivot": 66.65,
+    "stop": 63.68,
+    "r_ratio": 4.53
   }
 ]
