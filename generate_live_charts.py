@@ -311,8 +311,12 @@ def generate_web_thumbnails():
                 generated.add(t)
                 time.sleep(0.5)  # Micro-delay to prevent Yahoo Finance IP blocks
 
-if __name__ == "__main__":
+def generate_all():
+    """Master function called by scanner.py to run both pipelines."""
     print("[*] Generating HD Hero Assets for Social & PDF pipelines...")
     generate_social_cards()
     print("[*] Generating Lightweight Web Thumbnails for Screener Terminal...")
     generate_web_thumbnails()
+
+if __name__ == "__main__":
+    generate_all()
