@@ -1,12 +1,26 @@
 ﻿import os
 import json
+import time
+import shutil
+import requests
 import yfinance as yf
 import pandas as pd
 from PIL import Image, ImageDraw, ImageFont
 
 META_FILE = "latest_post_meta.json"
+FEED_FILE = "terminal_feed.json"
 OUT_DIR = os.path.join("assets", "cards")
+THUMB_DIR = "thumbnails"
+
 os.makedirs(OUT_DIR, exist_ok=True)
+
+# Stealth Session for bulk downloading
+GLOBAL_HTTP_SESSION = requests.Session()
+GLOBAL_HTTP_SESSION.headers.update({
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+    "Accept-Language": "en-US,en;q=0.9",
+})
 
 W, H = 1200, 675
 BG_COLOR = "#0b0f19"
@@ -66,9 +80,9 @@ def calculate_tactical_geometry(pivot, stop, structural_resistance=None):
         
     return target, final_r
 
-def render_ticker_chart(ticker, label, pivot, stop, risk_pct, r_ratio, target_price, out_name):
+def render_ticker_chart(ticker, label, pivot, stop, risk_pct, r_ratio, target_price, out_path):
     try:
-        df = yf.download(ticker, period="8mo", interval="1d", progress=False, auto_adjust=True)
+        df = yf.download(ticker, period="8mo", interval="1d", progress=False, auto_adjust=True, session=GLOBAL_HTTP_SESSION)
     except Exception as e:
         print(f"[!] yfinance fetch failed for {ticker}: {e}")
         return
@@ -194,11 +208,11 @@ def render_ticker_chart(ticker, label, pivot, stop, risk_pct, r_ratio, target_pr
     risk_txt = f"{risk_pct:.2f}%" if risk_pct else "2.0% - 3.5%"
     draw.text((65, 615), f"SETUP PAYOFF: {r_txt} ASYMMETRY   |   RISK BUDGET: {risk_txt}   |   INVALIDATION: GAP > +2.5%", fill=TEXT_MAIN, font=F_BODY)
 
-    out_path = os.path.join(OUT_DIR, out_name)
     im.save(out_path)
-    print(f"[+] Rendered live card: {out_path} ({ticker})")
+    print(f"[+] Rendered chart: {out_path}")
 
-def generate_all():
+def generate_social_cards():
+    """Generates the 4 core hero charts for the PDF and Twitter pipelines."""
     if not os.path.exists(META_FILE):
         return
     with open(META_FILE, "r", encoding="utf-8") as f:
@@ -229,10 +243,54 @@ def generate_all():
                 cand['Tactical_Target'] = round(safe_target, 2)
                 cand['Tactical_R_Ratio'] = round(safe_r, 2)
                 
-                render_ticker_chart(t, label, p, s, r_pct, safe_r, safe_target, fname)
+                out_path = os.path.join(OUT_DIR, fname)
+                render_ticker_chart(t, label, p, s, r_pct, safe_r, safe_target, out_path)
 
     with open(META_FILE, "w", encoding="utf-8") as f:
         json.dump(meta, f, indent=4)
 
+def generate_web_thumbnails():
+    """Generates localized thumbnail charts for all qualifying items in the terminal feed."""
+    if not os.path.exists(FEED_FILE):
+        return
+    
+    # Wipe old thumbnails to prevent repository bloat
+    if os.path.exists(THUMB_DIR):
+        shutil.rmtree(THUMB_DIR)
+    os.makedirs(THUMB_DIR, exist_ok=True)
+
+    with open(FEED_FILE, "r", encoding="utf-8") as f:
+        feed = json.load(f)
+
+    watchlists = feed.get("watchlists", {})
+    categories = {
+        'base_resets': 'Base-Reset',
+        'momentum_flags': 'Momentum Flag',
+        'pocket_pivots': 'Pocket Pivot',
+        'liquidity_sweeps': 'Liquidity Sweep'
+    }
+
+    generated = set()
+    for cat_key, cat_label in categories.items():
+        candidates = watchlists.get(cat_key, [])
+        for cand in candidates:
+            t = cand.get('Ticker')
+            if not t or t in generated:
+                continue
+
+            p = float(cand.get('Pivot_Trigger', 0))
+            s = float(cand.get('Stop_Loss', 0))
+            r_pct = float(cand.get('Risk_%', 0))
+            safe_target, safe_r = calculate_tactical_geometry(p, s, cand.get('Structural_Resistance'))
+            
+            if safe_target and safe_r:
+                out_path = os.path.join(THUMB_DIR, f"{t}.png")
+                render_ticker_chart(t, cat_label, p, s, r_pct, safe_r, safe_target, out_path)
+                generated.add(t)
+                time.sleep(0.5)  # Micro-delay to avoid API rate limits
+
 if __name__ == "__main__":
-    generate_all()
+    print("[*] Generating Hero Assets for Social & PDF...")
+    generate_social_cards()
+    print("[*] Generating Web Thumbnails for Screener Terminal...")
+    generate_web_thumbnails()

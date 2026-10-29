@@ -34,11 +34,11 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add sector_cache.json zacks_rank_tracker.json trade_history.json terminal_feed.json master_screener_results.csv daily_market_intelligence.pdf latest_post_meta.json x_cards/ || true
+          git add sector_cache.json zacks_rank_tracker.json trade_history.json terminal_feed.json master_screener_results.csv daily_market_intelligence.pdf latest_post_meta.json x_cards/ thumbnails/ || true
           if git diff --staged --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "Auto-update scanner cache, trade history, web feed, PDF, metadata & X cards [skip ci]"
+            git commit -m "Auto-update scanner cache, trade history, web feed, PDF, metadata, X cards & Thumbnails [skip ci]"
             git push
           fi
 
@@ -64,10 +64,13 @@ jobs:
           
           mkdir -p site_temp/x_cards
           cp -r x_cards/* site_temp/x_cards/ || true
+          
+          mkdir -p site_temp/thumbnails
+          cp -r thumbnails/* site_temp/thumbnails/ || true
 
           cd site_temp
           git add -A
-          git commit -m "Auto-deploy daily intelligence, terminal feed & X cards [skip ci]" || echo "No changes to commit"
+          git commit -m "Auto-deploy daily intelligence, terminal feed, X cards & Thumbnails [skip ci]" || echo "No changes to commit"
           git push origin main
 
       - name: Publish to LinkedIn
