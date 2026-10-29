@@ -14,7 +14,7 @@ THUMB_DIR = "thumbnails"
 
 os.makedirs(OUT_DIR, exist_ok=True)
 
-# Stealth Session for bulk downloading
+# Stealth Session for bulk downloading to bypass rate limits
 GLOBAL_HTTP_SESSION = requests.Session()
 GLOBAL_HTTP_SESSION.headers.update({
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36",
@@ -22,6 +22,7 @@ GLOBAL_HTTP_SESSION.headers.update({
     "Accept-Language": "en-US,en;q=0.9",
 })
 
+# Base HD Canvas Size (used natively for Twitter/LinkedIn)
 W, H = 1200, 675
 BG_COLOR = "#0b0f19"
 PANEL_BG = "#111827"
@@ -60,6 +61,15 @@ def axis_flag(draw, x, y, text, bg, fg="#ffffff"):
     draw.rectangle([(x, top_y), (x + box_w, top_y + box_h)], fill=bg, outline="#000000", width=1)
     draw.text((x + 7, top_y + 4), text, fill=fg, font=F_TAG)
 
+def safe_float(val):
+    """Safely cast JSON data to float, skipping strings like 'N/A' or empty fields."""
+    try:
+        if val is None or str(val).strip() == "":
+            return None
+        return float(val)
+    except (ValueError, TypeError):
+        return None
+
 def calculate_tactical_geometry(pivot, stop, structural_resistance=None):
     if not pivot or not stop or pivot <= stop:
         return None, None
@@ -80,7 +90,7 @@ def calculate_tactical_geometry(pivot, stop, structural_resistance=None):
         
     return target, final_r
 
-def render_ticker_chart(ticker, label, pivot, stop, risk_pct, r_ratio, target_price, out_path):
+def render_ticker_chart(ticker, label, pivot, stop, risk_pct, r_ratio, target_price, out_path, is_thumbnail=False):
     try:
         df = yf.download(ticker, period="8mo", interval="1d", progress=False, auto_adjust=True, session=GLOBAL_HTTP_SESSION)
     except Exception as e:
@@ -208,11 +218,17 @@ def render_ticker_chart(ticker, label, pivot, stop, risk_pct, r_ratio, target_pr
     risk_txt = f"{risk_pct:.2f}%" if risk_pct else "2.0% - 3.5%"
     draw.text((65, 615), f"SETUP PAYOFF: {r_txt} ASYMMETRY   |   RISK BUDGET: {risk_txt}   |   INVALIDATION: GAP > +2.5%", fill=TEXT_MAIN, font=F_BODY)
 
-    im.save(out_path)
-    print(f"[+] Rendered chart: {out_path}")
+    # TIERED ARCHITECTURE: Resize and highly compress web thumbnails
+    if is_thumbnail:
+        im = im.resize((600, 337), Image.Resampling.LANCZOS)
+        im.save(out_path, format="PNG", optimize=True)
+        print(f"[+] Rendered Web Thumbnail: {out_path}")
+    else:
+        im.save(out_path, format="PNG")
+        print(f"[+] Rendered HD Hero Chart: {out_path}")
 
 def generate_social_cards():
-    """Generates the 4 core hero charts for the PDF and Twitter pipelines."""
+    """Generates the 4 core hero charts for the PDF and Twitter pipelines (HD Resolution)."""
     if not os.path.exists(META_FILE):
         return
     with open(META_FILE, "r", encoding="utf-8") as f:
@@ -229,28 +245,28 @@ def generate_social_cards():
         cand = meta.get(key)
         if cand and cand.get('Ticker'):
             t = cand.get('Ticker')
-            p = float(cand.get('Pivot_Trigger', 0))
-            s = float(cand.get('Stop_Loss', 0))
-            r_pct = float(cand.get('Risk_%', 0))
             
-            struct_res = cand.get('Structural_Resistance', None)
-            if struct_res:
-                struct_res = float(struct_res)
+            p = safe_float(cand.get('Pivot_Trigger'))
+            s = safe_float(cand.get('Stop_Loss'))
+            r_pct = safe_float(cand.get('Risk_%'))
+            struct_res = safe_float(cand.get('Structural_Resistance'))
+            
+            if not p or not s:
+                continue
                 
             safe_target, safe_r = calculate_tactical_geometry(p, s, struct_res)
             
             if safe_target and safe_r:
                 cand['Tactical_Target'] = round(safe_target, 2)
                 cand['Tactical_R_Ratio'] = round(safe_r, 2)
-                
                 out_path = os.path.join(OUT_DIR, fname)
-                render_ticker_chart(t, label, p, s, r_pct, safe_r, safe_target, out_path)
+                render_ticker_chart(t, label, p, s, r_pct, safe_r, safe_target, out_path, is_thumbnail=False)
 
     with open(META_FILE, "w", encoding="utf-8") as f:
         json.dump(meta, f, indent=4)
 
 def generate_web_thumbnails():
-    """Generates localized thumbnail charts for all qualifying items in the terminal feed."""
+    """Generates lightweight, downscaled thumbnails for all qualifying items in the terminal feed."""
     if not os.path.exists(FEED_FILE):
         return
     
@@ -278,19 +294,25 @@ def generate_web_thumbnails():
             if not t or t in generated:
                 continue
 
-            p = float(cand.get('Pivot_Trigger', 0))
-            s = float(cand.get('Stop_Loss', 0))
-            r_pct = float(cand.get('Risk_%', 0))
-            safe_target, safe_r = calculate_tactical_geometry(p, s, cand.get('Structural_Resistance'))
+            p = safe_float(cand.get('Pivot_Trigger'))
+            s = safe_float(cand.get('Stop_Loss'))
+            r_pct = safe_float(cand.get('Risk_%'))
+            struct_res = safe_float(cand.get('Structural_Resistance'))
+            
+            if not p or not s:
+                continue
+
+            safe_target, safe_r = calculate_tactical_geometry(p, s, struct_res)
             
             if safe_target and safe_r:
                 out_path = os.path.join(THUMB_DIR, f"{t}.png")
-                render_ticker_chart(t, cat_label, p, s, r_pct, safe_r, safe_target, out_path)
+                # Flag as True to drastically compress and scale down for the web terminal
+                render_ticker_chart(t, cat_label, p, s, r_pct, safe_r, safe_target, out_path, is_thumbnail=True)
                 generated.add(t)
-                time.sleep(0.5)  # Micro-delay to avoid API rate limits
+                time.sleep(0.5)  # Micro-delay to prevent Yahoo Finance IP blocks
 
 if __name__ == "__main__":
-    print("[*] Generating Hero Assets for Social & PDF...")
+    print("[*] Generating HD Hero Assets for Social & PDF pipelines...")
     generate_social_cards()
-    print("[*] Generating Web Thumbnails for Screener Terminal...")
+    print("[*] Generating Lightweight Web Thumbnails for Screener Terminal...")
     generate_web_thumbnails()
