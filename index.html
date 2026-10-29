@@ -404,26 +404,25 @@
           document.getElementById('dash-breadth').innerText = `${m.pct_above_200 || "--"}%`;
           document.getElementById('dash-yield').innerText = `${m.tnx || "--"}% / $${m.oil || "--"}`;
           
-          // Parse Structural Catalyst safely
-          let eventStr = "Monitoring Horizon...";
-          let eventSub = "Forward Pipeline";
-          if (m.calendar && m.calendar.length > 0) {
-             let nextEvent = m.calendar[0];
-             let rawStr = typeof nextEvent === 'string' ? nextEvent : (Array.isArray(nextEvent) ? nextEvent[1] : "");
-             
-             // Strip out the trailing date like "(2026-10-30)" using regex
-             rawStr = rawStr.replace(/\s*\(\d{4}-\d{2}-\d{2}\)/g, '').trim();
-             
-             // Split the countdown from the event name
-             if (rawStr.includes(':')) {
-                 let parts = rawStr.split(':');
-                 // Clean up the "(S)" to make it read naturally
-                 eventSub = parts[0].trim().replace('(S)', 'S'); 
-                 eventStr = parts[1].trim(); 
-             } else {
-                 eventStr = rawStr;
-             }
-          }
+          // Parse Structural Catalyst safely (Fixed for timestamps)
+      let eventStr = "Monitoring Horizon...";
+      let eventSub = "Forward Pipeline";
+      if (macro.calendar && macro.calendar.length > 0) {
+         let nextEvent = macro.calendar[0];
+         let rawStr = typeof nextEvent === 'string' ? nextEvent : (Array.isArray(nextEvent) ? nextEvent[1] : "");
+         
+         // Strip out the trailing date like "(2026-10-30)" using regex
+         rawStr = rawStr.replace(/\s*\(\d{4}-\d{2}-\d{2}\)/g, '').trim();
+         
+         // Split ONLY on the first colon to protect times like "8:30 AM"
+         let firstColonIdx = rawStr.indexOf(':');
+         if (firstColonIdx !== -1) {
+             eventSub = rawStr.substring(0, firstColonIdx).trim().replace('(S)', 'S'); 
+             eventStr = rawStr.substring(firstColonIdx + 1).trim(); 
+         } else {
+             eventStr = rawStr;
+         }
+      }
           
           const opexEl = document.getElementById('dash-opex');
           const opexSubEl = document.getElementById('dash-opex-sub');
