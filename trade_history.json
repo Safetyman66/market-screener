@@ -19590,5 +19590,37 @@
     "pivot": 425.25,
     "stop": 405.0,
     "r_ratio": 2.55
+  },
+  {
+    "date": "2026-10-29",
+    "ticker": "ISRG",
+    "category": "Base-Reset",
+    "pivot": 458.88,
+    "stop": 437.51,
+    "r_ratio": 7.56
+  },
+  {
+    "date": "2026-10-29",
+    "ticker": "MEDP",
+    "category": "Base-Reset",
+    "pivot": 693.97,
+    "stop": 669.76,
+    "r_ratio": 3.64
+  },
+  {
+    "date": "2026-10-29",
+    "ticker": "RTX",
+    "category": "Base-Reset",
+    "pivot": 201.15,
+    "stop": 193.12,
+    "r_ratio": 3.27
+  },
+  {
+    "date": "2026-10-29",
+    "ticker": "UNH",
+    "category": "Base-Reset",
+    "pivot": 425.25,
+    "stop": 405.0,
+    "r_ratio": 2.59
   }
 ]
