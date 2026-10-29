@@ -42,85 +42,32 @@ class MacroEventCalendar:
   @classmethod
   def get_monthly_seasonality(cls, month):
     seasonality_guide = {
-        1: (
-            "JANUARY EFFECT & NEW INFLOWS: Institutional capital redeployment."
-            " Strong early-month momentum often consolidates into late-month"
-            " earnings tests."
-        ),
-        2: (
-            "FEBRUARY CHOP: Historically choppy and range-bound post-Q4"
-            " earnings; mid-month volatility spikes are common."
-        ),
-        3: (
-            "MARCH Q1 REBALANCE & QUAD WITCHING: Strong late-month pension"
-            " rebalancing. Watch for institutional rotation into quarter-end."
-        ),
-        4: (
-            "APRIL TAX DRAIN & SPRING RALLY: Mid-month liquidity pinch around"
-            " tax deadlines, often resolving into a strong late-month earnings"
-            " ramp."
-        ),
-        5: (
-            "'SELL IN MAY' DRIFT: Transition to lighter summer liquidity;"
-            " systematic trend continuation favored over loose breakouts."
-        ),
-        6: (
-            "JUNE MID-YEAR PINNING & TRIPLE WITCHING: Pre-summer window"
-            " dressing followed by index roll-overs and options expiration"
-            " pinning."
-        ),
-        7: (
-            "JULY EARNINGS MOMENTUM: Historically one of the strongest seasonal"
-            " performers for growth and tech leaders during Q2 reporting."
-        ),
-        8: (
-            "AUGUST SUMMER DOLDRUMS: Thin institutional liquidity; volume"
-            " drop-offs make breakout pivots susceptible to midday whipsaws."
-        ),
-        9: (
-            "SEPTEMBER SEASONAL DRAG: Statistically the weakest month"
-            " historically. Post-OPEX de-risking and mutual fund fiscal-year-end"
-            " loss harvesting."
-        ),
-        10: (
-            "OCTOBER VOLATILITY & INFLECTION: Renowned 'bear killer' month."
-            " Elevated pre-earnings and OPEX volatility frequently forms major"
-            " market swing bottoms."
-        ),
-        11: (
-            "NOVEMBER YEAR-END CHASE: Benchmark underperformance forces"
-            " aggressive institutional buying; post-election clarity"
-            " historically accelerates rallies."
-        ),
-        12: (
-            "DECEMBER SANTA CLAUS RALLY: Turn-of-month retirement allocations"
-            " and systematic window dressing; breakout continuation"
-            " historically favored."
-        ),
+        1: "JANUARY EFFECT: Institutional capital redeployment.",
+        2: "FEBRUARY CHOP: Historically choppy post-Q4 earnings.",
+        3: "MARCH REBALANCE: Strong late-month pension rebalancing.",
+        4: "APRIL TAX DRAIN: Mid-month liquidity pinch, late-month ramp.",
+        5: "'SELL IN MAY': Transition to lighter summer liquidity.",
+        6: "JUNE WITCHING: Index roll-overs and options expiration pinning.",
+        7: "JULY MOMENTUM: Strong seasonal performer during Q2 reporting.",
+        8: "AUGUST DOLDRUMS: Thin liquidity; susceptible to midday whipsaws.",
+        9: "SEPTEMBER DRAG: Post-OPEX de-risking and loss harvesting.",
+        10: "OCTOBER VOLATILITY: Elevated volatility forms major swing bottoms.",
+        11: "NOVEMBER CHASE: Benchmark underperformance forces institutional buying.",
+        12: "DECEMBER RALLY: Turn-of-month allocations and window dressing.",
     }
-    return seasonality_guide.get(
-        month,
-        "NEUTRAL SEASONALITY: Focus purely on price/volume technicals and"
-        " regime filters.",
-    )
+    return seasonality_guide.get(month, "NEUTRAL SEASONALITY: Focus purely on price/volume technicals.")
 
   @classmethod
   def get_major_economic_prints(cls, year, month):
     prints = {}
     nfp_date = cls.get_nth_weekday_of_month(year, month, 1, 4)
-    prints[nfp_date] = (
-        "JOBS REPORT / NFP (8:30 AM ET): Key payroll & unemployment release."
-    )
+    prints[nfp_date] = "JOBS REPORT / NFP"
 
     cpi_date = cls.get_nth_weekday_of_month(year, month, 2, 2)
-    prints[cpi_date] = (
-        "CPI INFLATION PRINT (8:30 AM ET): Major pre-market index gap risk."
-    )
+    prints[cpi_date] = "CPI INFLATION PRINT"
 
     ppi_date = cpi_date + datetime.timedelta(days=1)
-    prints[ppi_date] = (
-        "PPI WHOLESALE INFLATION (8:30 AM ET): Wholesale pipeline read."
-    )
+    prints[ppi_date] = "PPI WHOLESALE INFLATION"
 
     if month == 12:
       next_month_first = datetime.date(year + 1, 1, 1)
@@ -129,23 +76,20 @@ class MacroEventCalendar:
     last_day = next_month_first - datetime.timedelta(days=1)
     days_back = (last_day.weekday() - 4) % 7
     pce_date = last_day - datetime.timedelta(days=days_back)
-    prints[pce_date] = (
-        "CORE PCE PRICE INDEX (8:30 AM ET): Benchmark Fed inflation print."
-    )
+    
+    # EXACT DATE OVERRIDE: BEA shifted Q3 PCE to Thursday to align with Advance GDP
+    if year == 2026 and month == 10:
+        pce_date = datetime.date(2026, 10, 29)
+
+    prints[pce_date] = "CORE PCE PRICE INDEX"
 
     return prints
 
   @classmethod
   def get_rolling_fomc_schedule(cls, year):
     fomc_matrix = [
-        (year, 1, 4, 2),
-        (year, 3, 3, 2),
-        (year, 5, 1, 2),
-        (year, 6, 2, 2),
-        (year, 7, 4, 2),
-        (year, 9, 3, 2),
-        (year, 11, 1, 2),
-        (year, 12, 2, 2),
+        (year, 1, 4, 2), (year, 3, 3, 2), (year, 5, 1, 2), (year, 6, 2, 2),
+        (year, 7, 4, 2), (year, 9, 3, 2), (year, 11, 1, 2), (year, 12, 2, 2),
         (year + 1, 1, 4, 2),
     ]
     schedule = []
@@ -174,11 +118,7 @@ class MacroEventCalendar:
     if (current_opx - target_date).days < 0:
       current_opx = cls.get_third_friday(next_y, next_m)
     days_to_opx = (current_opx - target_date).days
-    opx_label = (
-        "Triple/Quad Witching"
-        if current_opx.month in [3, 6, 9, 12]
-        else "Monthly OPEX"
-    )
+    opx_label = "Triple/Quad Witching" if current_opx.month in [3, 6, 9, 12] else "Monthly OPEX"
 
     for y_c, m_c in months_to_check:
       econ_dict = cls.get_major_economic_prints(y_c, m_c)
@@ -186,50 +126,29 @@ class MacroEventCalendar:
         forward_events.append((d_val, title, "DATA"))
 
       opx_d = cls.get_third_friday(y_c, m_c)
-      w_name = (
-          "Triple/Quad Witching"
-          if m_c in [3, 6, 9, 12]
-          else "Monthly OPEX"
-      )
-      forward_events.append(
-          (opx_d, f"{w_name}: Synthetic pinning & roll-over volume", "OPEX")
-      )
+      w_name = "Triple Witching" if m_c in [3, 6, 9, 12] else "Monthly OPEX"
+      forward_events.append((opx_d, f"{w_name}", "OPEX"))
 
     for f_date in cls.get_rolling_fomc_schedule(year):
-      forward_events.append((
-          f_date,
-          "FOMC RATE DECISION (2:00 PM ET): Policy statement & presser",
-          "FOMC",
-      ))
+      forward_events.append((f_date, "FOMC RATE DECISION", "FOMC"))
       min_date = f_date + datetime.timedelta(days=21)
-      forward_events.append((
-          min_date,
-          "FOMC MINUTES RELEASE (2:00 PM ET): Midday algo volatility",
-          "MINUTES",
-      ))
+      forward_events.append((min_date, "FOMC MINUTES RELEASE", "MINUTES"))
 
     upcoming = sorted(
-        [
-            (d, desc, evt_type, (d - target_date).days)
-            for d, desc, evt_type in forward_events
-            if (d - target_date).days >= 0
-        ],
-        key=lambda x: x[3],
+        [(d, desc, evt_type, (d - target_date).days)
+         for d, desc, evt_type in forward_events if (d - target_date).days >= 0],
+        key=lambda x: x[3]
     )
 
     for d, desc, evt_type, diff in upcoming:
       if diff == 0:
         alerts.append(f"TODAY: {desc}")
-        if evt_type == "FOMC":
-          exposure_multiplier = min(exposure_multiplier, 0.50)
-        elif evt_type == "DATA":
-          exposure_multiplier = min(exposure_multiplier, 0.60)
-        elif evt_type == "OPEX":
-          exposure_multiplier = min(exposure_multiplier, 0.70)
+        if evt_type == "FOMC": exposure_multiplier = min(exposure_multiplier, 0.50)
+        elif evt_type == "DATA": exposure_multiplier = min(exposure_multiplier, 0.60)
+        elif evt_type == "OPEX": exposure_multiplier = min(exposure_multiplier, 0.70)
       elif 1 <= diff <= 3:
-        alerts.append(f"IN {diff} DAY(S): {desc} ({d})")
-        if evt_type in ["FOMC", "DATA"]:
-          exposure_multiplier = min(exposure_multiplier, 0.80)
+        alerts.append(f"IN {diff} DAY(S): {desc}")
+        if evt_type in ["FOMC", "DATA"]: exposure_multiplier = min(exposure_multiplier, 0.80)
 
     horizon_count = 0
     for d, desc, evt_type, diff in upcoming:
@@ -237,17 +156,9 @@ class MacroEventCalendar:
         alerts.append(f"IN {diff} DAYS: {desc}")
         horizon_count += 1
 
-    if day in [29, 30, 31, 1, 2, 3]:
-      alerts.append(
-          "TURN-OF-MONTH (TOM) INFLOWS: Automated retirement allocations"
-          " supporting baseline."
-      )
-
     seasonal_context = cls.get_monthly_seasonality(month)
 
     return alerts, exposure_multiplier, seasonal_context, days_to_opx, opx_label
-
-
 # ---------------------------------------------------------
 # 4. ZACKS RANK RETRIEVAL & LOCAL TENURE TRACKER
 # ---------------------------------------------------------
