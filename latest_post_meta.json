@@ -92,7 +92,7 @@
         "1Min_Vol_Hurdle": 15545,
         "Execution_Archetype": "MEAN_REVERSION",
         "Category": "Liquidity Sweep",
-        "Zacks_Rank": "#3 (1d)",
+        "Zacks_Rank": "#3 (New)",
         "Earnings_Risk": "Reported (1d ago)",
         "Structural_Catalyst": "TECHNICAL MOMENTUM",
         "Execution_Protocol": "TOM INFLOW TAILWIND: Automated allocations active. Standard trailing stop.",
@@ -115,15 +115,15 @@
         "qqq_above_200": true,
         "tnx": 4.99,
         "tnx_5d_chg": 0.0,
-        "oil": 103.21,
-        "oil_5d_chg": 1.4,
+        "oil": 104.19,
+        "oil_5d_chg": 2.4,
         "pct_above_200": 58.8,
         "pct_below_200": 41.2,
         "momentum_count": 36,
         "sweep_count": 2,
         "warnings": [
             "\u26a1 YIELD SURGE: 10-Yr Yield at 4.99% (+0.0% 5d). Multiple drag active.",
-            "\ud83d\udee2\ufe0f OIL PRICE SPIKE: WTI Crude at $103.21/bbl (+1.4% 5d). Inflation expectations repricing."
+            "\ud83d\udee2\ufe0f OIL PRICE SPIKE: WTI Crude at $104.19/bbl (+2.4% 5d). Inflation expectations repricing."
         ],
         "calendar": [
             "IN 5 DAYS: FOMC RATE DECISION",
