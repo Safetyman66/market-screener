@@ -609,7 +609,8 @@ def update_and_evaluate_trailing_runners(todays_candidates):
             "max_gain_pct": round(gain_pct, 1),
             "r_multiple": round(gain_pct / risk_pct, 1),
         }
-    except Exception:
+    except Exception as e:
+      # SILENT SKIP: If a ticker was delisted or data is missing, skip it without crashing the pipeline
       continue
 
   if best_runner:
