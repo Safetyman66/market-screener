@@ -58,6 +58,26 @@ from reportlab.pdfgen import canvas
 import requests
 import yfinance as yf
 
+# --- ADD THIS NEW CLASS TO FIX THE JSON CRASH ---
+class NumpyJSONEncoder(json.JSONEncoder):
+    """Safely converts Pandas/NumPy data types into native Python JSON formats."""
+    def default(self, obj):
+        if isinstance(obj, (np.integer, np.int64, np.int32)):
+            return int(obj)
+        if isinstance(obj, (np.floating, np.float64, np.float32)):
+            return float(obj)
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        if pd.isna(obj):
+            return None
+        if isinstance(obj, (datetime.date, datetime.datetime, pd.Timestamp)):
+            return obj.isoformat()
+        try:
+            return super().default(obj)
+        except TypeError:
+            return str(obj)
+# ------------------------------------------------
+
 # ---------------------------------------------------------
 # GLOBAL CONSTANTS & SHARED HTTP SESSION
 # ---------------------------------------------------------
@@ -1012,7 +1032,7 @@ def run_master_screener():
   print(f"Slot 4 (Sweep / Secondary):    {_fmt(top_ls)}\n")
 
 
-  # ====================================================================================================================
+  # # ====================================================================================================================
   # JSON METADATA EXPORT (MUST HAPPEN BEFORE CHARTS ARE DRAWN)
   # ====================================================================================================================
   web_terminal_payload = {
@@ -1029,7 +1049,7 @@ def run_master_screener():
       },
   }
   with open(TERMINAL_FEED_FILENAME, "w", encoding="utf-8") as f:
-    json.dump(web_terminal_payload, f, indent=2)
+    json.dump(web_terminal_payload, f, indent=2, cls=NumpyJSONEncoder)  # <--- FIX APPLIED HERE
   print(f"[TERMINAL] Exported {TERMINAL_FEED_FILENAME}")
 
   slot_tickers = [c["Ticker"] for c in [top_br, top_htf, top_pp, top_ls] if c]
@@ -1055,7 +1075,7 @@ def run_master_screener():
       "macro_events": dashboard.get("calendar", [])
   }
   with open(POST_META_FILENAME, "w", encoding="utf-8") as f:
-    json.dump(broadcast_meta, f, indent=2)
+    json.dump(broadcast_meta, f, indent=2, cls=NumpyJSONEncoder)  # <--- FIX APPLIED HERE
   print(f"[METADATA] Saved {POST_META_FILENAME}")
 
 
