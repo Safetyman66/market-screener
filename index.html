@@ -407,8 +407,10 @@
           // Parse Structural Catalyst safely (Fixed for timestamps)
       let eventStr = "Monitoring Horizon...";
       let eventSub = "Forward Pipeline";
-      if (macro.calendar && macro.calendar.length > 0) {
-         let nextEvent = macro.calendar[0];
+      
+      // FIX: Changed "macro.calendar" to "m.calendar" 
+      if (m.calendar && m.calendar.length > 0) {
+         let nextEvent = m.calendar[0];
          let rawStr = typeof nextEvent === 'string' ? nextEvent : (Array.isArray(nextEvent) ? nextEvent[1] : "");
          
          // Strip out the trailing date like "(2026-10-30)" using regex
