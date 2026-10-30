@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-30 11:17 UTC",
+  "generated_at": "2026-10-30 11:29 UTC",
   "macro": {
     "regime_status": "AMBER: ROTATIONAL DIGESTION",
     "regime_code": "ROTATION",
@@ -16,7 +16,7 @@
     "qqq_above_200": true,
     "tnx": 4.99,
     "tnx_5d_chg": 0.0,
-    "oil": 104.19,
+    "oil": 104.22,
     "oil_5d_chg": 2.4,
     "pct_above_200": 58.8,
     "pct_below_200": 41.2,
@@ -24,7 +24,7 @@
     "sweep_count": 2,
     "warnings": [
       "\u26a1 YIELD SURGE: 10-Yr Yield at 4.99% (+0.0% 5d). Multiple drag active.",
-      "\ud83d\udee2\ufe0f OIL PRICE SPIKE: WTI Crude at $104.19/bbl (+2.4% 5d). Inflation expectations repricing."
+      "\ud83d\udee2\ufe0f OIL PRICE SPIKE: WTI Crude at $104.22/bbl (+2.4% 5d). Inflation expectations repricing."
     ],
     "calendar": [
       "IN 5 DAYS: FOMC RATE DECISION",
@@ -108,27 +108,6 @@
         "Category": "Base-Reset",
         "Zacks_Rank": "#2 (2d)",
         "Earnings_Risk": "SAFE (83d)",
-        "Structural_Catalyst": "ZACKS #2 BUY",
-        "Execution_Protocol": "TOM INFLOW TAILWIND: Automated allocations active. Standard trailing stop."
-      },
-      {
-        "Ticker": "MCHP",
-        "Close": 81.12,
-        "Headroom_%": 29.1,
-        "Above_200_%": 5.3,
-        "Hist_Now": -0.423,
-        "Vol_Ratio": "0.86x",
-        "Conviction_Score": 0.815,
-        "Pivot_Trigger": 81.22,
-        "Stop_Loss": 76.63,
-        "Risk_%": 5.65,
-        "R_Ratio": 5.16,
-        "ADV_20": 9937495,
-        "1Min_Vol_Hurdle": 34781,
-        "Execution_Archetype": "BREAKOUT",
-        "Category": "Base-Reset",
-        "Zacks_Rank": "#2 (New)",
-        "Earnings_Risk": "Unknown/TBD",
         "Structural_Catalyst": "ZACKS #2 BUY",
         "Execution_Protocol": "TOM INFLOW TAILWIND: Automated allocations active. Standard trailing stop."
       },
