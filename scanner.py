@@ -563,6 +563,7 @@ def update_and_evaluate_trailing_runners(todays_candidates):
         auto_adjust=True,
         threads=True,
         progress=False,
+        ignore_tz=True,             # <--- CRITICAL FIX: Strips timezones to prevent crash
         session=GLOBAL_HTTP_SESSION,
     )
   except Exception as e:
