@@ -19862,5 +19862,69 @@
     "pivot": 80.01,
     "stop": 76.14,
     "r_ratio": 3.27
+  },
+  {
+    "date": "2026-10-30",
+    "ticker": "BAH",
+    "category": "Base-Reset",
+    "pivot": 84.94,
+    "stop": 81.97,
+    "r_ratio": 7.61
+  },
+  {
+    "date": "2026-10-30",
+    "ticker": "HAS",
+    "category": "Base-Reset",
+    "pivot": 121.04,
+    "stop": 117.1,
+    "r_ratio": 3.74
+  },
+  {
+    "date": "2026-10-30",
+    "ticker": "ISRG",
+    "category": "Base-Reset",
+    "pivot": 458.88,
+    "stop": 437.51,
+    "r_ratio": 7.42
+  },
+  {
+    "date": "2026-10-30",
+    "ticker": "NUE",
+    "category": "Base-Reset",
+    "pivot": 275.9,
+    "stop": 262.51,
+    "r_ratio": 2.58
+  },
+  {
+    "date": "2026-10-30",
+    "ticker": "R",
+    "category": "Base-Reset",
+    "pivot": 287.0,
+    "stop": 274.75,
+    "r_ratio": 2.86
+  },
+  {
+    "date": "2026-10-30",
+    "ticker": "RTX",
+    "category": "Base-Reset",
+    "pivot": 202.0,
+    "stop": 193.12,
+    "r_ratio": 3.08
+  },
+  {
+    "date": "2026-10-30",
+    "ticker": "MUSA",
+    "category": "Pocket Pivot",
+    "pivot": 550.0,
+    "stop": 519.01,
+    "r_ratio": 3.14
+  },
+  {
+    "date": "2026-10-30",
+    "ticker": "DXCM",
+    "category": "Liquidity Sweep",
+    "pivot": 80.01,
+    "stop": 76.14,
+    "r_ratio": 3.27
   }
 ]
