@@ -14,6 +14,9 @@ Architecture:
     and a unified 'master_screener_results.csv' spreadsheet.
 """
 
+import warnings
+warnings.filterwarnings("ignore")
+
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import datetime
