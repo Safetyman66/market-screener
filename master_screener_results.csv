@@ -1,7 +1,7 @@
 Ticker,Category,Close,Pivot_Trigger,Stop_Loss,Risk_%,R_Ratio,Conviction_Score,Headroom_%,Above_200_%,Hist_Now,Vol_Ratio,ADV_20,1Min_Vol_Hurdle,Execution_Archetype,Zacks_Rank,Earnings_Risk,Structural_Catalyst,Execution_Protocol
 HAS,Base-Reset,119.09,121.04,117.14,3.22,3.82,3.251,1.6,30.4,2.867,1.33x,2617253,9160,BREAKOUT,#1 (4d),SAFE (>14d),ZACKS #1 STRONG BUY,TOM INFLOW TAILWIND: Automated allocations active. Standard trailing stop.
-R,Base-Reset,282.55,287.0,274.75,4.27,2.83,2.302,1.6,19.4,0.24,1.43x,369320,1292,BREAKOUT,#2 (11d),Unknown/TBD,ZACKS #2 BUY,TOM INFLOW TAILWIND: Automated allocations active. Standard trailing stop.
+R,Base-Reset,282.55,287.0,274.75,4.27,2.83,2.302,1.6,19.4,0.24,1.43x,369320,1292,BREAKOUT,#2 (11d),SAFE (>14d),ZACKS #2 BUY,TOM INFLOW TAILWIND: Automated allocations active. Standard trailing stop.
 GEHC,Base-Reset,76.57,78.22,74.64,4.58,3.76,1.908,17.2,10.1,1.019,1.5x,3889034,13611,BREAKOUT,#2 (1d),Reported (3d ago),ZACKS #2 BUY,TOM INFLOW TAILWIND: Automated allocations active. Standard trailing stop.
 URI,Base-Reset,1170.05,1202.12,1160.57,3.46,4.1,1.087,2.7,16.9,-1.068,0.97x,535705,1874,BREAKOUT,#1 (1d),SAFE (>14d),ZACKS #1 STRONG BUY,PEAK DIFFUSION: Fresh Rank 1 revision. Full swing leeway to 3.0R+ expansion.
 UNH,Base-Reset,406.97,420.86,404.31,3.93,3.42,0.704,13.4,9.7,-1.956,0.79x,6074896,21262,BREAKOUT,#2 (32d),SAFE (73d),ZACKS #2 BUY,TOM INFLOW TAILWIND: Automated allocations active. Standard trailing stop.
-RS,Base-Reset,436.91,442.94,424.7,4.12,2.67,0.67,1.4,17.3,0.04,1.14x,301950,1056,BREAKOUT,#1 (18d),SAFE (>14d),ZACKS #1 STRONG BUY,TOM INFLOW TAILWIND: Automated allocations active. Standard trailing stop.
+RS,Base-Reset,436.91,442.94,424.7,4.12,2.67,0.67,1.4,17.3,0.04,1.14x,301950,1056,BREAKOUT,#1 (18d),Unknown/TBD,ZACKS #1 STRONG BUY,TOM INFLOW TAILWIND: Automated allocations active. Standard trailing stop.

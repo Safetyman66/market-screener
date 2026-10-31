@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-31 18:23 UTC",
+  "generated_at": "2026-10-31 18:50 UTC",
   "macro": {
     "regime_status": "RED: STRUCTURAL CONTRACTION",
     "regime_code": "CONTRACTION",
@@ -107,7 +107,7 @@
         "Execution_Archetype": "BREAKOUT",
         "Category": "Base-Reset",
         "Zacks_Rank": "#2 (11d)",
-        "Earnings_Risk": "Unknown/TBD",
+        "Earnings_Risk": "SAFE (>14d)",
         "Structural_Catalyst": "ZACKS #2 BUY",
         "Execution_Protocol": "TOM INFLOW TAILWIND: Automated allocations active. Standard trailing stop."
       },
@@ -128,7 +128,7 @@
         "Execution_Archetype": "BREAKOUT",
         "Category": "Base-Reset",
         "Zacks_Rank": "#1 (18d)",
-        "Earnings_Risk": "SAFE (>14d)",
+        "Earnings_Risk": "Unknown/TBD",
         "Structural_Catalyst": "ZACKS #1 STRONG BUY",
         "Execution_Protocol": "TOM INFLOW TAILWIND: Automated allocations active. Standard trailing stop."
       },
