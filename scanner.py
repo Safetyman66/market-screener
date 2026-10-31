@@ -741,10 +741,10 @@ def run_master_screener():
         bars = ALPACA_CLIENT.get_stock_bars(req)
         
         if bars and not bars.df.empty:
-        df = bars.df.reset_index()
-        df = df.rename(columns={'timestamp': 'Date', 'symbol': 'Ticker', 'open': 'Open', 'high': 'High', 'low': 'Low', 'close': 'Close', 'volume': 'Volume'})
-        df['Date'] = pd.to_datetime(df['Date']).dt.tz_localize(None)
-        df = df.set_index('Date')
+            df = bars.df.reset_index()
+            df = df.rename(columns={'timestamp': 'Date', 'symbol': 'Ticker', 'open': 'Open', 'high': 'High', 'low': 'Low', 'close': 'Close', 'volume': 'Volume'})
+            df['Date'] = pd.to_datetime(df['Date']).dt.tz_localize(None)
+            df = df.set_index('Date')
             
             # Pivot columns to match yfinance group_by="ticker" output
             df_pivoted = df.pivot(columns='Ticker', values=['Open', 'High', 'Low', 'Close', 'Volume'])
