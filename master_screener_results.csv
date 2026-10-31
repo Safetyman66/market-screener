@@ -2,7 +2,6 @@ Ticker,Category,Close,Pivot_Trigger,Stop_Loss,Risk_%,R_Ratio,Conviction_Score,He
 HAS,Base-Reset,119.09,121.04,117.14,3.22,3.82,3.224,1.6,31.5,2.845,1.33x,2616460,9157,BREAKOUT,#1 (4d),SAFE (>14d),ZACKS #1 STRONG BUY,TOM INFLOW TAILWIND: Automated allocations active. Standard trailing stop.
 R,Base-Reset,282.55,287.0,274.75,4.27,2.83,2.288,1.6,19.8,0.243,1.43x,369190,1292,BREAKOUT,#2 (11d),SAFE (>14d),ZACKS #2 BUY,TOM INFLOW TAILWIND: Automated allocations active. Standard trailing stop.
 GEHC,Base-Reset,76.57,78.22,74.64,4.58,3.71,1.891,17.0,10.1,1.021,1.5x,3887590,13606,BREAKOUT,#2 (1d),Reported (3d ago),ZACKS #2 BUY,TOM INFLOW TAILWIND: Automated allocations active. Standard trailing stop.
-STE,Base-Reset,227.12,234.34,225.01,3.98,4.43,1.11,17.6,1.5,1.426,0.96x,715445,2504,BREAKOUT,#2 (4d),Unknown/TBD,ZACKS #2 BUY,TOM INFLOW TAILWIND: Automated allocations active. Standard trailing stop.
 URI,Base-Reset,1170.05,1202.12,1160.57,3.46,4.1,1.083,2.7,17.1,-1.137,0.97x,535020,1872,BREAKOUT,#1 (1d),SAFE (>14d),ZACKS #1 STRONG BUY,PEAK DIFFUSION: Fresh Rank 1 revision. Full swing leeway to 3.0R+ expansion.
 NUE,Base-Reset,273.87,275.9,263.44,4.52,2.83,0.828,2.0,21.0,-1.324,1.46x,1298955,4546,BREAKOUT,#1 (17d),SAFE (86d),ZACKS #1 STRONG BUY,TOM INFLOW TAILWIND: Automated allocations active. Standard trailing stop.
 RS,Base-Reset,436.91,442.94,424.7,4.12,2.67,0.663,1.4,17.7,-0.008,1.14x,301735,1056,BREAKOUT,#1 (18d),SAFE (>14d),ZACKS #1 STRONG BUY,TOM INFLOW TAILWIND: Automated allocations active. Standard trailing stop.

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-31 14:59 UTC",
+  "generated_at": "2026-10-31 15:04 UTC",
   "macro": {
     "regime_status": "RED: STRUCTURAL CONTRACTION",
     "regime_code": "CONTRACTION",
@@ -151,27 +151,6 @@
         "Zacks_Rank": "#1 (18d)",
         "Earnings_Risk": "SAFE (>14d)",
         "Structural_Catalyst": "ZACKS #1 STRONG BUY",
-        "Execution_Protocol": "TOM INFLOW TAILWIND: Automated allocations active. Standard trailing stop."
-      },
-      {
-        "Ticker": "STE",
-        "Close": 227.12,
-        "Headroom_%": 17.6,
-        "Above_200_%": 1.5,
-        "Hist_Now": 1.426,
-        "Vol_Ratio": "0.96x",
-        "Conviction_Score": 1.11,
-        "Pivot_Trigger": 234.34,
-        "Stop_Loss": 225.01,
-        "Risk_%": 3.98,
-        "R_Ratio": 4.43,
-        "ADV_20": 715445,
-        "1Min_Vol_Hurdle": 2504,
-        "Execution_Archetype": "BREAKOUT",
-        "Category": "Base-Reset",
-        "Zacks_Rank": "#2 (4d)",
-        "Earnings_Risk": "Unknown/TBD",
-        "Structural_Catalyst": "ZACKS #2 BUY",
         "Execution_Protocol": "TOM INFLOW TAILWIND: Automated allocations active. Standard trailing stop."
       },
       {

@@ -20182,5 +20182,61 @@
     "pivot": 420.86,
     "stop": 404.31,
     "r_ratio": 3.24
+  },
+  {
+    "date": "2026-10-31",
+    "ticker": "GEHC",
+    "category": "Base-Reset",
+    "pivot": 78.22,
+    "stop": 74.64,
+    "r_ratio": 3.71
+  },
+  {
+    "date": "2026-10-31",
+    "ticker": "HAS",
+    "category": "Base-Reset",
+    "pivot": 121.04,
+    "stop": 117.14,
+    "r_ratio": 3.82
+  },
+  {
+    "date": "2026-10-31",
+    "ticker": "NUE",
+    "category": "Base-Reset",
+    "pivot": 275.9,
+    "stop": 263.44,
+    "r_ratio": 2.83
+  },
+  {
+    "date": "2026-10-31",
+    "ticker": "R",
+    "category": "Base-Reset",
+    "pivot": 287.0,
+    "stop": 274.75,
+    "r_ratio": 2.83
+  },
+  {
+    "date": "2026-10-31",
+    "ticker": "RS",
+    "category": "Base-Reset",
+    "pivot": 442.94,
+    "stop": 424.7,
+    "r_ratio": 2.67
+  },
+  {
+    "date": "2026-10-31",
+    "ticker": "URI",
+    "category": "Base-Reset",
+    "pivot": 1202.12,
+    "stop": 1160.57,
+    "r_ratio": 4.1
+  },
+  {
+    "date": "2026-10-31",
+    "ticker": "UNH",
+    "category": "Base-Reset",
+    "pivot": 420.86,
+    "stop": 404.31,
+    "r_ratio": 3.24
   }
 ]
