@@ -58,6 +58,17 @@ from reportlab.pdfgen import canvas
 import requests
 import yfinance as yf
 
+from alpaca.data.historical import StockHistoricalDataClient
+from alpaca.data.requests import StockBarsRequest
+from alpaca.data.timeframe import TimeFrame
+from alpaca.data.enums import DataFeed
+
+try:
+    ALPACA_CLIENT = StockHistoricalDataClient(os.environ["ALPACA_API_KEY"], os.environ["ALPACA_SECRET_KEY"])
+except KeyError:
+    print("[!] ERROR: Alpaca API keys not found in environment variables. Pipeline will fail.")
+    ALPACA_CLIENT = None
+
 # --- ADD THIS NEW CLASS TO FIX THE JSON CRASH ---
 class NumpyJSONEncoder(json.JSONEncoder):
     """Safely converts Pandas/NumPy data types into native Python JSON formats."""
@@ -575,17 +586,27 @@ def update_and_evaluate_trailing_runners(todays_candidates):
   )
 
   try:
-    data = yf.download(
-        check_tickers,
-        period="1mo",
-        interval="1d",
-        group_by="ticker",
-        auto_adjust=True,
-        threads=True,
-        progress=False,
-        ignore_tz=True,             # <--- CRITICAL FIX: Strips timezones to prevent crash
-        session=GLOBAL_HTTP_SESSION,
+    req = StockBarsRequest(
+        symbol_or_symbols=check_tickers,
+        timeframe=TimeFrame.Day,
+        start=pd.Timestamp.now() - pd.DateOffset(months=1),
+        end=pd.Timestamp.now(),
+        feed=DataFeed.SIP # Forces consolidated 15-min delayed volume
     )
+    bars = ALPACA_CLIENT.get_stock_bars(req)
+    
+    if bars and not bars.df.empty:
+        df = bars.df.reset_index()
+        # Transform Alpaca's lowercase output into yfinance's Title Case structure
+        df.rename(columns={'timestamp': 'Date', 'symbol': 'Ticker', 'open': 'Open', 'high': 'High', 'low': 'Low', 'close': 'Close', 'volume': 'Volume'}, inplace=True)
+        df['Date'] = pd.to_datetime(df['Date']).dt.tz_localize(None)
+        df.set_index('Date', inplace=True)
+        
+        # Pivot columns to match yfinance group_by="ticker" output
+        data = df.pivot(columns='Ticker', values=['Open', 'High', 'Low', 'Close', 'Volume'])
+        data = data.swaplevel(0, 1, axis=1).sort_index(axis=1)
+    else:
+        return None
   except Exception as e:
     print(f"[RUNNERS] Download error evaluating runners: {e}")
     return None
@@ -708,42 +729,31 @@ def run_master_screener():
     cache_file = os.path.join(cache_dir, f"chunk_{chunk_idx}.pkl")
     
     batch_data = None
-
     for attempt in range(3):
       try:
-        if os.path.exists(cache_file):
-          # FAST FETCH: Load 15-month history from disk, fetch ONLY the live 5-day tape
-          cached_df = pd.read_pickle(cache_file)
-          tail_data = yf.download(
-              tickers=chunk, period="5d", interval="1d", group_by="ticker",
-              auto_adjust=True, threads=False, session=GLOBAL_HTTP_SESSION, progress=False, ignore_tz=True
-          )
-          
-          if not tail_data.empty:
-              # Drop overlapping days and stitch the live tape to the historical base
-              cached_df = cached_df.loc[~cached_df.index.isin(tail_data.index)]
-              batch_data = pd.concat([cached_df, tail_data]).sort_index()
-              
-              # Memory Guard: Prune data older than 15 months so the cache stays light
-              cutoff = pd.Timestamp.now().normalize() - pd.DateOffset(months=15)
-              batch_data = batch_data[batch_data.index >= cutoff]
-          else:
-              batch_data = cached_df
-              
-        else:
-          # BASELINE FETCH (First Run Only): Download the full 15-month history
-          batch_data = yf.download(
-              tickers=chunk, period="15mo", interval="1d", group_by="ticker",
-              auto_adjust=True, threads=False, session=GLOBAL_HTTP_SESSION, progress=False, ignore_tz=True
-          )
+        req = StockBarsRequest(
+            symbol_or_symbols=chunk,
+            timeframe=TimeFrame.Day,
+            start=pd.Timestamp.now() - pd.DateOffset(months=15),
+            end=pd.Timestamp.now(),
+            feed=DataFeed.SIP
+        )
+        bars = ALPACA_CLIENT.get_stock_bars(req)
         
-        # Save the stitched dataset back to the local database for the next run
-        if batch_data is not None and not batch_data.empty:
-          batch_data.to_pickle(cache_file)
-          break
-          
-      except Exception:
-        pass
+        if bars and not bars.df.empty:
+            df = bars.df.reset_index()
+            df.rename(columns={'timestamp': 'Date', 'symbol': 'Ticker', 'open': 'Open', 'high': 'High', 'low': 'Low', 'close': 'Close', 'volume': 'Volume'}, inplace=True)
+            df['Date'] = pd.to_datetime(df['Date']).dt.tz_localize(None)
+            df.set_index('Date', inplace=True)
+            
+            # Pivot columns to match yfinance group_by="ticker" output
+            df_pivoted = df.pivot(columns='Ticker', values=['Open', 'High', 'Low', 'Close', 'Volume'])
+            df_pivoted = df_pivoted.swaplevel(0, 1, axis=1).sort_index(axis=1)
+            
+            batch_data = df_pivoted
+            break
+      except Exception as e:
+        print(f"Alpaca fetch failed: {e}")
       time.sleep(1.0)
 
     if batch_data is None or batch_data.empty:

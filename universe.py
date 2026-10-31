@@ -10,9 +10,20 @@ import os
 import time
 import pandas as pd
 import requests
-import yfinance as yf
+
+from alpaca.data.historical import StockHistoricalDataClient
+from alpaca.data.requests import StockBarsRequest
+from alpaca.data.timeframe import TimeFrame
+from alpaca.data.enums import DataFeed
 
 SECTOR_CACHE_FILE = "sector_cache.json"
+
+# Initialize Alpaca Client for Stage 1 Liquidity Prune
+try:
+    ALPACA_CLIENT = StockHistoricalDataClient(os.environ["ALPACA_API_KEY"], os.environ["ALPACA_SECRET_KEY"])
+except KeyError:
+    print("[!] ERROR: Alpaca API keys not found in environment variables. Pipeline will fail.")
+    ALPACA_CLIENT = None
 
 
 BANNED_HEALTHCARE_KEYWORDS = {
@@ -176,49 +187,66 @@ def stage_0_prune_by_sector(universe, sector_map):
 
 
 def stage_1_prune_by_liquidity(tickers_pool, chunk_size=100):
+  """Filters universe using a single rapid bulk fetch of delayed SIP consolidated volume."""
+  print(f"Stage 1: Bulk Scanning {len(tickers_pool)} candidates for liquidity...")
   qualified = []
-  total = len(tickers_pool)
-  for i in range(0, total, chunk_size):
-    chunk = tickers_pool[i : i + chunk_size]
-    print(
-        f"Stage 1: Scanning {i + 1}-{min(i + chunk_size, total)} of {total}...",
-        end="",
-        flush=True,
+  
+  if not ALPACA_CLIENT:
+      print("Alpaca client not initialized. Falling back to universal pass.")
+      return tickers_pool
+
+  try:
+    req = StockBarsRequest(
+        symbol_or_symbols=tickers_pool,
+        timeframe=TimeFrame.Day,
+        start=pd.Timestamp.now() - pd.DateOffset(days=10),
+        end=pd.Timestamp.now(),
+        feed=DataFeed.SIP
     )
-    batch_passed = 0
-    try:
-      data = yf.download(
-          chunk,
-          period="5d",
-          interval="1d",
-          group_by="ticker",
-          threads=True,
-          progress=False,
-      )
-    except Exception:
-      qualified.extend(chunk)
-      print(f" (fallback {len(chunk)})")
-      continue
+    bars = ALPACA_CLIENT.get_stock_bars(req)
+    
+    if bars and not bars.df.empty:
+        df = bars.df.reset_index()
+        # Transform Alpaca structure to standard OHLCV
+        df.rename(columns={'timestamp': 'Date', 'symbol': 'Ticker', 'open': 'Open', 'high': 'High', 'low': 'Low', 'close': 'Close', 'volume': 'Volume'}, inplace=True)
+        df['Date'] = pd.to_datetime(df['Date']).dt.tz_localize(None)
+        df.set_index('Date', inplace=True)
+        
+        # Pivot the dataframe so columns are [Open, High, Low, Close, Volume] grouped by Ticker
+        data = df.pivot(columns='Ticker', values=['Open', 'High', 'Low', 'Close', 'Volume'])
+        data = data.swaplevel(0, 1, axis=1).sort_index(axis=1)
+        
+        for sym in tickers_pool:
+          try:
+            if isinstance(data.columns, pd.MultiIndex):
+                if sym not in data.columns.levels[0]:
+                    continue
+                df_sym = data[sym].dropna()
+            else:
+                df_sym = data.dropna()
+                
+            if len(df_sym) >= 3:
+              c0 = float(df_sym["Close"].iloc[-1])
+              v5 = df_sym["Volume"].tail(5).mean()
+              dollar_vol_5d = c0 * v5
+              if c0 >= 10.0 and dollar_vol_5d >= 12_000_000:
+                qualified.append(sym)
+            else:
+              qualified.append(sym) # Fallback if history is too short
+          except Exception:
+            qualified.append(sym) # Fallback on error
+            
+    else:
+        print("Warning: Bulk fetch returned empty dataframe. Passing all symbols.")
+        return tickers_pool
+        
+  except Exception as e:
+    print(f" (fallback triggered due to API error: {e})")
+    return tickers_pool
 
-    for sym in chunk:
-      try:
-        df = data[sym].dropna() if len(chunk) > 1 else data.dropna()
-        if len(df) >= 3:
-          c0 = float(df["Close"].iloc[-1])
-          v5 = df["Volume"].tail(5).mean()
-          dollar_vol_5d = c0 * v5
-          if c0 >= 10.0 and dollar_vol_5d >= 12_000_000:
-            qualified.append(sym)
-            batch_passed += 1
-        else:
-          qualified.append(sym)
-      except Exception:
-        qualified.append(sym)
-
-    print(f" done ({batch_passed} liquid)")
-    time.sleep(0.5)
-
+  print(f" done ({len(qualified)} liquid out of {len(tickers_pool)})")
   return sorted(list(set(qualified)))
+
 
 def is_binary_healthcare(industry_str):
     if not industry_str:
