@@ -1141,7 +1141,7 @@ def run_master_screener():
           top_pp=top_pp,
           top_ls=top_ls,
           dashboard=dashboard,
-          macro_events=dashboard.get("calendar", [])
+          macro_events=[]
       )
       pdf_engine.export_carousel_cards_for_web(CAROUSEL_PDF_FILENAME)
   except Exception as e:
