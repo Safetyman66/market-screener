@@ -590,7 +590,7 @@ def update_and_evaluate_trailing_runners(todays_candidates):
         symbol_or_symbols=check_tickers,
         timeframe=TimeFrame.Day,
         start=pd.Timestamp.now() - pd.DateOffset(months=1),
-        end=pd.Timestamp.now(),
+        end=pd.Timestamp.now() - pd.Timedelta(minutes=16),
         feed=DataFeed.SIP # Forces consolidated 15-min delayed volume
     )
     bars = ALPACA_CLIENT.get_stock_bars(req)
@@ -598,9 +598,9 @@ def update_and_evaluate_trailing_runners(todays_candidates):
     if bars and not bars.df.empty:
         df = bars.df.reset_index()
         # Transform Alpaca's lowercase output into yfinance's Title Case structure
-        df.rename(columns={'timestamp': 'Date', 'symbol': 'Ticker', 'open': 'Open', 'high': 'High', 'low': 'Low', 'close': 'Close', 'volume': 'Volume'}, inplace=True)
+        df = df.rename(columns={'timestamp': 'Date', 'symbol': 'Ticker', 'open': 'Open', 'high': 'High', 'low': 'Low', 'close': 'Close', 'volume': 'Volume'})
         df['Date'] = pd.to_datetime(df['Date']).dt.tz_localize(None)
-        df.set_index('Date', inplace=True)
+        df = df.set_index('Date')
         
         # Pivot columns to match yfinance group_by="ticker" output
         data = df.pivot(columns='Ticker', values=['Open', 'High', 'Low', 'Close', 'Volume'])
@@ -735,16 +735,16 @@ def run_master_screener():
             symbol_or_symbols=chunk,
             timeframe=TimeFrame.Day,
             start=pd.Timestamp.now() - pd.DateOffset(months=15),
-            end=pd.Timestamp.now(),
+            end=pd.Timestamp.now() - pd.Timedelta(minutes=16),
             feed=DataFeed.SIP
         )
         bars = ALPACA_CLIENT.get_stock_bars(req)
         
         if bars and not bars.df.empty:
-            df = bars.df.reset_index()
-            df.rename(columns={'timestamp': 'Date', 'symbol': 'Ticker', 'open': 'Open', 'high': 'High', 'low': 'Low', 'close': 'Close', 'volume': 'Volume'}, inplace=True)
-            df['Date'] = pd.to_datetime(df['Date']).dt.tz_localize(None)
-            df.set_index('Date', inplace=True)
+        df = bars.df.reset_index()
+        df = df.rename(columns={'timestamp': 'Date', 'symbol': 'Ticker', 'open': 'Open', 'high': 'High', 'low': 'Low', 'close': 'Close', 'volume': 'Volume'})
+        df['Date'] = pd.to_datetime(df['Date']).dt.tz_localize(None)
+        df = df.set_index('Date')
             
             # Pivot columns to match yfinance group_by="ticker" output
             df_pivoted = df.pivot(columns='Ticker', values=['Open', 'High', 'Low', 'Close', 'Volume'])
@@ -982,7 +982,7 @@ def run_master_screener():
       export_cols = front_cols + [c for c in master_df.columns if c not in front_cols]
       master_df = master_df[[c for c in export_cols if c in master_df.columns]]
       
-      master_df.sort_values(by=["Category", "Conviction_Score"], ascending=[True, False], inplace=True)
+      master_df = master_df.sort_values(by=["Category", "Conviction_Score"], ascending=[True, False])
       
       master_df.to_csv("master_screener_results.csv", index=False)
       print(f"[SPREADSHEET] Exported {len(master_df)} consolidated setups to master_screener_results.csv")
@@ -1134,7 +1134,6 @@ def run_master_screener():
           regime_status=dashboard.get("regime_status", "AMBER: ROTATIONAL ACCUMULATION"),
           posture_box=dashboard.get("posture_box", "SELECTIVE"),
           max_exposure=dashboard.get("max_exposure", "N/A"),
-          calendar_alerts=dashboard.get("calendar", []),
           pct_above_200=dashboard.get("pct_above_200", 0.0),
           top_runner=top_runner,
           top_br=top_br,

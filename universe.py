@@ -200,7 +200,7 @@ def stage_1_prune_by_liquidity(tickers_pool, chunk_size=100):
         symbol_or_symbols=tickers_pool,
         timeframe=TimeFrame.Day,
         start=pd.Timestamp.now() - pd.DateOffset(days=10),
-        end=pd.Timestamp.now(),
+        end=pd.Timestamp.now() - pd.Timedelta(minutes=16),
         feed=DataFeed.SIP
     )
     bars = ALPACA_CLIENT.get_stock_bars(req)
@@ -208,9 +208,9 @@ def stage_1_prune_by_liquidity(tickers_pool, chunk_size=100):
     if bars and not bars.df.empty:
         df = bars.df.reset_index()
         # Transform Alpaca structure to standard OHLCV
-        df.rename(columns={'timestamp': 'Date', 'symbol': 'Ticker', 'open': 'Open', 'high': 'High', 'low': 'Low', 'close': 'Close', 'volume': 'Volume'}, inplace=True)
+        df = df.rename(columns={'timestamp': 'Date', 'symbol': 'Ticker', 'open': 'Open', 'high': 'High', 'low': 'Low', 'close': 'Close', 'volume': 'Volume'})
         df['Date'] = pd.to_datetime(df['Date']).dt.tz_localize(None)
-        df.set_index('Date', inplace=True)
+        df = df.set_index('Date')
         
         # Pivot the dataframe so columns are [Open, High, Low, Close, Volume] grouped by Ticker
         data = df.pivot(columns='Ticker', values=['Open', 'High', 'Low', 'Close', 'Volume'])
