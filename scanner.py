@@ -15,6 +15,7 @@ Architecture:
 """
 
 import warnings
+warnings.warn = lambda *args, **kwargs: None
 warnings.filterwarnings("ignore")
 
 from collections import Counter
