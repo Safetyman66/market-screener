@@ -31,7 +31,7 @@ jobs:
           ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
           ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
         run: |
-          python scanner.py
+          python -W ignore scanner.py
 
       - name: Commit and push updated artifacts and metadata
         run: |
