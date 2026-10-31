@@ -11,7 +11,7 @@ import time
 import pandas as pd
 import requests
 import warnings
-warnings.simplefilter(action='ignore', category=FutureWarning)
+warnings.filterwarnings("ignore")
 
 from alpaca.data.historical import StockHistoricalDataClient
 from alpaca.data.requests import StockBarsRequest

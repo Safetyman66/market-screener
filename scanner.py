@@ -27,7 +27,7 @@ import time
 import numpy as np
 import pandas as pd
 import warnings
-warnings.simplefilter(action='ignore', category=FutureWarning)
+warnings.filterwarnings("ignore")
 
 from pdf_engine import create_linkedin_carousel_pdf, export_carousel_cards_for_web, CAROUSEL_PDF_FILENAME  # PyMuPDF
 from setups import (
@@ -682,6 +682,7 @@ def run_master_screener():
       f"[*] Stage 1 Complete: {len(stage1_survivors)} liquid institutional"
       " candidates qualified for deep scan."
   )
+  stage1_survivors = [sym for sym in stage1_survivors if "-" not in sym and "." not in sym]
   print(
       "[*] Stage 2: Ingesting 15-month historical data (period='15mo') only for"
       " survivors...\n"
