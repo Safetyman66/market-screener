@@ -703,22 +703,45 @@ def run_master_screener():
         flush=True,
     )
 
+    cache_dir = "market_cache"
+    os.makedirs(cache_dir, exist_ok=True)
+    cache_file = os.path.join(cache_dir, f"chunk_{chunk_idx}.pkl")
+    
     batch_data = None
+
     for attempt in range(3):
       try:
-        batch_data = yf.download(
-            tickers=chunk,
-            period="15mo",
-            interval="1d",
-            group_by="ticker",
-            auto_adjust=True,
-            threads=False,
-            session=GLOBAL_HTTP_SESSION,
-            progress=False,
-            ignore_tz=True,
-        )
+        if os.path.exists(cache_file):
+          # FAST FETCH: Load 15-month history from disk, fetch ONLY the live 5-day tape
+          cached_df = pd.read_pickle(cache_file)
+          tail_data = yf.download(
+              tickers=chunk, period="5d", interval="1d", group_by="ticker",
+              auto_adjust=True, threads=False, session=GLOBAL_HTTP_SESSION, progress=False, ignore_tz=True
+          )
+          
+          if not tail_data.empty:
+              # Drop overlapping days and stitch the live tape to the historical base
+              cached_df = cached_df.loc[~cached_df.index.isin(tail_data.index)]
+              batch_data = pd.concat([cached_df, tail_data]).sort_index()
+              
+              # Memory Guard: Prune data older than 15 months so the cache stays light
+              cutoff = pd.Timestamp.now().normalize() - pd.DateOffset(months=15)
+              batch_data = batch_data[batch_data.index >= cutoff]
+          else:
+              batch_data = cached_df
+              
+        else:
+          # BASELINE FETCH (First Run Only): Download the full 15-month history
+          batch_data = yf.download(
+              tickers=chunk, period="15mo", interval="1d", group_by="ticker",
+              auto_adjust=True, threads=False, session=GLOBAL_HTTP_SESSION, progress=False, ignore_tz=True
+          )
+        
+        # Save the stitched dataset back to the local database for the next run
         if batch_data is not None and not batch_data.empty:
+          batch_data.to_pickle(cache_file)
           break
+          
       except Exception:
         pass
       time.sleep(1.0)

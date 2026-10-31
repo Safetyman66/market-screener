@@ -26,6 +26,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Restore Market Data Cache
+        uses: actions/cache@v3
+        with:
+          path: market_cache
+          key: market-data-${{ github.run_id }}
+          restore-keys: |
+            market-data-
+            
       - name: Run Master Screener
         run: |
           python scanner.py
