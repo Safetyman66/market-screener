@@ -1,94 +1,67 @@
 {
     "pdf_path": "daily_market_intelligence.pdf",
-    "date": "2026-10-30",
+    "date": "2026-10-31",
     "regime_code": "CONTRACTION",
     "regime_status": "RED: STRUCTURAL CONTRACTION",
     "posture_box": "[!] DEFENSIVE POSTURE: CASH PRESERVATION / RISK-OFF",
     "max_exposure": "0% - 20%",
-    "pct_above_200": 57.1,
-    "primary_ticker": "CLH",
-    "slot_tickers": [
-        "CLH"
-    ],
-    "focus_tickers": [
-        "CLH"
-    ],
+    "pct_above_200": 56.6,
+    "primary_ticker": null,
+    "slot_tickers": [],
+    "focus_tickers": [],
     "top_runner": {
         "ticker": "CROX",
         "category": "Base-Reset",
         "rec_date": "2026-10-27",
         "entry_pivot": 122.41,
         "stop_loss": 117.0,
-        "peak_high": 153.49,
-        "latest_close": 152.73,
-        "max_gain_pct": 25.4,
-        "r_multiple": 5.7
+        "peak_high": 154.05,
+        "latest_close": 150.52,
+        "max_gain_pct": 25.8,
+        "r_multiple": 5.8
     },
     "top_br": null,
     "top_htf": null,
     "top_pp": null,
-    "top_ls": {
-        "Ticker": "CLH",
-        "Close": 310.12,
-        "Shelf_Level": 306.53,
-        "Flush_Low": 303.02,
-        "Sweep_Depth_%": 1.15,
-        "Headroom_%": 8.3,
-        "Vol_Ratio": "2.66x",
-        "Conviction_Score": 2.92,
-        "Pivot_Trigger": 310.33,
-        "Stop_Loss": 301.5,
-        "Risk_%": 2.85,
-        "R_Ratio": 2.92,
-        "ADV_20": 449384,
-        "1Min_Vol_Hurdle": 1572,
-        "Execution_Archetype": "MEAN_REVERSION",
-        "Category": "Liquidity Sweep",
-        "Zacks_Rank": "#2 (8d)",
-        "Earnings_Risk": "Reported (2d ago)",
-        "Structural_Catalyst": "ZACKS #2 BUY",
-        "Execution_Protocol": "TOM INFLOW TAILWIND: Automated allocations active. Standard trailing stop.",
-        "Tactical_Target": 336.82,
-        "Tactical_R_Ratio": 3.0
-    },
+    "top_ls": null,
     "dashboard": {
         "regime_status": "RED: STRUCTURAL CONTRACTION",
         "regime_code": "CONTRACTION",
         "posture_box": "[!] DEFENSIVE POSTURE: CASH PRESERVATION / RISK-OFF",
         "max_exposure": "0% - 20%",
         "action_plan": "CAPITAL PRESERVATION POSTURE. Benchmarks trapped below 50 SMA / breadth compressed. Breakout failure rates peak here. Stand aside or trade small-sized liquidity sweeps only.",
-        "spy_c": 760.37,
+        "spy_c": 755.72,
         "spy_above_21": false,
         "spy_above_50": false,
         "spy_above_200": true,
-        "qqq_c": 696.22,
+        "qqq_c": 690.49,
         "qqq_above_21": false,
         "qqq_above_50": false,
-        "qqq_above_200": true,
+        "qqq_above_200": false,
         "tnx": 4.93,
         "tnx_5d_chg": -1.1,
-        "oil": 103.74,
-        "oil_5d_chg": 1.9,
-        "pct_above_200": 57.1,
-        "pct_below_200": 42.9,
-        "momentum_count": 43,
-        "sweep_count": 1,
+        "oil": 104.12,
+        "oil_5d_chg": 2.3,
+        "pct_above_200": 56.6,
+        "pct_below_200": 43.4,
+        "momentum_count": 34,
+        "sweep_count": 0,
         "warnings": [
             "\u26a1 YIELD SURGE: 10-Yr Yield at 4.93% (-1.1% 5d). Multiple drag active.",
-            "\ud83d\udee2\ufe0f OIL PRICE SPIKE: WTI Crude at $103.74/bbl (+1.9% 5d). Inflation expectations repricing."
+            "\ud83d\udee2\ufe0f OIL PRICE SPIKE: WTI Crude at $104.12/bbl (+2.3% 5d). Inflation expectations repricing."
         ],
         "calendar": [
-            "IN 5 DAYS: FOMC RATE DECISION",
-            "IN 7 DAYS: JOBS REPORT / NFP",
-            "IN 12 DAYS: CPI INFLATION PRINT"
+            "IN 4 DAYS: FOMC RATE DECISION",
+            "IN 6 DAYS: JOBS REPORT / NFP",
+            "IN 11 DAYS: CPI INFLATION PRINT"
         ],
         "seasonality": "OCTOBER VOLATILITY: Elevated volatility forms major swing bottoms.",
-        "days_to_opx": 21,
+        "days_to_opx": 20,
         "opx_label": "Monthly OPEX"
     },
     "macro_events": [
-        "IN 5 DAYS: FOMC RATE DECISION",
-        "IN 7 DAYS: JOBS REPORT / NFP",
-        "IN 12 DAYS: CPI INFLATION PRINT"
+        "IN 4 DAYS: FOMC RATE DECISION",
+        "IN 6 DAYS: JOBS REPORT / NFP",
+        "IN 11 DAYS: CPI INFLATION PRINT"
     ]
 }
