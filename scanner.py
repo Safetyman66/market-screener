@@ -26,6 +26,8 @@ import time
 
 import numpy as np
 import pandas as pd
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 
 from pdf_engine import create_linkedin_carousel_pdf, export_carousel_cards_for_web, CAROUSEL_PDF_FILENAME  # PyMuPDF
 from setups import (
