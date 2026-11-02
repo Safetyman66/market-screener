@@ -1,11 +1,11 @@
 {
     "pdf_path": "daily_market_intelligence.pdf",
-    "date": "2026-10-31",
+    "date": "2026-11-02",
     "regime_code": "CONTRACTION",
     "regime_status": "RED: STRUCTURAL CONTRACTION",
     "posture_box": "[!] DEFENSIVE POSTURE: CASH PRESERVATION / RISK-OFF",
     "max_exposure": "0% - 20%",
-    "pct_above_200": 53.6,
+    "pct_above_200": 53.4,
     "primary_ticker": null,
     "slot_tickers": [],
     "focus_tickers": [],
@@ -40,28 +40,30 @@
         "qqq_above_200": false,
         "tnx": 4.93,
         "tnx_5d_chg": -1.1,
-        "oil": 104.12,
-        "oil_5d_chg": 2.3,
-        "pct_above_200": 53.6,
-        "pct_below_200": 46.4,
-        "momentum_count": 35,
+        "oil": 99.73,
+        "oil_5d_chg": -0.2,
+        "pct_above_200": 53.4,
+        "pct_below_200": 46.6,
+        "momentum_count": 50,
         "sweep_count": 0,
         "warnings": [
             "\u26a1 YIELD SURGE: 10-Yr Yield at 4.93% (-1.1% 5d). Multiple drag active.",
-            "\ud83d\udee2\ufe0f OIL PRICE SPIKE: WTI Crude at $104.12/bbl (+2.3% 5d). Inflation expectations repricing."
+            "\ud83d\udee2\ufe0f OIL PRICE SPIKE: WTI Crude at $99.73/bbl (-0.2% 5d). Inflation expectations repricing."
         ],
         "calendar": [
-            "IN 4 DAYS: FOMC RATE DECISION",
-            "IN 6 DAYS: JOBS REPORT / NFP",
-            "IN 11 DAYS: CPI INFLATION PRINT"
+            "IN 2 DAY(S): FOMC RATE DECISION",
+            "IN 4 DAYS: JOBS REPORT / NFP",
+            "IN 9 DAYS: CPI INFLATION PRINT",
+            "IN 10 DAYS: PPI WHOLESALE INFLATION"
         ],
-        "seasonality": "OCTOBER VOLATILITY: Elevated volatility forms major swing bottoms.",
-        "days_to_opx": 20,
+        "seasonality": "NOVEMBER CHASE: Benchmark underperformance forces institutional buying.",
+        "days_to_opx": 18,
         "opx_label": "Monthly OPEX"
     },
     "macro_events": [
-        "IN 4 DAYS: FOMC RATE DECISION",
-        "IN 6 DAYS: JOBS REPORT / NFP",
-        "IN 11 DAYS: CPI INFLATION PRINT"
+        "IN 2 DAY(S): FOMC RATE DECISION",
+        "IN 4 DAYS: JOBS REPORT / NFP",
+        "IN 9 DAYS: CPI INFLATION PRINT",
+        "IN 10 DAYS: PPI WHOLESALE INFLATION"
     ]
 }
