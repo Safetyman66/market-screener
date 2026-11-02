@@ -38,17 +38,17 @@
         "qqq_above_21": false,
         "qqq_above_50": false,
         "qqq_above_200": false,
-        "tnx": 4.93,
-        "tnx_5d_chg": -1.1,
-        "oil": 99.73,
-        "oil_5d_chg": -0.2,
+        "tnx": 4.91,
+        "tnx_5d_chg": -1.7,
+        "oil": 97.38,
+        "oil_5d_chg": -2.5,
         "pct_above_200": 53.4,
         "pct_below_200": 46.6,
         "momentum_count": 50,
         "sweep_count": 0,
         "warnings": [
-            "\u26a1 YIELD SURGE: 10-Yr Yield at 4.93% (-1.1% 5d). Multiple drag active.",
-            "\ud83d\udee2\ufe0f OIL PRICE SPIKE: WTI Crude at $99.73/bbl (-0.2% 5d). Inflation expectations repricing."
+            "\u26a1 YIELD SURGE: 10-Yr Yield at 4.91% (-1.7% 5d). Multiple drag active.",
+            "\ud83d\udee2\ufe0f OIL PRICE SPIKE: WTI Crude at $97.38/bbl (-2.5% 5d). Inflation expectations repricing."
         ],
         "calendar": [
             "IN 2 DAY(S): FOMC RATE DECISION",

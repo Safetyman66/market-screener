@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-02 09:26 UTC",
+  "generated_at": "2026-11-02 14:27 UTC",
   "macro": {
     "regime_status": "RED: STRUCTURAL CONTRACTION",
     "regime_code": "CONTRACTION",
@@ -14,17 +14,17 @@
     "qqq_above_21": false,
     "qqq_above_50": false,
     "qqq_above_200": false,
-    "tnx": 4.93,
-    "tnx_5d_chg": -1.1,
-    "oil": 99.73,
-    "oil_5d_chg": -0.2,
+    "tnx": 4.91,
+    "tnx_5d_chg": -1.7,
+    "oil": 97.38,
+    "oil_5d_chg": -2.5,
     "pct_above_200": 53.4,
     "pct_below_200": 46.6,
     "momentum_count": 50,
     "sweep_count": 0,
     "warnings": [
-      "\u26a1 YIELD SURGE: 10-Yr Yield at 4.93% (-1.1% 5d). Multiple drag active.",
-      "\ud83d\udee2\ufe0f OIL PRICE SPIKE: WTI Crude at $99.73/bbl (-0.2% 5d). Inflation expectations repricing."
+      "\u26a1 YIELD SURGE: 10-Yr Yield at 4.91% (-1.7% 5d). Multiple drag active.",
+      "\ud83d\udee2\ufe0f OIL PRICE SPIKE: WTI Crude at $97.38/bbl (-2.5% 5d). Inflation expectations repricing."
     ],
     "calendar": [
       "IN 2 DAY(S): FOMC RATE DECISION",
@@ -176,27 +176,6 @@
         "Execution_Protocol": "TOM INFLOW TAILWIND: Automated allocations active. Standard trailing stop."
       },
       {
-        "Ticker": "URI",
-        "Close": 1170.05,
-        "Headroom_%": 2.7,
-        "Above_200_%": 16.9,
-        "Hist_Now": -8.306,
-        "Vol_Ratio": "7.41x",
-        "Conviction_Score": 3.022,
-        "Pivot_Trigger": 1202.12,
-        "Stop_Loss": 1160.57,
-        "Risk_%": 3.46,
-        "R_Ratio": 4.1,
-        "ADV_20": 535705,
-        "1Min_Vol_Hurdle": 1874,
-        "Execution_Archetype": "BREAKOUT",
-        "Category": "Base-Reset",
-        "Zacks_Rank": "#1 (3d)",
-        "Earnings_Risk": "SAFE (86d)",
-        "Structural_Catalyst": "ZACKS #1 STRONG BUY",
-        "Execution_Protocol": "PEAK DIFFUSION: Fresh Rank 1 revision. Full swing leeway to 3.0R+ expansion."
-      },
-      {
         "Ticker": "UNH",
         "Close": 406.97,
         "Headroom_%": 13.4,
@@ -216,6 +195,27 @@
         "Earnings_Risk": "SAFE (71d)",
         "Structural_Catalyst": "ZACKS #2 BUY",
         "Execution_Protocol": "TOM INFLOW TAILWIND: Automated allocations active. Standard trailing stop."
+      },
+      {
+        "Ticker": "URI",
+        "Close": 1170.05,
+        "Headroom_%": 2.7,
+        "Above_200_%": 16.9,
+        "Hist_Now": -8.306,
+        "Vol_Ratio": "7.41x",
+        "Conviction_Score": 3.022,
+        "Pivot_Trigger": 1202.12,
+        "Stop_Loss": 1160.57,
+        "Risk_%": 3.46,
+        "R_Ratio": 4.1,
+        "ADV_20": 535705,
+        "1Min_Vol_Hurdle": 1874,
+        "Execution_Archetype": "BREAKOUT",
+        "Category": "Base-Reset",
+        "Zacks_Rank": "#1 (3d)",
+        "Earnings_Risk": "SAFE (86d)",
+        "Structural_Catalyst": "ZACKS #1 STRONG BUY",
+        "Execution_Protocol": "PEAK DIFFUSION: Fresh Rank 1 revision. Full swing leeway to 3.0R+ expansion."
       }
     ],
     "momentum_flags": [],
