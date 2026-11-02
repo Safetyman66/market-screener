@@ -21222,5 +21222,53 @@
     "pivot": 84.31,
     "stop": 80.36,
     "r_ratio": 2.51
+  },
+  {
+    "date": "2026-11-02",
+    "ticker": "ENSG",
+    "category": "Base-Reset",
+    "pivot": 189.0,
+    "stop": 177.82,
+    "r_ratio": 3.7
+  },
+  {
+    "date": "2026-11-02",
+    "ticker": "ISRG",
+    "category": "Base-Reset",
+    "pivot": 453.6,
+    "stop": 431.19,
+    "r_ratio": 7.5
+  },
+  {
+    "date": "2026-11-02",
+    "ticker": "RTX",
+    "category": "Base-Reset",
+    "pivot": 204.21,
+    "stop": 197.75,
+    "r_ratio": 3.94
+  },
+  {
+    "date": "2026-11-02",
+    "ticker": "STLD",
+    "category": "Base-Reset",
+    "pivot": 259.24,
+    "stop": 246.23,
+    "r_ratio": 3.02
+  },
+  {
+    "date": "2026-11-02",
+    "ticker": "UNH",
+    "category": "Base-Reset",
+    "pivot": 416.19,
+    "stop": 394.11,
+    "r_ratio": 2.97
+  },
+  {
+    "date": "2026-11-02",
+    "ticker": "IDCC",
+    "category": "Liquidity Sweep",
+    "pivot": 321.19,
+    "stop": 304.72,
+    "r_ratio": 4.9
   }
 ]
