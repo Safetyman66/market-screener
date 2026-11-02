@@ -74,7 +74,7 @@ def check_base_reset(
     if pct_above_200 < 0.5:
       return (
           None,
-          f"Below 200 EMA uptrend floor ({pct_above_200:.1f}% < +0.5%)",
+          f"Trend Alignment < 0.5%",
       )
 
     atr14 = calculate_atr(daily_df, 14).iloc[-1]
@@ -85,14 +85,6 @@ def check_base_reset(
     dist_from_52w = max(0.0, ((high_52w - c0) / high_52w) * 100)
     if dist_from_52w > 28.0:
       return None, f"Deep overhead base lag ({dist_from_52w:.1f}% > 28.0% max)"
-
-    headroom_calc = ((high_52w - c0) / c0) * 100
-    # Realistic headroom: true distance to 52w high, capped blue-sky extension
-    # Volatility-scaled headroom: ATR14-based blue-sky cap, true distance if overhead exists
-    if headroom_calc < 3.0:
-        effective_headroom = min(18.0, max(6.0, round(4.0 * atr_pct, 1)))
-    else:
-        effective_headroom = headroom_calc
 
     w_close = w_df["Close"]
     macd, signal, hist = calculate_macd(w_close)
@@ -117,39 +109,58 @@ def check_base_reset(
 
     daily_pivot = round(daily_df["High"].tail(5).max(), 2)
     tactical_stop = round(daily_df["Low"].tail(3).min(), 2)
-    risk_pct = round(((daily_pivot - tactical_stop) / daily_pivot) * 100, 2)
-
+    
     is_flat, flat_reason = is_buyout_or_flatlined(daily_df)
     if is_flat:
         return None, flat_reason
 
+    # 1. Variable Separation
+    target_price = round(high_52w, 2)
+    entry_pivot_gap_pct = ((daily_pivot - c0) / c0) * 100
+    macro_headroom_pct = ((target_price - c0) / c0) * 100
+    
+    risk_pct = ((daily_pivot - tactical_stop) / daily_pivot) * 100 
+    
     if risk_pct > 6.50 or risk_pct < 1.50:
-        return None, f'Stop width invalid or outside bounds (Risk {risk_pct}% not in 1.5%-13.0%)'
+        return None, f'Stop width invalid or outside bounds (Risk {risk_pct:.2f}% not in 1.5%-6.5%)'
+        
+    r_ratio = macro_headroom_pct / risk_pct if risk_pct > 0 else 0.0
 
-    reward_risk = effective_headroom / risk_pct
-    if reward_risk < 2.5:
-      return None, f"Low Asymmetry (R:R {round(reward_risk, 1)} < 2.5)"
+    # 2. Strict Blue Sky Isolation
+    absolute_ath = daily_df["High"].max()
+    is_blue_sky = bool(c0 >= absolute_ath)
+
+    # 3. The Unified Logic Gate
+    if not (r_ratio >= 2.5):
+        return None, f"R:R ({r_ratio:.2f}) < 2.5"
+
+    if not (macro_headroom_pct >= 8.0 or is_blue_sky):
+        return None, f"Macro Headroom ({macro_headroom_pct:.1f}%) < 8.0% and not Blue Sky"
 
     hist_expansion = max(h0 - h2, h0 - h1)
     score = (
-        (abs(hist_expansion) / max(atr14, 0.01)) * vol_ratio * reward_risk
+        (abs(hist_expansion) / max(atr14, 0.01)) * vol_ratio * r_ratio
     )
 
     if score < 0.60:
-      return None, f"Conviction Score too low ({score:.3f} < 0.12)"
+      return None, f"Conviction Score too low ({score:.3f} < 0.60)"
 
+    # 4. Dictionary Mapping
     return {
         "Ticker": ticker,
         "Close": round(c0, 2),
-        "Headroom_%": round(headroom_calc, 1),
+        "Pivot_Trigger": daily_pivot,
+        "Target_Price": round(target_price, 2),
+        "Stop_Loss": tactical_stop,
+        "Entry_Pivot_Gap_%": round(entry_pivot_gap_pct, 2),
+        "Macro_Headroom_%": round(macro_headroom_pct, 1),
         "Above_200_%": round(pct_above_200, 1),
         "Hist_Now": round(h0, 3),
         "Vol_Ratio": f"{round(vol_ratio, 2)}x",
         "Conviction_Score": round(score, 3),
-        "Pivot_Trigger": daily_pivot,
-        "Stop_Loss": tactical_stop,
-        "Risk_%": risk_pct,
-        "R_Ratio": round(reward_risk, 2),
+        "Risk_%": round(risk_pct, 2),
+        "R_Ratio": round(r_ratio, 2),
+        "Is_Blue_Sky": is_blue_sky,
         "ADV_20": adv_20_shares,
         "1Min_Vol_Hurdle": int(adv_20_shares * 0.0035),
         "Execution_Archetype": "BREAKOUT",
@@ -303,12 +314,6 @@ def check_pocket_pivot(ticker, df, c0, daily_ema200, high_52w, adv_20_shares):
     pp_atr_pct = float((tr14.rolling(14).mean().iloc[-1] / c0) * 100)
     if headroom_calc < 3.0:
         effective_headroom = min(18.0, max(6.0, round(4.0 * pp_atr_pct, 1)))
-    else:
-        effective_headroom = headroom_calc
-    # Realistic headroom: true distance to 52w high, capped blue-sky extension
-    # Volatility-scaled headroom: ATR14-based blue-sky cap, true distance if overhead exists
-    if headroom_calc < 3.0:
-        effective_headroom = min(18.0, max(6.0, round(4.0 * atr_pct, 1)))
     else:
         effective_headroom = headroom_calc
 

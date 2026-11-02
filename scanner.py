@@ -511,7 +511,6 @@ def run_master_screener():
     stage1_survivors = stage_1_prune_by_liquidity(stage0_candidates, chunk_size=CHUNK_SIZE)
     print(f"[*] Stage 1 Complete: {len(stage1_survivors)} liquid institutional candidates qualified for deep scan.")
     
-    # SANITIZE TICKERS (DROPS MOG-A, BRK-B) TO PREVENT ALPACA CHUNK FAILURES
     stage1_survivors = [sym for sym in stage1_survivors if "-" not in sym and "." not in sym]
     
     print("[*] Stage 2: Ingesting 15-month historical data (period='15mo') only for survivors...\n")
@@ -733,7 +732,7 @@ def run_master_screener():
     if not execution_df.empty:
         export_cols = [
             c for c in [
-                "Ticker", "Close", "Headroom_%", "Above_200_%", "Hist_Now", "Vol_Ratio",
+                "Ticker", "Close", "Target_Price", "Macro_Headroom_%", "Above_200_%", "Hist_Now", "Vol_Ratio",
                 "Conviction_Score", "Pivot_Trigger", "Stop_Loss", "Risk_%", "R_Ratio",
                 "ADV_20", "1Min_Vol_Hurdle", "Execution_Archetype", "Category",
                 "Zacks_Rank", "Earnings_Risk", "Structural_Catalyst", "Execution_Protocol"
@@ -750,7 +749,7 @@ def run_master_screener():
     
     if all_current_setups:
         master_df = pd.DataFrame(all_current_setups)
-        front_cols = ["Ticker", "Category", "Close", "Pivot_Trigger", "Stop_Loss", "Risk_%", "R_Ratio", "Conviction_Score"]
+        front_cols = ["Ticker", "Category", "Close", "Pivot_Trigger", "Target_Price", "Stop_Loss", "Risk_%", "R_Ratio", "Conviction_Score"]
         export_cols = front_cols + [c for c in master_df.columns if c not in front_cols]
         master_df = master_df[[c for c in export_cols if c in master_df.columns]]
         master_df = master_df.sort_values(by=["Category", "Conviction_Score"], ascending=[True, False])
@@ -779,7 +778,7 @@ def run_master_screener():
             df_disp = pd.DataFrame(pool)
             disp_cols = [
                 c for c in [
-                    "Ticker", "Close", "Headroom_%", "Above_200_%", "Shelf_Level", "Flush_Low",
+                    "Ticker", "Close", "Target_Price", "Macro_Headroom_%", "Above_200_%", "Shelf_Level", "Flush_Low",
                     "Ext_10EMA_%", "Above_200EMA_%", "Vol_Ratio", "Vol_Pocket_Ratio", "Conviction_Score",
                     "Pivot_Trigger", "Stop_Loss", "Risk_%", "R_Ratio", "ADV_20", "1Min_Vol_Hurdle",
                     "Execution_Archetype", "Category", "Zacks_Rank", "Earnings_Risk"
@@ -890,7 +889,6 @@ def run_master_screener():
         print("[*] Compiling fresh daily market intelligence PDF...")
         import pdf_engine
         
-        # BYPASS EMPTY LIST FIX APPLIED TO MACRO_EVENTS PARAMETER
         pdf_engine.create_linkedin_carousel_pdf(
             filename=CAROUSEL_PDF_FILENAME,
             regime_status=dashboard.get("regime_status", "AMBER: ROTATIONAL ACCUMULATION"),

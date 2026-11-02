@@ -286,8 +286,8 @@
       left: 0;
       right: 0;
       bottom: 0;
-      min-height: 380px; /* <--- Forces the box to stay fully open */
-      overflow: hidden;  /* <--- Kills the scrollbars */
+      min-height: 380px; 
+      overflow: hidden;  
       background: linear-gradient(180deg, rgba(15, 23, 42, 0.1) 0%, rgba(15, 23, 42, 0.95) 40%, #0f172a 100%);
       display: flex;
       flex-direction: column;
@@ -542,6 +542,7 @@
             <th title="Security ticker symbol">Ticker</th>
             <th title="Latest market closing price">Close</th>
             <th title="The exact price level that confirms the breakout entry">Trigger Pivot</th>
+            <th title="The structural resistance or 52-week overhead supply level">Target Price</th>
             <th title="The risk management exit level if the trade moves against you">Tactical Stop</th>
             <th title="Distance to stop loss">Risk %</th>
             <th title="Reward-to-risk ratio (all setups require >= 2.0R)">Asymmetry</th>
@@ -691,7 +692,6 @@
       expEl.innerText = `Exposure: ${macro.max_exposure || "30% - 60%"}`;
       caEl.innerText = `${macro.tnx || "--"}% / $${macro.oil || "--"}`;
 
-      // CLEANUP: Fixed missing variables and removed rogue python text
       let eventStr = "Monitoring Horizon...";
       let eventSub = "Forward Pipeline";
       if (macro.calendar && macro.calendar.length > 0) {
@@ -748,7 +748,7 @@
       const rows = (screenerData && screenerData.watchlists && screenerData.watchlists[currentCategory]) ? screenerData.watchlists[currentCategory] : [];
 
       if (!rows || rows.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:2.5rem; color:var(--muted);">No setups currently met strict mathematical asymmetry and risk gates. Cash is a valid position.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="10" style="text-align:center; padding:2.5rem; color:var(--muted);">No setups currently met strict mathematical asymmetry and risk gates. Cash is a valid position.</td></tr>`;
         overlay.style.display = 'none';
         return;
       }
@@ -760,6 +760,8 @@
         const tr = document.createElement('tr');
         if (isLocked) tr.className = 'locked-row';
 
+        const targetPriceDisplay = r.Target_Price ? `$${Number(r.Target_Price).toFixed(2)}` : 'ATH';
+
         tr.innerHTML = `
           <td style="text-align: center;">
             <button onclick="openChartModal('${r.Ticker}')" style="background:transparent; border:none; color:var(--accent); font-size:1.15rem; cursor:pointer;" title="View Setup Chart">👁️</button>
@@ -767,6 +769,7 @@
           <td><span class="ticker-pill">$${r.Ticker}</span></td>
           <td>$${Number(r.Close).toFixed(2)}</td>
           <td><strong>$${Number(r.Pivot_Trigger).toFixed(2)}</strong></td>
+          <td style="color:var(--muted);">${targetPriceDisplay}</td>
           <td style="color:var(--red);">$${Number(r.Stop_Loss).toFixed(2)}</td>
           <td>${r['Risk_%']}%</td>
           <td><span class="r-pill">${r.R_Ratio}R</span></td>
@@ -785,8 +788,8 @@
         macro: { regime_status: "AMBER", pct_above_200: 51.8, max_exposure: "30% - 60%", tnx: 4.24, oil: 74.5 },
         watchlists: {
           base_resets: [
-            { Ticker: "LITE", Close: 84.50, Pivot_Trigger: 86.20, Stop_Loss: 80.50, 'Risk_%': 6.6, R_Ratio: 3.2, Zacks_Rank: "#1 (New)", Earnings_Risk: "SAFE (>14d)" },
-            { Ticker: "POET", Close: 4.85, Pivot_Trigger: 5.10, Stop_Loss: 4.60, 'Risk_%': 9.8, R_Ratio: 2.8, Zacks_Rank: "#2 (12d)", Earnings_Risk: "SAFE (>14d)" }
+            { Ticker: "LITE", Close: 84.50, Pivot_Trigger: 86.20, Target_Price: 95.80, Stop_Loss: 80.50, 'Risk_%': 6.6, R_Ratio: 3.2, Zacks_Rank: "#1 (New)", Earnings_Risk: "SAFE (>14d)" },
+            { Ticker: "POET", Close: 4.85, Pivot_Trigger: 5.10, Target_Price: 6.20, Stop_Loss: 4.60, 'Risk_%': 9.8, R_Ratio: 2.8, Zacks_Rank: "#2 (12d)", Earnings_Risk: "SAFE (>14d)" }
           ]
         }
       };
