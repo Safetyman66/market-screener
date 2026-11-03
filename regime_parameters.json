@@ -1,0 +1,80 @@
+{
+"EXPANSION": {
+"base_reset": {
+"min_trend_alignment": 0.5,
+"max_21_ema_extension": 12.5,
+"min_r_ratio": 2.0,
+"min_macro_headroom": 6.0,
+"min_vol_ratio": 0.40,
+"min_conviction_score": 0.60
+},
+"htf": {
+"min_pole_gain": 45.0,
+"max_flag_depth": 14.0,
+"max_flag_tightness": 13.0,
+"min_r_ratio": 2.0
+},
+"pocket_pivot": {
+"max_200_ema_extension": 45.0,
+"min_macro_headroom": 6.0,
+"min_r_ratio": 2.0
+},
+"liquidity_sweep": {
+"min_200_ema_floor": 0.99,
+"max_undercut_pct": 6.5,
+"min_r_ratio": 2.5
+}
+},
+"ROTATION": {
+"base_reset": {
+"min_trend_alignment": 0.5,
+"max_21_ema_extension": 10.0,
+"min_r_ratio": 2.5,
+"min_macro_headroom": 8.0,
+"min_vol_ratio": 0.50,
+"min_conviction_score": 0.60
+},
+"htf": {
+"min_pole_gain": 50.0,
+"max_flag_depth": 11.0,
+"max_flag_tightness": 10.0,
+"min_r_ratio": 2.2
+},
+"pocket_pivot": {
+"max_200_ema_extension": 35.0,
+"min_macro_headroom": 8.0,
+"min_r_ratio": 2.2
+},
+"liquidity_sweep": {
+"min_200_ema_floor": 0.97,
+"max_undercut_pct": 9.0,
+"min_r_ratio": 2.5
+}
+},
+"CONTRACTION": {
+"base_reset": {
+"min_trend_alignment": 0.5,
+"max_21_ema_extension": 6.5,
+"min_r_ratio": 2.8,
+"min_macro_headroom": 10.0,
+"min_vol_ratio": 0.60,
+"min_conviction_score": 0.70
+},
+"htf": {
+"min_pole_gain": 55.0,
+"max_flag_depth": 8.0,
+"max_flag_tightness": 8.0,
+"min_r_ratio": 2.5
+},
+"pocket_pivot": {
+"max_200_ema_extension": 25.0,
+"min_macro_headroom": 10.0,
+"min_r_ratio": 2.5
+},
+"liquidity_sweep": {
+"min_200_ema_floor": 0.95,
+"max_undercut_pct": 12.5,
+"min_r_ratio": 2.5
+}
+}
+}
