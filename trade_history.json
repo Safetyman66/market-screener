@@ -21270,5 +21270,53 @@
     "pivot": 321.19,
     "stop": 304.72,
     "r_ratio": 4.9
+  },
+  {
+    "date": "2026-11-03",
+    "ticker": "ENSG",
+    "category": "Base-Reset",
+    "pivot": 189.0,
+    "stop": 177.82,
+    "r_ratio": 3.68
+  },
+  {
+    "date": "2026-11-03",
+    "ticker": "ISRG",
+    "category": "Base-Reset",
+    "pivot": 453.6,
+    "stop": 431.19,
+    "r_ratio": 7.74
+  },
+  {
+    "date": "2026-11-03",
+    "ticker": "RTX",
+    "category": "Base-Reset",
+    "pivot": 204.21,
+    "stop": 197.75,
+    "r_ratio": 3.76
+  },
+  {
+    "date": "2026-11-03",
+    "ticker": "STLD",
+    "category": "Base-Reset",
+    "pivot": 259.24,
+    "stop": 246.23,
+    "r_ratio": 2.91
+  },
+  {
+    "date": "2026-11-03",
+    "ticker": "UNH",
+    "category": "Base-Reset",
+    "pivot": 416.19,
+    "stop": 394.11,
+    "r_ratio": 2.88
+  },
+  {
+    "date": "2026-11-03",
+    "ticker": "VNOM",
+    "category": "Base-Reset",
+    "pivot": 47.75,
+    "stop": 45.59,
+    "r_ratio": 2.62
   }
 ]
