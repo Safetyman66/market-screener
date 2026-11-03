@@ -66,9 +66,9 @@
       "min_r_ratio": 2.5
     },
     "liquidity_sweep": {
-      "min_200_ema_floor": 0.95,
-      "max_undercut_pct": 12.5,
-      "min_r_ratio": 2.5
+      "min_200_ema_floor": 0.80,
+      "max_undercut_pct": 25,
+      "min_r_ratio": 1.2
     }
   }
 }
