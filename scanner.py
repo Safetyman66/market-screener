@@ -690,6 +690,21 @@ def run_master_screener():
     }
 
     # Final Dashboard Printout using actual measured breadth
+    print("\n" + "=" * 112)
+    print("                      ENGINE DIAGNOSTICS & REJECTION REASONS")
+    print("=" * 112)
+    print("MACRO REJECTIONS:")
+    for reason, count in macro_diag.most_common(5): print(f"  - {reason}: {count}")
+    print("\nBASE-RESET REJECTIONS:")
+    for reason, count in br_diag.most_common(5): print(f"  - {reason}: {count}")
+    print("\nMOMENTUM FLAG REJECTIONS:")
+    for reason, count in htf_diag.most_common(5): print(f"  - {reason}: {count}")
+    print("\nPOCKET PIVOT REJECTIONS:")
+    for reason, count in pp_diag.most_common(5): print(f"  - {reason}: {count}")
+    print("\nLIQUIDITY SWEEP REJECTIONS:")
+    for reason, count in ls_diag.most_common(5): print(f"  - {reason}: {count}")
+    print("=" * 112)
+    
     regime, dashboard = analyze_market_regime(total_evaluated, total_above_200, category_counts)
     days_to_opx = dashboard.get("days_to_opx", 15)
 
