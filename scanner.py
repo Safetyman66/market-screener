@@ -122,6 +122,26 @@ GLOBAL_HTTP_SESSION.headers.update({
     "Upgrade-Insecure-Requests": "1",
 })
 
+
+def get_preliminary_regime():
+    """Lightweight check to lock in parameters before scanning the entire universe."""
+    try:
+        cross_assets = yf.download(["SPY", "QQQ"], period="1y", interval="1d", progress=False, session=GLOBAL_HTTP_SESSION)["Close"]
+        spy_c = cross_assets["SPY"].dropna().iloc[-1]
+        spy_sma50 = cross_assets["SPY"].dropna().rolling(50).mean().iloc[-1]
+        qqq_c = cross_assets["QQQ"].dropna().iloc[-1]
+        qqq_sma50 = cross_assets["QQQ"].dropna().rolling(50).mean().iloc[-1]
+        
+        if spy_c < spy_sma50 and qqq_c < qqq_sma50:
+            return "CONTRACTION"
+        elif spy_c > spy_sma50 and qqq_c > qqq_sma50:
+            return "EXPANSION"
+        else:
+            return "ROTATION"
+    except Exception:
+        return "ROTATION"
+
+
 def is_acquisition_freeze(daily_df, lookback=5):
     """Detects stocks pinned in a narrow merger arbitrage / cash buyout spread."""
     if daily_df is None or len(daily_df) < lookback + 1:
@@ -161,7 +181,7 @@ def is_acquisition_freeze(daily_df, lookback=5):
 
     return False
 
-def evaluate_all_setups(ticker, daily_df, spy_1m_perf, sector_map):
+def evaluate_all_setups(ticker, daily_df, spy_1m_perf, sector_map, regime_params):
     if is_acquisition_freeze(daily_df):
         return {
             "diagnostics": "Acquisition freeze / cash buyout pin",
@@ -225,19 +245,20 @@ def evaluate_all_setups(ticker, daily_df, spy_1m_perf, sector_map):
             "diagnostics": "Evaluated",
         }
 
-        res_br, r_br = check_base_reset(ticker, daily_df, w_df, c0, daily_ema200, pct_above_200, high_52w, adv_20_shares)
+        # DYNAMIC INJECTION: Pass the regime-specific parameters into the evaluators
+        res_br, r_br = check_base_reset(ticker, daily_df, w_df, c0, daily_ema200, pct_above_200, high_52w, adv_20_shares, regime_params["base_reset"])
         results["base_reset"] = res_br
         results["br_reason"] = r_br
 
-        res_htf, r_htf = check_htf(ticker, daily_df, c0, daily_ema200, high_52w, adv_20_shares)
+        res_htf, r_htf = check_htf(ticker, daily_df, c0, daily_ema200, high_52w, adv_20_shares, regime_params["momentum_flag"])
         results["htf"] = res_htf
         results["htf_reason"] = r_htf
 
-        res_pp, r_pp = check_pocket_pivot(ticker, daily_df, c0, daily_ema200, high_52w, adv_20_shares)
+        res_pp, r_pp = check_pocket_pivot(ticker, daily_df, c0, daily_ema200, high_52w, adv_20_shares, regime_params["pocket_pivot"])
         results["pocket_pivot"] = res_pp
         results["pp_reason"] = r_pp
 
-        res_ls, r_ls = check_liquidity_sweep(ticker, daily_df, c0, daily_ema200, high_52w, adv_20_shares)
+        res_ls, r_ls = check_liquidity_sweep(ticker, daily_df, c0, daily_ema200, high_52w, adv_20_shares, regime_params["liquidity_sweep"])
         results["liquidity_sweep"] = res_ls
         results["ls_reason"] = r_ls
 
@@ -501,9 +522,18 @@ def update_and_evaluate_trailing_runners(todays_candidates):
     return best_runner
 
 def run_master_screener():
+    print("\n[*] Establishing Macro Regime to load parameter boundaries...")
+    regime_code = get_preliminary_regime()
+    print(f"[*] Detected Regime for Parameter Selection: {regime_code}")
+    
+    # Load JSON Control Room Parameters
+    with open("regime_parameters.json", "r") as f:
+        master_params = json.load(f)
+    regime_params = master_params.get(regime_code, master_params["ROTATION"])
+
     universe, sector_map = fetch_institutional_universe_and_sectors()
     total_raw = len(universe)
-    print(f"Loaded institutional universe of {total_raw} stocks.")
+    print(f"\nLoaded institutional universe of {total_raw} stocks.")
 
     stage0_candidates = stage_0_prune_by_sector(universe, sector_map)
     print(f"[*] Stage 0: Pruned {total_raw - len(stage0_candidates)} non-momentum tickers via sector metadata. {len(stage0_candidates)} remain.")
@@ -588,9 +618,9 @@ def run_master_screener():
                 try:
                     if isinstance(batch_data.columns, pd.MultiIndex):
                         if sym in batch_data.columns.levels[0]:
-                            future_to_sym[executor.submit(evaluate_all_setups, sym, batch_data[sym], spy_1m_perf, sector_map)] = sym
+                            future_to_sym[executor.submit(evaluate_all_setups, sym, batch_data[sym], spy_1m_perf, sector_map, regime_params)] = sym
                     else:
-                        future_to_sym[executor.submit(evaluate_all_setups, sym, batch_data, spy_1m_perf, sector_map)] = sym
+                        future_to_sym[executor.submit(evaluate_all_setups, sym, batch_data, spy_1m_perf, sector_map, regime_params)] = sym
                 except Exception as e:
                     print(f" [!] Task dispatch error for {sym}: {e}")
 
@@ -649,6 +679,7 @@ def run_master_screener():
         "sweep": len(liquidity_sweeps),
     }
 
+    # Final Dashboard Printout using actual measured breadth
     regime, dashboard = analyze_market_regime(total_evaluated, total_above_200, category_counts)
     days_to_opx = dashboard.get("days_to_opx", 15)
 

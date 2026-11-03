@@ -69,12 +69,18 @@ def check_base_reset(
     pct_above_200,
     high_52w,
     adv_20_shares,
+    params
 ):
   try:
-    if pct_above_200 < 0.5:
+    min_trend_alignment = params["min_trend_alignment"]
+    max_21_ema_extension = params["max_21_ema_extension"]
+    min_r_ratio = params["min_r_ratio"]
+    min_macro_headroom = params["min_macro_headroom"]
+
+    if pct_above_200 < min_trend_alignment:
       return (
           None,
-          f"Trend Alignment < 0.5%",
+          f"Trend Alignment < {min_trend_alignment}%",
       )
 
     atr14 = calculate_atr(daily_df, 14).iloc[-1]
@@ -89,6 +95,12 @@ def check_base_reset(
     w_close = w_df["Close"]
     macd, signal, hist = calculate_macd(w_close)
     w_ema10 = w_close.ewm(span=10, adjust=False).mean()
+
+    # DYNAMIC REGIME CHECK: Prevent overextended chases based on active environment rules
+    daily_ema21 = daily_df["Close"].ewm(span=21, adjust=False).mean().iloc[-1]
+    ext_21 = ((c0 - daily_ema21) / daily_ema21) * 100
+    if ext_21 > max_21_ema_extension:
+        return None, f"Overextended chase (Price is {ext_21:.1f}% above 21 EMA)"
 
     h0, h1, h2 = hist.iloc[-1], hist.iloc[-2], hist.iloc[-3]
     hist_curling = (h0 >= h1 - 0.08) or (h1 >= h2)
@@ -114,7 +126,7 @@ def check_base_reset(
     if is_flat:
         return None, flat_reason
 
-    # 1. Variable Separation
+    # Variable Separation
     target_price = round(high_52w, 2)
     entry_pivot_gap_pct = ((daily_pivot - c0) / c0) * 100
     macro_headroom_pct = ((target_price - c0) / c0) * 100
@@ -126,16 +138,15 @@ def check_base_reset(
         
     r_ratio = macro_headroom_pct / risk_pct if risk_pct > 0 else 0.0
 
-    # 2. Strict Blue Sky Isolation
     absolute_ath = daily_df["High"].max()
     is_blue_sky = bool(c0 >= absolute_ath)
 
-    # 3. The Unified Logic Gate
-    if not (r_ratio >= 2.5):
-        return None, f"R:R ({r_ratio:.2f}) < 2.5"
+    # DYNAMIC REGIME CHECKS
+    if not (r_ratio >= min_r_ratio):
+        return None, f"R:R ({r_ratio:.2f}) < {min_r_ratio}"
 
-    if not (macro_headroom_pct >= 8.0 or is_blue_sky):
-        return None, f"Macro Headroom ({macro_headroom_pct:.1f}%) < 8.0% and not Blue Sky"
+    if not (macro_headroom_pct >= min_macro_headroom or is_blue_sky):
+        return None, f"Macro Headroom ({macro_headroom_pct:.1f}%) < {min_macro_headroom}% and not Blue Sky"
 
     hist_expansion = max(h0 - h2, h0 - h1)
     score = (
@@ -145,7 +156,6 @@ def check_base_reset(
     if score < 0.60:
       return None, f"Conviction Score too low ({score:.3f} < 0.60)"
 
-    # 4. Dictionary Mapping
     return {
         "Ticker": ticker,
         "Close": round(c0, 2),
@@ -169,8 +179,13 @@ def check_base_reset(
     return None, f"Error: {type(e).__name__}"
 
 
-def check_htf(ticker, df, c0, daily_ema200, high_52w, adv_20_shares):
+def check_htf(ticker, df, c0, daily_ema200, high_52w, adv_20_shares, params):
   try:
+    min_pole_gain = params["min_pole_gain"]
+    max_flag_depth = params["max_flag_depth"]
+    max_flag_tightness = params["max_flag_tightness"]
+    min_r_ratio = params["min_r_ratio"]
+
     if c0 < (0.96 * daily_ema200):
       return None, "Price below 200 EMA tolerance (< -4%)"
 
@@ -198,21 +213,21 @@ def check_htf(ticker, df, c0, daily_ema200, high_52w, adv_20_shares):
     pole_trough = low.iloc[pole_start_pos:pole_end_pos].min()
     pole_gain_pct = ((peak_price - pole_trough) / pole_trough) * 100
 
-    if pole_gain_pct < 45.0:
-      return None, f"Pole gain < 45.0% standard ({pole_gain_pct:.1f}%)"
+    if pole_gain_pct < min_pole_gain:
+      return None, f"Pole gain < {min_pole_gain}% regime standard ({pole_gain_pct:.1f}%)"
 
     flag_low = low.iloc[-bars_since_peak:].min()
     flag_depth_pct = ((peak_price - flag_low) / peak_price) * 100
 
-    if flag_depth_pct > 14.0:
-      return None, "Flag pullback too loose (>14.0%)"
+    if flag_depth_pct > max_flag_depth:
+      return None, f"Flag pullback too loose (> {max_flag_depth}%)"
 
     last_10_high = high.tail(10).max()
     last_10_low = low.tail(10).min()
     flag_tightness_pct = ((last_10_high - last_10_low) / last_10_high) * 100
 
-    if not (2.0 <= flag_tightness_pct <= 13.0):
-      return None, f"Flag tightness out of bounds ({flag_tightness_pct:.2f}%)"
+    if not (2.0 <= flag_tightness_pct <= max_flag_tightness):
+      return None, f"Flag tightness out of bounds ({flag_tightness_pct:.2f}% vs {max_flag_tightness}%)"
 
     dist_from_peak = ((peak_price - c0) / peak_price) * 100
     if dist_from_peak > 11.0:
@@ -224,18 +239,10 @@ def check_htf(ticker, df, c0, daily_ema200, high_52w, adv_20_shares):
     vol_dryup_d1 = v0 / max(vol_sma50, 1)
 
     if vol_dryup_5d > 0.82:
-      return (
-          None,
-          f"5-day volume not dry ({vol_dryup_5d:.2f}x > 0.82x of 50d avg)",
-      )
+      return None, f"5-day volume not dry ({vol_dryup_5d:.2f}x > 0.82x of 50d avg)"
     if vol_dryup_d1 > 1.05:
-      return (
-          None,
-          f"Prior session volume churn ({vol_dryup_d1:.2f}x > 1.05x of 50d"
-          " avg)",
-      )
+      return None, f"Prior session volume churn ({vol_dryup_d1:.2f}x > 1.05x of 50d avg)"
 
-    # Strict momentum alignment: must hold above 50 SMA and 21 EMA
     sma_50 = close.rolling(50).mean().iloc[-1]
     if c0 < sma_50:
         return None, 'Price below 50 SMA (not an active momentum flag)'
@@ -246,17 +253,11 @@ def check_htf(ticker, df, c0, daily_ema200, high_52w, adv_20_shares):
 
     pivot_trigger = round(peak_price, 2)
     tactical_stop = round(flag_low, 2)
-    risk_pct = round(
-        ((pivot_trigger - tactical_stop) / pivot_trigger) * 100, 2
-    )
+    risk_pct = round(((pivot_trigger - tactical_stop) / pivot_trigger) * 100, 2)
 
     if risk_pct < 1.5 or risk_pct > 14.5:
-      return (
-          None,
-          f"Risk % invalid or outside executable limits ({risk_pct:.2f}%)",
-      )
+      return None, f"Risk % invalid or outside executable limits ({risk_pct:.2f}%)"
 
-    # Grounded target calculation: respect 52w resistance & cap run to realistic bounds
     base_run = min(pole_gain_pct * 0.50, 18.0)
     if high_52w > pivot_trigger:
         headroom_52w = ((high_52w - pivot_trigger) / pivot_trigger) * 100
@@ -265,8 +266,8 @@ def check_htf(ticker, df, c0, daily_ema200, high_52w, adv_20_shares):
         effective_run = base_run
 
     reward_risk = round(effective_run / risk_pct, 2)
-    if reward_risk < 2.0:
-      return None, f"Low Asymmetry (R:R {round(reward_risk, 1)} < 2.0)"
+    if reward_risk < min_r_ratio:
+      return None, f"Low Asymmetry (R:R {round(reward_risk, 1)} < {min_r_ratio})"
 
     return {
         "Ticker": ticker,
@@ -289,8 +290,12 @@ def check_htf(ticker, df, c0, daily_ema200, high_52w, adv_20_shares):
     return None, f"Error: {type(e).__name__}"
 
 
-def check_pocket_pivot(ticker, df, c0, daily_ema200, high_52w, adv_20_shares):
+def check_pocket_pivot(ticker, df, c0, daily_ema200, high_52w, adv_20_shares, params):
   try:
+    min_r_ratio = params["min_r_ratio"]
+    max_200_ema_extension = params["max_200_ema_extension"]
+    max_10_ema_extension = params["max_10_ema_extension"]
+
     close = df["Close"]
     high = df["High"]
     low = df["Low"]
@@ -306,8 +311,8 @@ def check_pocket_pivot(ticker, df, c0, daily_ema200, high_52w, adv_20_shares):
       return None, "Trend not aligned (C > SMA50 > EMA200)"
 
     ext_200 = ((c0 - daily_ema200) / daily_ema200) * 100
-    if ext_200 > 45.0:
-      return None, "Stretched >45% above 200 EMA"
+    if ext_200 > max_200_ema_extension:
+      return None, f"Stretched >{max_200_ema_extension}% above 200 EMA"
 
     headroom_calc = ((high_52w - c0) / c0) * 100
     tr14 = pd.concat([high - low, (high - close.shift(1)).abs(), (low - close.shift(1)).abs()], axis=1).max(axis=1)
@@ -348,8 +353,8 @@ def check_pocket_pivot(ticker, df, c0, daily_ema200, high_52w, adv_20_shares):
     closed_above_ema = (c0 > ema_10.iloc[-1]) and (c0 > ema_21.iloc[-1])
     ext_10 = ((c0 - ema_10.iloc[-1]) / ema_10.iloc[-1]) * 100
 
-    if not (touched_ema and closed_above_ema and ext_10 <= 3.2):
-      return None, "Not launching off 10/21 EMA (or ext >3.2%)"
+    if not (touched_ema and closed_above_ema and ext_10 <= max_10_ema_extension):
+      return None, f"Not launching off 10/21 EMA (or ext > {max_10_ema_extension}%)"
 
     prior_10_down_vols = [
         volume.iloc[-i]
@@ -370,16 +375,14 @@ def check_pocket_pivot(ticker, df, c0, daily_ema200, high_52w, adv_20_shares):
     vol_pocket_ratio = round(v0 / max_down_vol, 2)
     pivot_trigger = round(high.iloc[-1], 2)
     tactical_stop = round(min(low.iloc[-1], ema_21.iloc[-1]), 2)
-    risk_pct = round(
-        ((pivot_trigger - tactical_stop) / pivot_trigger) * 100, 2
-    )
+    risk_pct = round(((pivot_trigger - tactical_stop) / pivot_trigger) * 100, 2)
 
     if risk_pct > 6.5 or risk_pct < 1.5:
       return None, "Tactical risk invalid or outside 1.5%-6.5%"
 
     reward_risk = effective_headroom / risk_pct
-    if reward_risk < 2.0:
-      return None, f"Low Asymmetry (R:R {round(reward_risk, 1)} < 2.0)"
+    if reward_risk < min_r_ratio:
+      return None, f"Low Asymmetry (R:R {round(reward_risk, 1)} < {min_r_ratio})"
 
     return {
         "Ticker": ticker,
@@ -402,9 +405,13 @@ def check_pocket_pivot(ticker, df, c0, daily_ema200, high_52w, adv_20_shares):
 
 
 def check_liquidity_sweep(
-    ticker, df, c0, daily_ema200, high_52w, adv_20_shares
+    ticker, df, c0, daily_ema200, high_52w, adv_20_shares, params
 ):
   try:
+    min_200_ema_floor = params["min_200_ema_floor"]
+    max_undercut_pct = params["max_undercut_pct"]
+    min_r_ratio = params["min_r_ratio"]
+
     if c0 < 15.0:
       return None, "Price < $15.00 floor (Anti-Penny Gate)"
 
@@ -412,8 +419,8 @@ def check_liquidity_sweep(
     if is_flat:
         return None, flat_reason
 
-    if c0 < (0.99 * daily_ema200):
-        return None, 'Price below 200 EMA baseline (< -1%)'
+    if c0 < (min_200_ema_floor * daily_ema200):
+        return None, f'Price below 200 EMA dynamic regime floor (< {min_200_ema_floor}x)'
 
     high = df["High"]
     low = df["Low"]
@@ -434,8 +441,8 @@ def check_liquidity_sweep(
     recent_flush_low = low.iloc[-4:].min()
 
     undercut_pct = ((support_shelf - recent_flush_low) / support_shelf) * 100
-    if not (0.20 <= undercut_pct <= 6.5):
-      return None, "No clean undercut (Needs 0.20%-6.5% sweep)"
+    if not (0.20 <= undercut_pct <= max_undercut_pct):
+      return None, f"No clean undercut (Needs 0.20%-{max_undercut_pct}% sweep)"
 
     if c0 <= support_shelf:
       return None, "Price remains trapped below support shelf"
@@ -455,16 +462,14 @@ def check_liquidity_sweep(
 
     pivot_trigger = round(max(current_high, support_shelf * 1.002), 2)
     tactical_stop = round(recent_flush_low * 0.995, 2)
-    risk_pct = round(
-        ((pivot_trigger - tactical_stop) / pivot_trigger) * 100, 2
-    )
+    risk_pct = round(((pivot_trigger - tactical_stop) / pivot_trigger) * 100, 2)
 
     if risk_pct > 6.5 or risk_pct < 1.5:
       return None, "Tactical risk invalid or outside 1.5%-6.5%"
 
     reward_risk = raw_headroom / risk_pct
-    if reward_risk < 2.5:
-      return None, f"Low Asymmetry (R:R {round(reward_risk, 1)} < 2.5)"
+    if reward_risk < min_r_ratio:
+      return None, f"Low Asymmetry (R:R {round(reward_risk, 1)} < {min_r_ratio})"
 
     return {
         "Ticker": ticker,
@@ -485,6 +490,5 @@ def check_liquidity_sweep(
     }, "PASSED"
   except Exception as e:
     return None, f"Error: {type(e).__name__}"
-
 
 # ---------------------------------------------------------

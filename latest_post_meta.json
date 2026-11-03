@@ -74,8 +74,8 @@
         "momentum_count": 45,
         "sweep_count": 3,
         "warnings": [
-            "\u26a1 YIELD SURGE: 10-Yr Yield at 4.89% (-2.1% 5d). Multiple drag active.",
-            "\ud83d\udee2\ufe0f OIL PRICE SPIKE: WTI Crude at $96.84/bbl (-3.1% 5d). Inflation expectations repricing."
+            "⚡ YIELD SURGE: 10-Yr Yield at 4.89% (-2.1% 5d). Multiple drag active.",
+            "🛢️ OIL PRICE SPIKE: WTI Crude at $96.84/bbl (-3.1% 5d). Inflation expectations repricing."
         ],
         "calendar": [
             "IN 2 DAY(S): FOMC RATE DECISION",
