@@ -602,6 +602,16 @@ def run_master_screener():
                     df_pivoted = df_pivoted.swaplevel(0, 1, axis=1).sort_index(axis=1)
                     
                     batch_data = df_pivoted
+
+                    # =========================================================================
+                    # NEW FIX: DROP PARTIAL INTRADAY BAR
+                    # Prevents 30-minute volume bars from collapsing the daily volume indicators
+                    # =========================================================================
+                    current_et_date = pd.Timestamp.now(tz='US/Eastern').date()
+                    if batch_data.index[-1].date() == current_et_date:
+                        batch_data = batch_data.iloc[:-1]
+                    # =========================================================================
+
                     break
             except Exception as e:
                 print(f"Alpaca fetch failed: {e}")

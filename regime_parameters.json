@@ -54,9 +54,9 @@
 "CONTRACTION": {
 "base_reset": {
 "min_trend_alignment": 0.5,
-"max_21_ema_extension": 6.5,
-"min_r_ratio": 2.8,
-"min_macro_headroom": 10.0,
+"max_21_ema_extension": 25,
+"min_r_ratio": 1.5,
+"min_macro_headroom": 3.0,
 "min_vol_ratio": 0.60,
 "min_conviction_score": 0.70
 },
