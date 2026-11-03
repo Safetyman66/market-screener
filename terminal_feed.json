@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-03 07:06 UTC",
+  "generated_at": "2026-11-03 13:29 UTC",
   "macro": {
     "regime_status": "RED: STRUCTURAL CONTRACTION",
     "regime_code": "CONTRACTION",
@@ -16,15 +16,15 @@
     "qqq_above_200": false,
     "tnx": 4.89,
     "tnx_5d_chg": -2.0,
-    "oil": 98.06,
-    "oil_5d_chg": -4.6,
+    "oil": 97.12,
+    "oil_5d_chg": -5.5,
     "pct_above_200": 56.6,
     "pct_below_200": 43.4,
     "momentum_count": 29,
     "sweep_count": 3,
     "warnings": [
       "\u26a1 YIELD SURGE: 10-Yr Yield at 4.89% (-2.0% 5d). Multiple drag active.",
-      "\ud83d\udee2\ufe0f OIL PRICE SPIKE: WTI Crude at $98.06/bbl (-4.6% 5d). Inflation expectations repricing."
+      "\ud83d\udee2\ufe0f OIL PRICE SPIKE: WTI Crude at $97.12/bbl (-5.5% 5d). Inflation expectations repricing."
     ],
     "calendar": [
       "IN 1 DAY(S): FOMC RATE DECISION",
@@ -89,7 +89,7 @@
         "Risk_%": 4.94,
         "R_Ratio": 7.74,
         "Is_Blue_Sky": false,
-        "ADV_20": 2510768,
+        "ADV_20": 2510767,
         "1Min_Vol_Hurdle": 8787,
         "Execution_Archetype": "BREAKOUT",
         "Category": "Base-Reset",
@@ -190,7 +190,7 @@
         "Execution_Archetype": "BREAKOUT",
         "Category": "Base-Reset",
         "Zacks_Rank": "#1 (28d)",
-        "Earnings_Risk": "Unknown/TBD",
+        "Earnings_Risk": "Reported (1d ago)",
         "Structural_Catalyst": "ZACKS #1 STRONG BUY",
         "Execution_Protocol": "TOM INFLOW TAILWIND: Automated allocations active. Standard trailing stop."
       }

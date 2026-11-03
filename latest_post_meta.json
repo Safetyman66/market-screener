@@ -40,15 +40,15 @@
         "qqq_above_200": false,
         "tnx": 4.89,
         "tnx_5d_chg": -2.0,
-        "oil": 98.06,
-        "oil_5d_chg": -4.6,
+        "oil": 97.12,
+        "oil_5d_chg": -5.5,
         "pct_above_200": 56.6,
         "pct_below_200": 43.4,
         "momentum_count": 29,
         "sweep_count": 3,
         "warnings": [
             "\u26a1 YIELD SURGE: 10-Yr Yield at 4.89% (-2.0% 5d). Multiple drag active.",
-            "\ud83d\udee2\ufe0f OIL PRICE SPIKE: WTI Crude at $98.06/bbl (-4.6% 5d). Inflation expectations repricing."
+            "\ud83d\udee2\ufe0f OIL PRICE SPIKE: WTI Crude at $97.12/bbl (-5.5% 5d). Inflation expectations repricing."
         ],
         "calendar": [
             "IN 1 DAY(S): FOMC RATE DECISION",
