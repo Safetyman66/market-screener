@@ -21606,5 +21606,109 @@
     "pivot": 86.29,
     "stop": 82.09,
     "r_ratio": 6.62
+  },
+  {
+    "date": "2026-11-04",
+    "ticker": "BBWI",
+    "category": "Base-Reset",
+    "pivot": 23.66,
+    "stop": 22.38,
+    "r_ratio": 2.13
+  },
+  {
+    "date": "2026-11-04",
+    "ticker": "BAH",
+    "category": "Base-Reset",
+    "pivot": 90.18,
+    "stop": 85.05,
+    "r_ratio": 4.46
+  },
+  {
+    "date": "2026-11-04",
+    "ticker": "ENSG",
+    "category": "Base-Reset",
+    "pivot": 189.0,
+    "stop": 177.82,
+    "r_ratio": 3.32
+  },
+  {
+    "date": "2026-11-04",
+    "ticker": "H",
+    "category": "Base-Reset",
+    "pivot": 188.75,
+    "stop": 179.66,
+    "r_ratio": 2.4
+  },
+  {
+    "date": "2026-11-04",
+    "ticker": "ISRG",
+    "category": "Base-Reset",
+    "pivot": 453.6,
+    "stop": 431.19,
+    "r_ratio": 7.49
+  },
+  {
+    "date": "2026-11-04",
+    "ticker": "KEX",
+    "category": "Base-Reset",
+    "pivot": 147.98,
+    "stop": 140.07,
+    "r_ratio": 2.24
+  },
+  {
+    "date": "2026-11-04",
+    "ticker": "LMT",
+    "category": "Base-Reset",
+    "pivot": 657.0,
+    "stop": 631.04,
+    "r_ratio": 2.1
+  },
+  {
+    "date": "2026-11-04",
+    "ticker": "LUV",
+    "category": "Base-Reset",
+    "pivot": 44.77,
+    "stop": 42.0,
+    "r_ratio": 4.34
+  },
+  {
+    "date": "2026-11-04",
+    "ticker": "RTX",
+    "category": "Base-Reset",
+    "pivot": 205.62,
+    "stop": 199.37,
+    "r_ratio": 3.72
+  },
+  {
+    "date": "2026-11-04",
+    "ticker": "STLD",
+    "category": "Base-Reset",
+    "pivot": 259.24,
+    "stop": 246.23,
+    "r_ratio": 3.31
+  },
+  {
+    "date": "2026-11-04",
+    "ticker": "UNH",
+    "category": "Base-Reset",
+    "pivot": 416.19,
+    "stop": 394.11,
+    "r_ratio": 2.66
+  },
+  {
+    "date": "2026-11-04",
+    "ticker": "ULTA",
+    "category": "Base-Reset",
+    "pivot": 659.48,
+    "stop": 623.44,
+    "r_ratio": 2.31
+  },
+  {
+    "date": "2026-11-04",
+    "ticker": "VRSN",
+    "category": "Pocket Pivot",
+    "pivot": 317.41,
+    "stop": 303.76,
+    "r_ratio": 2.72
   }
 ]
