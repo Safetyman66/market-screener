@@ -21782,5 +21782,13 @@
     "pivot": 508.53,
     "stop": 480.05,
     "r_ratio": 4.75
+  },
+  {
+    "date": "2026-11-06",
+    "ticker": "GATX",
+    "category": "Base-Reset",
+    "pivot": 193.29,
+    "stop": 184.22,
+    "r_ratio": 2.19
   }
 ]
