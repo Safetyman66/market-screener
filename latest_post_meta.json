@@ -1,14 +1,18 @@
 {
     "pdf_path": "daily_market_intelligence.pdf",
-    "date": "2026-11-06",
+    "date": "2026-11-07",
     "regime_code": "CONTRACTION",
     "regime_status": "RED: STRUCTURAL CONTRACTION",
     "posture_box": "[!] DEFENSIVE POSTURE: CASH PRESERVATION / RISK-OFF",
     "max_exposure": "0% - 20%",
-    "pct_above_200": 50.1,
-    "primary_ticker": null,
-    "slot_tickers": [],
-    "focus_tickers": [],
+    "pct_above_200": 49.2,
+    "primary_ticker": "MSM",
+    "slot_tickers": [
+        "MSM"
+    ],
+    "focus_tickers": [
+        "MSM"
+    ],
     "top_runner": {
         "ticker": "VNT",
         "category": "Base-Reset",
@@ -16,54 +20,75 @@
         "entry_pivot": 36.07,
         "stop_loss": 34.6,
         "peak_high": 42.66,
-        "latest_close": 39.9,
+        "latest_close": 42.23,
         "max_gain_pct": 18.3,
         "r_multiple": 4.5
     },
     "top_br": null,
     "top_htf": null,
     "top_pp": null,
-    "top_ls": null,
+    "top_ls": {
+        "Ticker": "MSM",
+        "Close": 113.27,
+        "Shelf_Level": 111.76,
+        "Flush_Low": 110.29,
+        "Sweep_Depth_%": 1.32,
+        "Headroom_%": 18.3,
+        "Vol_Ratio": "1.22x",
+        "Conviction_Score": 5.45,
+        "Pivot_Trigger": 113.54,
+        "Stop_Loss": 109.74,
+        "Risk_%": 3.35,
+        "R_Ratio": 5.45,
+        "ADV_20": 1054187,
+        "1Min_Vol_Hurdle": 3689,
+        "Execution_Archetype": "MEAN_REVERSION",
+        "Category": "Liquidity Sweep",
+        "Zacks_Rank": "#2 (26d)",
+        "Earnings_Risk": "SAFE (60d)",
+        "Structural_Catalyst": "ZACKS #2 BUY",
+        "Execution_Protocol": "STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.",
+        "Tactical_Target": 124.94,
+        "Tactical_R_Ratio": 3.0
+    },
     "dashboard": {
         "regime_status": "RED: STRUCTURAL CONTRACTION",
         "regime_code": "CONTRACTION",
         "posture_box": "[!] DEFENSIVE POSTURE: CASH PRESERVATION / RISK-OFF",
         "max_exposure": "0% - 20%",
         "action_plan": "CAPITAL PRESERVATION POSTURE. Benchmarks trapped below 50 SMA / breadth compressed. Breakout failure rates peak here. Stand aside or trade small-sized liquidity sweeps only.",
-        "spy_c": 733.0,
+        "spy_c": 735.29,
         "spy_above_21": false,
         "spy_above_50": false,
-        "spy_above_200": false,
-        "qqq_c": 647.05,
+        "spy_above_200": true,
+        "qqq_c": 656.1,
         "qqq_above_21": false,
         "qqq_above_50": false,
         "qqq_above_200": false,
-        "tnx": 4.84,
-        "tnx_5d_chg": -1.9,
-        "oil": 91.41,
-        "oil_5d_chg": -5.2,
-        "pct_above_200": 50.1,
-        "pct_below_200": 49.9,
-        "momentum_count": 9,
-        "sweep_count": 0,
+        "tnx": 4.86,
+        "tnx_5d_chg": -0.7,
+        "oil": 90.83,
+        "oil_5d_chg": -5.8,
+        "pct_above_200": 49.2,
+        "pct_below_200": 50.8,
+        "momentum_count": 17,
+        "sweep_count": 4,
         "warnings": [
-            "\u26a1 YIELD SURGE: 10-Yr Yield at 4.84% (-1.9% 5d). Multiple drag active.",
-            "\ud83d\udee2\ufe0f OIL PRICE SPIKE: WTI Crude at $91.41/bbl (-5.2% 5d). Inflation expectations repricing."
+            "\u26a1 YIELD SURGE: 10-Yr Yield at 4.86% (-0.7% 5d). Multiple drag active.",
+            "\ud83d\udee2\ufe0f OIL PRICE SPIKE: WTI Crude at $90.83/bbl (-5.8% 5d). Inflation expectations repricing."
         ],
         "calendar": [
-            "TODAY: JOBS REPORT / NFP",
-            "IN 5 DAYS: CPI INFLATION PRINT",
-            "IN 6 DAYS: PPI WHOLESALE INFLATION",
-            "IN 14 DAYS: Monthly OPEX"
+            "IN 4 DAYS: CPI INFLATION PRINT",
+            "IN 5 DAYS: PPI WHOLESALE INFLATION",
+            "IN 13 DAYS: Monthly OPEX"
         ],
         "seasonality": "NOVEMBER CHASE: Benchmark underperformance forces institutional buying.",
-        "days_to_opx": 14,
+        "days_to_opx": 13,
         "opx_label": "Monthly OPEX"
     },
     "macro_events": [
-        "TODAY: JOBS REPORT / NFP",
-        "IN 5 DAYS: CPI INFLATION PRINT",
-        "IN 6 DAYS: PPI WHOLESALE INFLATION",
-        "IN 14 DAYS: Monthly OPEX"
+        "IN 4 DAYS: CPI INFLATION PRINT",
+        "IN 5 DAYS: PPI WHOLESALE INFLATION",
+        "IN 13 DAYS: Monthly OPEX"
     ]
 }
