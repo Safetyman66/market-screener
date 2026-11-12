@@ -538,10 +538,37 @@ def run_master_screener():
     stage0_candidates = stage_0_prune_by_sector(universe, sector_map)
     print(f"[*] Stage 0: Pruned {total_raw - len(stage0_candidates)} non-momentum tickers via sector metadata. {len(stage0_candidates)} remain.")
 
-    stage1_survivors = stage_1_prune_by_liquidity(stage0_candidates, chunk_size=CHUNK_SIZE)
-    print(f"[*] Stage 1 Complete: {len(stage1_survivors)} liquid institutional candidates qualified for deep scan.")
+    # ==============================================================================
+    # STAGE 1: DUAL-TRACK UNIVERSE FILTERING
+    # ==============================================================================
+    # Note: Assuming universe_data or stage0_candidates contains the dictionary data 
+    # required to run these comprehensions. If `stage_1_prune_by_liquidity` historically 
+    # fetched this data, you will need to map that data fetch here first.
+
+    # Track A: Core Institutional Universe (Feeds Categories 1 - 4)
+    legacy_survivors = [
+        t['ticker'] for t in stage0_candidates
+        if t.get('price', 0) >= 10.00 
+        and t.get('addv_5d', 0) >= 12_000_000 
+        and t.get('sessions', 0) >= 120
+    ]
+
+    # Track B: Alpha / High-Torque Discovery Universe (Feeds Categories 5 - 7)
+    alpha_survivors = [
+        t['ticker'] for t in stage0_candidates
+        if t.get('price', 0) >= 4.00 
+        and t.get('addv_5d', 0) >= 3_000_000 
+        and t.get('sessions', 0) >= 45 
+    ]
     
-    stage1_survivors = [sym for sym in stage1_survivors if "-" not in sym and "." not in sym]
+    print(f"[*] Stage 1 Complete: {len(legacy_survivors)} Legacy & {len(alpha_survivors)} Alpha candidates qualified.")
+
+    # Clean symbols for the Alpaca API exactly as the original code did
+    legacy_survivors = [sym for sym in legacy_survivors if "-" not in sym and "." not in sym]
+    alpha_survivors = [sym for sym in alpha_survivors if "-" not in sym and "." not in sym]
+    
+    # Combine both tracks for the heavy Stage 2 Alpaca historical fetch
+    stage1_survivors = list(set(legacy_survivors + alpha_survivors))
     
     print("[*] Stage 2: Ingesting 15-month historical data (period='15mo') only for survivors...\n")
 
@@ -799,12 +826,21 @@ def run_master_screener():
     execution_df.to_csv("breakouts_for_execution.csv", index=False)
 
     # ====================================================================================================================
-    # MASTER SPREADSHEET EXPORT
+    # PAYLOAD ROUTING & DOWNSTREAM ISOLATION
     # ====================================================================================================================
+    
+    # 1. CORE PIPELINE: Strictly isolated to Categories 1-4 for downstream JSON, PDF, and Social assets.
     all_current_setups = filtered_base_resets + filtered_htfs + filtered_pockets + filtered_sweeps
     
-    if all_current_setups:
-        master_df = pd.DataFrame(all_current_setups)
+    # Assuming you have populated your new Categories 5-7 into variables like filtered_episodic, etc.
+    # Replace these three list names below with whatever variables you assigned them to.
+    alpha_results = filtered_episodic + filtered_ema_reclaim + filtered_alpha_flags
+    
+    # 2. MASTER SPREADSHEET EXPORT: Includes ALL Categories 1-7
+    all_consolidated_results = all_current_setups + alpha_results
+    
+    if all_consolidated_results:
+        master_df = pd.DataFrame(all_consolidated_results)
         front_cols = ["Ticker", "Category", "Close", "Pivot_Trigger", "Target_Price", "Stop_Loss", "Risk_%", "R_Ratio", "Conviction_Score"]
         export_cols = front_cols + [c for c in master_df.columns if c not in front_cols]
         master_df = master_df[[c for c in export_cols if c in master_df.columns]]
@@ -817,32 +853,45 @@ def run_master_screener():
     top_runner = update_and_evaluate_trailing_runners(all_current_setups)
 
     # ====================================================================================================================
-    # TERMINAL DISPLAY
+    # TERMINAL DISPLAY (GITHUB ACTIONS CONSOLE SUMMARY)
     # ====================================================================================================================
-    terminal_categories = [
+    
+    def print_terminal_block(title_header, categories_list):
+        print("\n" + "=" * 148)
+        print(f"                    {title_header}")
+        print("=" * 148)
+        for title, pool in categories_list:
+            print("\n" + "-" * 148)
+            print(f"  {title}")
+            print("-" * 148)
+            if pool:
+                df_disp = pd.DataFrame(pool)
+                disp_cols = [
+                    c for c in [
+                        "Ticker", "Close", "Target_Price", "Macro_Headroom_%", "Above_200_%", "Shelf_Level", "Flush_Low",
+                        "Ext_10EMA_%", "Above_200EMA_%", "Vol_Ratio", "Vol_Pocket_Ratio", "Conviction_Score",
+                        "Pivot_Trigger", "Stop_Loss", "Risk_%", "R_Ratio", "ADV_20", "1Min_Vol_Hurdle",
+                        "Execution_Archetype", "Category", "Zacks_Rank", "Earnings_Risk"
+                    ] if c in df_disp.columns
+                ]
+                print(df_disp[disp_cols].to_string(index=False))
+            else:
+                print("No candidates currently meeting quality gates.")
+
+    legacy_categories = [
         ("CATEGORY 1: BASE-RESET INFLECTIONS", filtered_base_resets),
         ("CATEGORY 2: MOMENTUM BULL FLAGS", filtered_htfs),
         ("CATEGORY 3: POCKET PIVOT SQUEEZES", filtered_pockets),
         ("CATEGORY 4: LIQUIDITY SWEEPS", filtered_sweeps),
     ]
+    print_terminal_block("LEGACY CORE POOL (CATEGORIES 1 - 4)", legacy_categories)
 
-    for title, pool in terminal_categories:
-        print("\n" + "=" * 148)
-        print(f"                    {title}")
-        print("=" * 148)
-        if pool:
-            df_disp = pd.DataFrame(pool)
-            disp_cols = [
-                c for c in [
-                    "Ticker", "Close", "Target_Price", "Macro_Headroom_%", "Above_200_%", "Shelf_Level", "Flush_Low",
-                    "Ext_10EMA_%", "Above_200EMA_%", "Vol_Ratio", "Vol_Pocket_Ratio", "Conviction_Score",
-                    "Pivot_Trigger", "Stop_Loss", "Risk_%", "R_Ratio", "ADV_20", "1Min_Vol_Hurdle",
-                    "Execution_Archetype", "Category", "Zacks_Rank", "Earnings_Risk"
-                ] if c in df_disp.columns
-            ]
-            print(df_disp[disp_cols].to_string(index=False))
-        else:
-            print("No candidates currently meeting quality gates.")
+    alpha_categories = [
+        ("CATEGORY 5: EPISODIC PIVOTS", filtered_episodic),
+        ("CATEGORY 6: EMA RECLAIMS", filtered_ema_reclaim),
+        ("CATEGORY 7: ALPHA FLAGS", filtered_alpha_flags),
+    ]
+    print_terminal_block("ALPHA HIGH-TORQUE POOL (CATEGORIES 5 - 7)", alpha_categories)
 
     # ====================================================================================================================
     # REGIME-AWARE OPTIMAL SETUP SLOT ASSIGNMENT

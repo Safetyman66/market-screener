@@ -492,3 +492,101 @@ def check_liquidity_sweep(
     return None, f"Error: {type(e).__name__}"
 
 # ---------------------------------------------------------
+
+def evaluate_episodic_pivot(data, regime_params):
+    """Category 5: High-torque catalyst gap-ups (PEADs)"""
+    if len(data) < 50: return {"valid": False}
+    
+    today = data.iloc[-1]
+    yest = data.iloc[-2]
+    
+    # Gap: Prior close to open gap >= 8.0%
+    gap_pct = (today['Open'] - yest['Close']) / yest['Close']
+    if gap_pct < 0.08: return {"valid": False}
+    
+    # Volume: Day-1 volume >= 2.5x 50-day ADV
+    adv_50 = data['Volume'].rolling(50).mean().iloc[-1]
+    if today['Volume'] < (2.5 * adv_50): return {"valid": False}
+    
+    # Base: Pre-gap consolidation range >= 15 sessions (simplified check)
+    base_high = data['High'].iloc[-16:-1].max()
+    base_low = data['Low'].iloc[-16:-1].min()
+    if (base_high - base_low) / base_low > 0.30: return {"valid": False} # Exclude if wildly volatile before gap
+    
+    # Risk calculation
+    atr_14 = data['High'].iloc[-14:].sub(data['Low'].iloc[-14:]).mean()
+    max_risk_dist = 1.25 * atr_14
+    
+    stop_loss = today['Low']
+    if (today['Close'] - stop_loss) > max_risk_dist:
+        stop_loss = today['Close'] - max_risk_dist
+        
+    return {
+        "valid": True, "category": 5, "trigger": today['Close'], "stop": round(stop_loss, 2),
+        "daily_atr": round(atr_14, 2), "1Min_Vol_Hurdle": int((adv_50 / 390) * 1.5)
+    }
+
+def evaluate_ema_reclaim(data, regime_params):
+    """Category 6: Tight Wedge Pops / 10 & 21 EMA Reclaims"""
+    if len(data) < 50: return {"valid": False}
+    
+    today = data.iloc[-1]
+    ema_10 = data['Close'].ewm(span=10, adjust=False).mean()
+    ema_21 = data['Close'].ewm(span=21, adjust=False).mean()
+    
+    # Turn Geometry: Must have traded below 21 EMA recently, but closing above 10 & 21 today
+    traded_below_recently = any(data['Low'].iloc[-11:-1] < ema_21.iloc[-11:-1])
+    if not traded_below_recently: return {"valid": False}
+    if today['Close'] <= ema_10.iloc[-1] or today['Close'] <= ema_21.iloc[-1]: return {"valid": False}
+    
+    # Volume: >= 1.4x 50-day ADV
+    adv_50 = data['Volume'].rolling(50).mean().iloc[-1]
+    if today['Volume'] < (1.4 * adv_50): return {"valid": False}
+    
+    # Risk Calculation
+    atr_14 = data['High'].iloc[-14:].sub(data['Low'].iloc[-14:]).mean()
+    low_3d = data['Low'].iloc[-3:].min()
+    base_stop = min(low_3d, ema_21.iloc[-1])
+    
+    max_risk_dist = 1.25 * atr_14
+    stop_loss = base_stop
+    if (today['Close'] - stop_loss) > max_risk_dist:
+        stop_loss = today['Close'] - max_risk_dist
+        
+    return {
+        "valid": True, "category": 6, "trigger": today['Close'], "stop": round(stop_loss, 2),
+        "daily_atr": round(atr_14, 2), "1Min_Vol_Hurdle": int((adv_50 / 390) * 1.5)
+    }
+
+def evaluate_alpha_flag(data, regime_params):
+    """Category 7: High-velocity momentum flags"""
+    if len(data) < 50: return {"valid": False}
+    
+    today = data.iloc[-1]
+    
+    # Pole Gain: >= 30% over rolling 15 days
+    pole_low = data['Low'].iloc[-15:].min()
+    pole_high = data['High'].iloc[-15:].max()
+    if (pole_high - pole_low) / pole_low < 0.30: return {"valid": False}
+    
+    # Consolidation Depth
+    atr_14 = data['High'].iloc[-14:].sub(data['Low'].iloc[-14:]).mean()
+    current_depth = (pole_high - today['Close'])
+    if current_depth > (1.25 * atr_14) and current_depth > (pole_high * 0.12): return {"valid": False}
+    
+    # Volume Dry-Up
+    adv_50 = data['Volume'].rolling(50).mean().iloc[-1]
+    vol_3d = data['Volume'].iloc[-3:].mean()
+    if vol_3d > (0.70 * adv_50): return {"valid": False}
+    
+    # Risk Calculation
+    flag_low = data['Low'].iloc[-5:].min() # Dynamic swing low of the flag
+    stop_loss = flag_low
+    max_risk_dist = 1.25 * atr_14
+    if (today['Close'] - stop_loss) > max_risk_dist:
+        stop_loss = today['Close'] - max_risk_dist
+        
+    return {
+        "valid": True, "category": 7, "trigger": pole_high, "stop": round(stop_loss, 2),
+        "daily_atr": round(atr_14, 2), "1Min_Vol_Hurdle": int((adv_50 / 390) * 1.5)
+    }

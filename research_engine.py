@@ -241,7 +241,7 @@ def profile_zacks_with_local_tenure(tickers):
   return results
 
 
-def evaluate_earnings_proximity(ticker):
+def evaluate_earnings_proximity(ticker, category_id=1):
   try:
     # Route through the stealth global session to bypass Yahoo rate-limiting
     tk = yf.Ticker(ticker, session=GLOBAL_HTTP_SESSION)
@@ -259,18 +259,35 @@ def evaluate_earnings_proximity(ticker):
 
     if earnings_dates:
       target_date = pd.to_datetime(earnings_dates[0]).tz_localize(None).date()
-      days_diff = (target_date - today).days
+      days_to_earnings = (target_date - today).days
 
-      if 0 <= days_diff <= 7:
-        return f"🚨 DANGER ({days_diff}d)"
-      elif 8 <= days_diff <= 14:
-        return f"⚠️ CAUTION ({days_diff}d)"
-      elif days_diff > 14:
-        return f"SAFE ({days_diff}d)"
-      elif -3 <= days_diff < 0:
-        return f"Reported ({abs(days_diff)}d ago)"
-      else:
-        return "SAFE (>14d)"
+      # ---------------------------------------------------------
+      # DUAL-TRACK EARNINGS PROXIMITY LOGIC
+      # ---------------------------------------------------------
+      
+      # Core Legacy Protection Rule (Categories 1-4)
+      if category_id in [1, 2, 3, 4]:
+          if 0 <= days_to_earnings <= 7:
+              return f"🚨 DANGER ({days_to_earnings}d)"
+          elif 8 <= days_to_earnings <= 14:
+              return f"⚠️ CAUTION ({days_to_earnings}d)"
+          elif days_to_earnings > 14:
+              return f"SAFE ({days_to_earnings}d)"
+          elif -3 <= days_to_earnings < 0:
+              return f"Reported ({abs(days_to_earnings)}d ago)"
+          else:
+              return "SAFE (>14d)"
+              
+      # Alpha / Torque Logic (Category 5 PEADs)
+      if category_id == 5:
+          # Category 5 catalyst validator: checks if earnings were reported 0-2 sessions ago
+          if -2 <= days_to_earnings <= 0:
+              return "CATALYST_CONFIRMED (PEAD)"
+          return "SPECULATIVE_GAP"
+          
+      # Fallback for Categories 6 & 7
+      return "MONITOR"
+      
   except Exception:
     pass
   
