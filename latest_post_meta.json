@@ -45,7 +45,7 @@
         "Execution_Archetype": "MEAN_REVERSION",
         "Category": "Liquidity Sweep",
         "Zacks_Rank": "#3 (9d)",
-        "Earnings_Risk": "Unknown/TBD",
+        "Earnings_Risk": "SAFE (64d)",
         "Structural_Catalyst": "TECHNICAL MOMENTUM",
         "Execution_Protocol": "STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.",
         "Tactical_Target": 270.45,
@@ -65,16 +65,16 @@
         "qqq_above_21": false,
         "qqq_above_50": false,
         "qqq_above_200": true,
-        "tnx": 5.05,
-        "tnx_5d_chg": 3.9,
-        "oil": 86.89,
-        "oil_5d_chg": -4.3,
+        "tnx": 5.03,
+        "tnx_5d_chg": 3.5,
+        "oil": 86.49,
+        "oil_5d_chg": -4.8,
         "pct_above_200": 58.7,
         "pct_below_200": 41.3,
         "momentum_count": 39,
         "sweep_count": 4,
         "warnings": [
-            "\u26a1 YIELD SURGE: 10-Yr Yield at 5.05% (+3.9% 5d). Multiple drag active."
+            "\u26a1 YIELD SURGE: 10-Yr Yield at 5.03% (+3.5% 5d). Multiple drag active."
         ],
         "calendar": [
             "TODAY: PPI WHOLESALE INFLATION",
