@@ -538,6 +538,16 @@ def run_master_screener():
     stage0_candidates = stage_0_prune_by_sector(universe, sector_map)
     print(f"[*] Stage 0: Pruned {total_raw - len(stage0_candidates)} non-momentum tickers via sector metadata. {len(stage0_candidates)} remain.")
 
+    # Catch the new dual-track output from universe.py
+    legacy_survivors, alpha_survivors = stage_1_prune_by_liquidity(stage0_candidates, chunk_size=CHUNK_SIZE)
+    
+    # Clean symbols for the Alpaca API exactly as the original code did
+    legacy_survivors = [sym for sym in legacy_survivors if "-" not in sym and "." not in sym]
+    alpha_survivors = [sym for sym in alpha_survivors if "-" not in sym and "." not in sym]
+    
+    # Combine both tracks for the heavy Stage 2 Alpaca historical fetch
+    stage1_survivors = list(set(legacy_survivors + alpha_survivors))
+
     # ==============================================================================
     # STAGE 1: DUAL-TRACK UNIVERSE FILTERING
     # ==============================================================================

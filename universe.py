@@ -189,19 +189,23 @@ def stage_0_prune_by_sector(universe, sector_map):
 
 
 def stage_1_prune_by_liquidity(tickers_pool, chunk_size=100):
-  """Filters universe using a single rapid bulk fetch of delayed SIP consolidated volume."""
+  """Filters universe using a rapid bulk fetch of delayed SIP consolidated volume.
+  Returns two distinct lists: legacy_survivors and alpha_survivors.
+  """
   print(f"Stage 1: Bulk Scanning {len(tickers_pool)} candidates for liquidity...")
-  qualified = []
+  
+  legacy_survivors = []
+  alpha_survivors = []
   
   if not ALPACA_CLIENT:
       print("Alpaca client not initialized. Falling back to universal pass.")
-      return tickers_pool
+      return tickers_pool, []
 
   try:
     req = StockBarsRequest(
         symbol_or_symbols=tickers_pool,
         timeframe=TimeFrame.Day,
-        start=pd.Timestamp.now() - pd.DateOffset(days=10),
+        start=pd.Timestamp.now() - pd.DateOffset(days=180), # Expanded to 180 days to check session count
         end=pd.Timestamp.now() - pd.Timedelta(minutes=16),
         feed=DataFeed.SIP
     )
@@ -209,12 +213,10 @@ def stage_1_prune_by_liquidity(tickers_pool, chunk_size=100):
     
     if bars and not bars.df.empty:
         df = bars.df.reset_index()
-        # Transform Alpaca structure to standard OHLCV
         df = df.rename(columns={'timestamp': 'Date', 'symbol': 'Ticker', 'open': 'Open', 'high': 'High', 'low': 'Low', 'close': 'Close', 'volume': 'Volume'})
         df['Date'] = pd.to_datetime(df['Date']).dt.tz_localize(None)
         df = df.set_index('Date')
         
-        # Pivot the dataframe so columns are [Open, High, Low, Close, Volume] grouped by Ticker
         data = df.pivot(columns='Ticker', values=['Open', 'High', 'Low', 'Close', 'Volume'])
         data = data.swaplevel(0, 1, axis=1).sort_index(axis=1)
         
@@ -227,27 +229,33 @@ def stage_1_prune_by_liquidity(tickers_pool, chunk_size=100):
             else:
                 df_sym = data.dropna()
                 
-            if len(df_sym) >= 3:
+            sessions_count = len(df_sym)
+            if sessions_count >= 5:
               c0 = float(df_sym["Close"].iloc[-1])
               v5 = df_sym["Volume"].tail(5).mean()
               dollar_vol_5d = c0 * v5
-              if c0 >= 10.0 and dollar_vol_5d >= 12_000_000:
-                qualified.append(sym)
-            else:
-              qualified.append(sym) # Fallback if history is too short
+              
+              # Track A: Core Institutional Universe (Categories 1-4)
+              if c0 >= 10.0 and dollar_vol_5d >= 12_000_000 and sessions_count >= 120:
+                legacy_survivors.append(sym)
+                
+              # Track B: Alpha / High-Torque Discovery Universe (Categories 5-7)
+              if c0 >= 4.0 and dollar_vol_5d >= 3_000_000 and sessions_count >= 45:
+                alpha_survivors.append(sym)
+                
           except Exception:
-            qualified.append(sym) # Fallback on error
+             pass # Drop on error to be safe
             
     else:
         print("Warning: Bulk fetch returned empty dataframe. Passing all symbols.")
-        return tickers_pool
+        return tickers_pool, []
         
   except Exception as e:
     print(f" (fallback triggered due to API error: {e})")
-    return tickers_pool
+    return tickers_pool, []
 
-  print(f" done ({len(qualified)} liquid out of {len(tickers_pool)})")
-  return sorted(list(set(qualified)))
+  print(f" done ({len(legacy_survivors)} Legacy | {len(alpha_survivors)} Alpha liquid candidates)")
+  return sorted(list(set(legacy_survivors))), sorted(list(set(alpha_survivors)))
 
 
 def is_binary_healthcare(industry_str):
