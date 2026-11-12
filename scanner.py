@@ -812,8 +812,11 @@ def run_master_screener():
     # 1. CORE PIPELINE: Strictly isolated to Categories 1-4 for downstream JSON, PDF, and Social assets.
     all_current_setups = filtered_base_resets + filtered_htfs + filtered_pockets + filtered_sweeps
     
-    # Assuming you have populated your new Categories 5-7 into variables like filtered_episodic, etc.
-    # Replace these three list names below with whatever variables you assigned them to.
+    # Define empty Alpha lists to prevent crashes until the evaluation loop is fully wired up
+    filtered_episodic = []
+    filtered_ema_reclaim = []
+    filtered_alpha_flags = []
+    
     alpha_results = filtered_episodic + filtered_ema_reclaim + filtered_alpha_flags
     
     # 2. MASTER SPREADSHEET EXPORT: Includes ALL Categories 1-7
