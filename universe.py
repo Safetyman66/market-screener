@@ -192,6 +192,9 @@ def stage_1_prune_by_liquidity(tickers_pool, chunk_size=100):
   """Filters universe using a rapid bulk fetch of delayed SIP consolidated volume.
   Returns two distinct lists: legacy_survivors and alpha_survivors.
   """
+  # FIX: Sanitize the pool BEFORE sending to Alpaca so "MOG-A" doesn't crash the batch
+  tickers_pool = [sym for sym in tickers_pool if "-" not in sym and "." not in sym]
+  
   print(f"Stage 1: Bulk Scanning {len(tickers_pool)} candidates for liquidity...")
   
   legacy_survivors = []
@@ -202,6 +205,7 @@ def stage_1_prune_by_liquidity(tickers_pool, chunk_size=100):
       return tickers_pool, []
 
   try:
+    # ... (Keep the rest of your existing try/except block exactly the same) ...
     req = StockBarsRequest(
         symbol_or_symbols=tickers_pool,
         timeframe=TimeFrame.Day,
