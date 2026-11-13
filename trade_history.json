@@ -16974,5 +16974,53 @@
     "pivot": 228.45,
     "stop": 214.45,
     "r_ratio": 5.17
+  },
+  {
+    "date": "2026-11-13",
+    "ticker": "TKO",
+    "category": "Base-Reset",
+    "pivot": 201.98,
+    "stop": 192.64,
+    "r_ratio": 3.66
+  },
+  {
+    "date": "2026-11-13",
+    "ticker": "GE",
+    "category": "Base-Reset",
+    "pivot": 343.59,
+    "stop": 329.6,
+    "r_ratio": 4.3
+  },
+  {
+    "date": "2026-11-13",
+    "ticker": "IDXX",
+    "category": "Base-Reset",
+    "pivot": 712.88,
+    "stop": 680.0,
+    "r_ratio": 2.24
+  },
+  {
+    "date": "2026-11-13",
+    "ticker": "STE",
+    "category": "Base-Reset",
+    "pivot": 259.09,
+    "stop": 251.97,
+    "r_ratio": 2.3
+  },
+  {
+    "date": "2026-11-13",
+    "ticker": "TPR",
+    "category": "Base-Reset",
+    "pivot": 137.43,
+    "stop": 130.41,
+    "r_ratio": 4.75
+  },
+  {
+    "date": "2026-11-13",
+    "ticker": "NTNX",
+    "category": "Liquidity Sweep",
+    "pivot": 60.94,
+    "stop": 57.71,
+    "r_ratio": 4.68
   }
 ]
