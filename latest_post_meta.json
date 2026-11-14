@@ -1,17 +1,17 @@
 {
     "pdf_path": "daily_market_intelligence.pdf",
-    "date": "2026-11-13",
+    "date": "2026-11-14",
     "regime_code": "CONTRACTION",
     "regime_status": "RED: STRUCTURAL CONTRACTION",
     "posture_box": "[!] DEFENSIVE POSTURE: CASH PRESERVATION / RISK-OFF",
     "max_exposure": "0% - 20%",
-    "pct_above_200": 55.9,
-    "primary_ticker": "NTNX",
+    "pct_above_200": 55.6,
+    "primary_ticker": "NOV",
     "slot_tickers": [
-        "NTNX"
+        "NOV"
     ],
     "focus_tickers": [
-        "NTNX"
+        "NOV"
     ],
     "top_runner": {
         "ticker": "ALSN",
@@ -20,7 +20,7 @@
         "entry_pivot": 117.44,
         "stop_loss": 113.33,
         "peak_high": 131.53,
-        "latest_close": 125.65,
+        "latest_close": 126.69,
         "max_gain_pct": 12.0,
         "r_multiple": 3.4
     },
@@ -28,27 +28,27 @@
     "top_htf": null,
     "top_pp": null,
     "top_ls": {
-        "Ticker": "NTNX",
-        "Close": 60.87,
-        "Shelf_Level": 58.4,
-        "Flush_Low": 58.0,
-        "Sweep_Depth_%": 0.68,
-        "Headroom_%": 24.8,
-        "Vol_Ratio": "1.0x",
-        "Conviction_Score": 4.68,
-        "Pivot_Trigger": 60.94,
-        "Stop_Loss": 57.71,
-        "Risk_%": 5.3,
-        "R_Ratio": 4.68,
-        "ADV_20": 2194017,
-        "1Min_Vol_Hurdle": 7679,
+        "Ticker": "NOV",
+        "Close": 18.09,
+        "Shelf_Level": 17.36,
+        "Flush_Low": 17.24,
+        "Sweep_Depth_%": 0.69,
+        "Headroom_%": 21.2,
+        "Vol_Ratio": "1.05x",
+        "Conviction_Score": 3.97,
+        "Pivot_Trigger": 18.12,
+        "Stop_Loss": 17.15,
+        "Risk_%": 5.35,
+        "R_Ratio": 3.97,
+        "ADV_20": 4103364,
+        "1Min_Vol_Hurdle": 14361,
         "Execution_Archetype": "MEAN_REVERSION",
         "Category": "Liquidity Sweep",
-        "Zacks_Rank": "#3 (New)",
-        "Earnings_Risk": "\u26a0\ufe0f CAUTION (11d)",
+        "Zacks_Rank": "#3 (2d)",
+        "Earnings_Risk": "SAFE (>14d)",
         "Structural_Catalyst": "TECHNICAL MOMENTUM",
-        "Execution_Protocol": "DEFENSIVE RUNWAY: Blackout in <14d. Scale out at +1.5R or exit before day 7.",
-        "Tactical_Target": 70.63,
+        "Execution_Protocol": "STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.",
+        "Tactical_Target": 21.03,
         "Tactical_R_Ratio": 3.0
     },
     "dashboard": {
@@ -57,38 +57,38 @@
         "posture_box": "[!] DEFENSIVE POSTURE: CASH PRESERVATION / RISK-OFF",
         "max_exposure": "0% - 20%",
         "action_plan": "CAPITAL PRESERVATION POSTURE. Benchmarks trapped below 50 SMA / breadth compressed. Breakout failure rates peak here. Stand aside or trade small-sized liquidity sweeps only.",
-        "spy_c": 757.12,
+        "spy_c": 754.37,
         "spy_above_21": false,
         "spy_above_50": false,
         "spy_above_200": true,
-        "qqq_c": 688.17,
+        "qqq_c": 679.89,
         "qqq_above_21": false,
         "qqq_above_50": false,
-        "qqq_above_200": true,
-        "tnx": 5.1,
-        "tnx_5d_chg": 5.0,
-        "oil": 88.94,
-        "oil_5d_chg": 2.4,
-        "pct_above_200": 55.9,
-        "pct_below_200": 44.1,
-        "momentum_count": 32,
+        "qqq_above_200": false,
+        "tnx": 5.15,
+        "tnx_5d_chg": 6.0,
+        "oil": 88.56,
+        "oil_5d_chg": 2.0,
+        "pct_above_200": 55.6,
+        "pct_below_200": 44.4,
+        "momentum_count": 36,
         "sweep_count": 1,
         "warnings": [
-            "\u26a1 YIELD SURGE: 10-Yr Yield at 5.1% (+5.0% 5d). Multiple drag active.",
-            "\ud83d\udee2\ufe0f OIL PRICE SPIKE: WTI Crude at $88.94/bbl (+2.4% 5d). Inflation expectations repricing."
+            "\u26a1 YIELD SURGE: 10-Yr Yield at 5.15% (+6.0% 5d). Multiple drag active.",
+            "\ud83d\udee2\ufe0f OIL PRICE SPIKE: WTI Crude at $88.56/bbl (+2.0% 5d). Inflation expectations repricing."
         ],
         "calendar": [
-            "IN 7 DAYS: Monthly OPEX",
-            "IN 12 DAYS: FOMC MINUTES RELEASE",
-            "IN 14 DAYS: CORE PCE PRICE INDEX"
+            "IN 6 DAYS: Monthly OPEX",
+            "IN 11 DAYS: FOMC MINUTES RELEASE",
+            "IN 13 DAYS: CORE PCE PRICE INDEX"
         ],
         "seasonality": "NOVEMBER CHASE: Benchmark underperformance forces institutional buying.",
-        "days_to_opx": 7,
+        "days_to_opx": 6,
         "opx_label": "Monthly OPEX"
     },
     "macro_events": [
-        "IN 7 DAYS: Monthly OPEX",
-        "IN 12 DAYS: FOMC MINUTES RELEASE",
-        "IN 14 DAYS: CORE PCE PRICE INDEX"
+        "IN 6 DAYS: Monthly OPEX",
+        "IN 11 DAYS: FOMC MINUTES RELEASE",
+        "IN 13 DAYS: CORE PCE PRICE INDEX"
     ]
 }
