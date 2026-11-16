@@ -17086,5 +17086,141 @@
     "pivot": 18.12,
     "stop": 17.15,
     "r_ratio": 3.97
+  },
+  {
+    "date": "2026-11-16",
+    "ticker": "TPR",
+    "category": "Base-Reset",
+    "pivot": 137.43,
+    "stop": 130.41,
+    "r_ratio": 4.79
+  },
+  {
+    "date": "2026-11-16",
+    "ticker": "ENSG",
+    "category": "Base-Reset",
+    "pivot": 188.88,
+    "stop": 182.21,
+    "r_ratio": 4.45
+  },
+  {
+    "date": "2026-11-16",
+    "ticker": "SOLS",
+    "category": "Base-Reset",
+    "pivot": 67.76,
+    "stop": 64.06,
+    "r_ratio": 6.84
+  },
+  {
+    "date": "2026-11-16",
+    "ticker": "TTWO",
+    "category": "Base-Reset",
+    "pivot": 237.41,
+    "stop": 223.16,
+    "r_ratio": 2.79
+  },
+  {
+    "date": "2026-11-16",
+    "ticker": "LMT",
+    "category": "Base-Reset",
+    "pivot": 619.5,
+    "stop": 588.74,
+    "r_ratio": 3.24
+  },
+  {
+    "date": "2026-11-16",
+    "ticker": "GE",
+    "category": "Base-Reset",
+    "pivot": 343.59,
+    "stop": 328.1,
+    "r_ratio": 3.81
+  },
+  {
+    "date": "2026-11-16",
+    "ticker": "APG",
+    "category": "Base-Reset",
+    "pivot": 44.51,
+    "stop": 42.68,
+    "r_ratio": 3.65
+  },
+  {
+    "date": "2026-11-16",
+    "ticker": "OXY",
+    "category": "Base-Reset",
+    "pivot": 59.03,
+    "stop": 56.67,
+    "r_ratio": 3.7
+  },
+  {
+    "date": "2026-11-16",
+    "ticker": "TKO",
+    "category": "Base-Reset",
+    "pivot": 201.98,
+    "stop": 193.24,
+    "r_ratio": 3.73
+  },
+  {
+    "date": "2026-11-16",
+    "ticker": "CF",
+    "category": "Base-Reset",
+    "pivot": 126.29,
+    "stop": 121.33,
+    "r_ratio": 3.43
+  },
+  {
+    "date": "2026-11-16",
+    "ticker": "RTX",
+    "category": "Base-Reset",
+    "pivot": 204.27,
+    "stop": 196.37,
+    "r_ratio": 3.68
+  },
+  {
+    "date": "2026-11-16",
+    "ticker": "TDY",
+    "category": "Base-Reset",
+    "pivot": 659.44,
+    "stop": 639.5,
+    "r_ratio": 2.77
+  },
+  {
+    "date": "2026-11-16",
+    "ticker": "RRC",
+    "category": "Base-Reset",
+    "pivot": 52.62,
+    "stop": 51.04,
+    "r_ratio": 3.26
+  },
+  {
+    "date": "2026-11-16",
+    "ticker": "UNH",
+    "category": "Base-Reset",
+    "pivot": 408.51,
+    "stop": 396.91,
+    "r_ratio": 4.68
+  },
+  {
+    "date": "2026-11-16",
+    "ticker": "XPO",
+    "category": "Base-Reset",
+    "pivot": 193.05,
+    "stop": 184.73,
+    "r_ratio": 4.72
+  },
+  {
+    "date": "2026-11-16",
+    "ticker": "ISRG",
+    "category": "Base-Reset",
+    "pivot": 463.0,
+    "stop": 438.44,
+    "r_ratio": 6.81
+  },
+  {
+    "date": "2026-11-16",
+    "ticker": "PH",
+    "category": "Base-Reset",
+    "pivot": 980.1,
+    "stop": 944.8,
+    "r_ratio": 4.19
   }
 ]
