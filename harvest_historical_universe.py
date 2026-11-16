@@ -64,11 +64,11 @@ def download_daily_history(tickers, years=2):
         chunk = tickers[i:i + 100]
         print(f"[Daily {i+1}-{min(i+100, len(tickers))}/{len(tickers)}] Fetching daily bars...")
         req = StockBarsRequest(
-            symbol_or_symbols=tk,
-            timeframe=TimeFrame.Minute,
-            start=start_ts,
-            end=end_ts,
-            feed=DataFeed.IEX,  # Free tier historical feed
+            symbol_or_symbols=chunk,  # <-- Change 'tk' to 'chunk' here
+            timeframe=TimeFrame.Day,
+            start=start_dt,
+            end=end_dt,
+            feed=DataFeed.IEX,        # <-- Use DataFeed.IEX here too if Alpaca rejects SIP on daily bars
         )
         bars = ALPACA_CLIENT.get_stock_bars(req)
         if bars and not bars.df.empty:
@@ -171,7 +171,7 @@ def harvest_1m_windows(events_df, hold_days=4):
                 timeframe=TimeFrame.Minute,
                 start=start_ts,
                 end=end_ts,
-                feed=DataFeed.SIP,
+                feed=DataFeed.IEX,  # Change from DataFeed.SIP
             )
             bars = ALPACA_CLIENT.get_stock_bars(req)
             if bars and not bars.df.empty:
