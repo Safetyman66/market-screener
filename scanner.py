@@ -184,13 +184,74 @@ def is_acquisition_freeze(daily_df, lookback=5):
 
     return False
 
+# =========================================================================
+# EMBEDDED VOLUME PROFILE & LVN SCORE LOGIC (Air-gapped for ScanAPI)
+# =========================================================================
+def compute_volume_profile_metrics(df, atr=0):
+    """Computes authentic Volume Profile (POC, VAH, VAL) using a 70% Volume Value Area."""
+    if len(df) < 10:
+        return {"poc": 0.0, "vah": 0.0, "val": 0.0, "lvn_score": 0.0}
+
+    min_p = df['Low'].min()
+    max_p = df['High'].max()
+    
+    if min_p == max_p:
+        return {"poc": min_p, "vah": min_p, "val": min_p, "lvn_score": 0.0}
+        
+    bins = np.linspace(min_p, max_p, 40)
+    vol_profile = np.zeros(len(bins)-1)
+
+    for _, row in df.iterrows():
+        for i in range(len(bins)-1):
+            if bins[i] <= row['Close'] < bins[i+1]:
+                vol_profile[i] += row['Volume']
+                break
+
+    poc_idx = np.argmax(vol_profile)
+    poc_price = (bins[poc_idx] + bins[poc_idx+1]) / 2
+
+    total_vol = np.sum(vol_profile)
+    target_vol = total_vol * 0.70
+    current_vol = vol_profile[poc_idx]
+    
+    lower_idx, upper_idx = poc_idx, poc_idx
+    
+    while current_vol < target_vol and (lower_idx > 0 or upper_idx < len(vol_profile) - 1):
+        lower_vol = vol_profile[lower_idx - 1] if lower_idx > 0 else 0
+        upper_vol = vol_profile[upper_idx + 1] if upper_idx < len(vol_profile) - 1 else 0
+        
+        if lower_vol > upper_vol:
+            lower_idx -= 1
+            current_vol += lower_vol
+        else:
+            upper_idx += 1
+            current_vol += upper_vol
+
+    val = bins[lower_idx]
+    vah = bins[upper_idx + 1]
+
+    lvn_score = 0.0
+    if atr > 0:
+        current_price = df['Close'].iloc[-1]
+        target_price = current_price + (2.0 * atr)
+        overhead_vol = sum(vol_profile[i] for i in range(len(bins)-1) if current_price <= bins[i] <= target_price)
+        lvn_score = round(100 - ((overhead_vol / max(total_vol, 1)) * 100), 1)
+
+    return {
+        "poc": round(poc_price, 2),
+        "vah": round(vah, 2),
+        "val": round(val, 2),
+        "lvn_score": lvn_score
+    }
+# =========================================================================
+
 def evaluate_all_setups(ticker, daily_df, spy_1m_perf, sector_map, regime_params, is_legacy, is_alpha):
     if is_acquisition_freeze(daily_df):
         return {"diagnostics": "Acquisition freeze / cash buyout pin", "above_200": False}
 
     try:
         daily_df = daily_df.dropna()
-        if len(daily_df) < 45: # Lowered to 45 specifically to allow the Alpha track
+        if len(daily_df) < 45: 
             return {"diagnostics": "Insufficient data (<45 sessions)", "above_200": False}
 
         c0 = daily_df["Close"].iloc[-1]
@@ -202,7 +263,6 @@ def evaluate_all_setups(ticker, daily_df, spy_1m_perf, sector_map, regime_params
         adv_20_shares = int(volume.tail(20).mean())
         daily_dollar_vol = c0 * vol_sma50
         
-        # Dual-Track Intraday Liquidity Verification
         passed_legacy = is_legacy and c0 >= 10.0 and daily_dollar_vol >= 12_000_000 and len(daily_df) >= 120
         passed_alpha = is_alpha and c0 >= 4.0 and daily_dollar_vol >= 3_000_000
 
@@ -222,6 +282,14 @@ def evaluate_all_setups(ticker, daily_df, spy_1m_perf, sector_map, regime_params
 
         high_52w = daily_df["High"].tail(252).max() if len(daily_df) >= 252 else daily_df["High"].max()
 
+        # =========================================================================
+        # LVN RUNWAY SCORING
+        # =========================================================================
+        atr_14 = calculate_atr(daily_df, 14)
+        vp_metrics = compute_volume_profile_metrics(daily_df, atr=atr_14)
+        lvn_score = vp_metrics.get("lvn_score", 0.0)
+        # =========================================================================
+
         results = {
             "ticker": ticker,
             "above_200": is_above_200,
@@ -233,23 +301,34 @@ def evaluate_all_setups(ticker, daily_df, spy_1m_perf, sector_map, regime_params
 
         if passed_legacy:
             res_br, r_br = check_base_reset(ticker, daily_df, w_df, c0, daily_ema200, pct_above_200, high_52w, adv_20_shares, regime_params["base_reset"])
+            if res_br:
+                res_br["LVN_Score"] = lvn_score
+                res_br["Conviction_Score"] = round(res_br.get("Conviction_Score", 0) + (lvn_score * 0.02), 2)
             results["base_reset"] = res_br
             results["br_reason"] = r_br
 
             res_htf, r_htf = check_htf(ticker, daily_df, c0, daily_ema200, high_52w, adv_20_shares, regime_params["momentum_flag"])
+            if res_htf:
+                res_htf["LVN_Score"] = lvn_score
+                res_htf["Conviction_Score"] = round(res_htf.get("Conviction_Score", 0) + (lvn_score * 0.02), 2)
             results["htf"] = res_htf
             results["htf_reason"] = r_htf
 
             res_pp, r_pp = check_pocket_pivot(ticker, daily_df, c0, daily_ema200, high_52w, adv_20_shares, regime_params["pocket_pivot"])
+            if res_pp:
+                res_pp["LVN_Score"] = lvn_score
+                res_pp["Conviction_Score"] = round(res_pp.get("Conviction_Score", 0) + (lvn_score * 0.02), 2)
             results["pocket_pivot"] = res_pp
             results["pp_reason"] = r_pp
 
             res_ls, r_ls = check_liquidity_sweep(ticker, daily_df, c0, daily_ema200, high_52w, adv_20_shares, regime_params["liquidity_sweep"])
+            if res_ls:
+                res_ls["LVN_Score"] = lvn_score
+                res_ls["Conviction_Score"] = round(res_ls.get("Conviction_Score", 0) + (lvn_score * 0.02), 2)
             results["liquidity_sweep"] = res_ls
             results["ls_reason"] = r_ls
 
         if passed_alpha:
-            # Standardize Alpha outputs so they display cleanly in the CSV and Terminal
             def standardize(res_dict, cat_name):
                 res_dict["Ticker"] = ticker
                 res_dict["Close"] = round(c0, 2)
@@ -257,7 +336,8 @@ def evaluate_all_setups(ticker, daily_df, spy_1m_perf, sector_map, regime_params
                 res_dict["Pivot_Trigger"] = res_dict.get("trigger", c0)
                 res_dict["Stop_Loss"] = res_dict.get("stop", c0)
                 res_dict["Risk_%"] = round(((res_dict["Pivot_Trigger"] - res_dict["Stop_Loss"]) / res_dict["Pivot_Trigger"]) * 100, 2) if res_dict["Pivot_Trigger"] > 0 else 0
-                res_dict["Conviction_Score"] = 9.99 # Force-sort Discovery pool to the top
+                res_dict["LVN_Score"] = lvn_score
+                res_dict["Conviction_Score"] = round(9.99 + (lvn_score * 0.01), 2) 
                 return res_dict
 
             res_ep = evaluate_episodic_pivot(daily_df, regime_params)
@@ -849,7 +929,7 @@ def run_master_screener():
     
     if all_consolidated_results:
         master_df = pd.DataFrame(all_consolidated_results)
-        front_cols = ["Ticker", "Category", "Close", "Pivot_Trigger", "Target_Price", "Stop_Loss", "Risk_%", "R_Ratio", "Conviction_Score"]
+        front_cols = ["Ticker", "Category", "Close", "Pivot_Trigger", "Target_Price", "Stop_Loss", "Risk_%", "R_Ratio", "Conviction_Score", "LVN_Score"]
         export_cols = front_cols + [c for c in master_df.columns if c not in front_cols]
         master_df = master_df[[c for c in export_cols if c in master_df.columns]]
         master_df = master_df.sort_values(by=["Category", "Conviction_Score"], ascending=[True, False])
@@ -877,7 +957,7 @@ def run_master_screener():
                 disp_cols = [
                     c for c in [
                         "Ticker", "Close", "Target_Price", "Macro_Headroom_%", "Above_200_%", "Shelf_Level", "Flush_Low",
-                        "Ext_10EMA_%", "Above_200EMA_%", "Vol_Ratio", "Vol_Pocket_Ratio", "Conviction_Score",
+                        "Ext_10EMA_%", "Above_200EMA_%", "Vol_Ratio", "Vol_Pocket_Ratio", "LVN_Score", "Conviction_Score",
                         "Pivot_Trigger", "Stop_Loss", "Risk_%", "R_Ratio", "ADV_20", "1Min_Vol_Hurdle",
                         "Execution_Archetype", "Category", "Zacks_Rank", "Earnings_Risk"
                     ] if c in df_disp.columns
