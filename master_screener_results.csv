@@ -1,26 +1,35 @@
-Ticker,Category,Close,Pivot_Trigger,Target_Price,Stop_Loss,Risk_%,R_Ratio,Conviction_Score,Entry_Pivot_Gap_%,Macro_Headroom_%,Above_200_%,Hist_Now,Vol_Ratio,Is_Blue_Sky,ADV_20,1Min_Vol_Hurdle,Execution_Archetype,Zacks_Rank,Earnings_Risk,Structural_Catalyst,Execution_Protocol,Shelf_Level,Flush_Low,Sweep_Depth_%,Headroom_%,valid,category,trigger,stop,daily_atr
-GKOS,Alpha Flag,245.72,255.185,,227.98,10.66,,9.99,,,,,,,,5131,,,,,,,,,,True,7.0,255.185,227.98,14.19
-TPR,Alpha Flag,132.41,144.23,,130.41,9.58,,9.99,,,,,,,,11048,,,,,,,,,,True,7.0,144.23,130.41,4.07
-CVNA,Alpha Flag,72.37,78.48,,70.21,10.54,,9.99,,,,,,,,35258,,,,,,,,,,True,7.0,78.48,70.21,3.82
-MTZ,Alpha Flag,182.78,203.46,,175.37,13.81,,9.99,,,,,,,,6380,,,,,,,,,,True,7.0,203.46,175.37,12.5
-FDXF,Alpha Flag,133.93,135.43,,126.65,6.48,,9.99,,,,,,,,6117,,,,,,,,,,True,7.0,135.43,126.65,5.82
-KD,Alpha Flag,16.81,18.02,,16.01,11.15,,9.99,,,,,,,,16422,,,,,,,,,,True,7.0,18.02,16.01,0.93
-DY,Alpha Flag,221.54,243.79,,210.5,13.66,,9.99,,,,,,,,2378,,,,,,,,,,True,7.0,243.79,210.5,11.08
-GEN,Alpha Flag,30.4,31.2,,29.37,5.87,,9.99,,,,,,,,35913,,,,,,,,,,True,7.0,31.2,29.37,0.95
-GPK,Alpha Flag,10.87,12.14,,10.72,11.7,,9.99,,,,,,,,30059,,,,,,,,,,True,7.0,12.14,10.72,0.46
-ESAB,Alpha Flag,83.25,90.51,,81.92,9.49,,9.99,,,,,,,,4404,,,,,,,,,,True,7.0,90.51,81.92,4.5
-CMG,Alpha Flag,35.28,36.69,,34.75,5.29,,9.99,,,,,,,,73145,,,,,,,,,,True,7.0,36.69,34.75,1.07
-PNR,Alpha Flag,68.3,72.87,,67.79,6.97,,9.99,,,,,,,,11243,,,,,,,,,,True,7.0,72.87,67.79,2.24
-MOS,Alpha Flag,21.92,23.73,,21.42,9.73,,9.99,,,,,,,,37730,,,,,,,,,,True,7.0,23.73,21.42,1.01
-VNT,Base-Reset,43.64,44.24,48.2,42.68,3.53,2.96,2.125,1.37,10.4,26.5,1.383,1.47x,False,1728663.0,6050,BREAKOUT,#2 (29d),SAFE (>14d),ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,,,,,,,,,
-TPR,Base-Reset,132.41,137.43,164.8,130.41,5.11,4.79,2.103,3.79,24.5,2.6,0.459,0.83x,False,2844826.0,9956,BREAKOUT,#2 (1d),SAFE (82d),ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,,,,,,,,,
-TTWO,Base-Reset,227.82,237.41,265.94,223.16,6.0,2.79,1.811,4.21,16.7,2.7,-0.561,1.88x,False,3288814.0,11510,BREAKOUT,#2 (New),SAFE (87d),ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,,,,,,,,,
-SOLS,Base-Reset,66.12,67.76,90.8,64.06,5.46,6.84,1.304,2.48,37.3,3.3,0.305,0.94x,False,2568314.0,8989,BREAKOUT,#2 (1d),SAFE (>14d),ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,,,,,,,,,
-TKO,Base-Reset,195.42,201.98,226.94,193.24,4.33,3.73,1.169,3.36,16.1,2.9,1.004,0.96x,False,1175593.0,4114,BREAKOUT,#1 (2d),SAFE (>14d),ZACKS #1 STRONG BUY,PEAK DIFFUSION: Fresh Rank 1 revision. Full swing leeway to 3.0R+ expansion.,,,,,,,,,
-GE,Base-Reset,331.81,343.59,388.84,328.1,4.51,3.81,1.077,3.55,17.2,3.4,-2.864,0.78x,False,5757331.0,20150,BREAKOUT,#2 (33d),SAFE (68d),ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,,,,,,,,,
-IDXX,Base-Reset,704.23,712.88,769.98,680.0,4.61,2.02,0.789,1.23,9.3,20.8,19.432,0.85x,False,685174.0,2398,BREAKOUT,#2 (15d),SAFE (79d),ZACKS #2 BUY,MATURING DRIFT: Late Rank 2 drift. Trail tactical stop tightly along 10 EMA.,,,,,,,,,
-WTS,EMA Reclaim,360.39,360.39,,355.66,1.31,,9.99,,,,,,,,953,,,,,,,,,,True,6.0,360.39,355.66,13.88
-AMD,EMA Reclaim,534.06,534.06,,520.01,2.63,,9.99,,,,,,,,103914,,,,,,,,,,True,6.0,534.06,520.01,35.9
-AM,EMA Reclaim,20.46,20.46,,19.6,4.2,,9.99,,,,,,,,10979,,,,,,,,,,True,6.0,20.46,19.6,0.69
-LYV,EMA Reclaim,178.45,178.45,,176.68,0.99,,9.99,,,,,,,,8766,,,,,,,,,,True,6.0,178.45,176.68,5.02
-NOV,Liquidity Sweep,18.09,18.12,,17.15,5.35,3.97,3.97,,,,,1.05x,,4103364.0,14361,MEAN_REVERSION,#3 (2d),SAFE (>14d),TECHNICAL MOMENTUM,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,17.36,17.24,0.69,21.2,,,,,
+Ticker,Category,Close,Pivot_Trigger,Target_Price,Stop_Loss,Risk_%,R_Ratio,Conviction_Score,LVN_Score,Entry_Pivot_Gap_%,Macro_Headroom_%,Above_200_%,Hist_Now,Vol_Ratio,Is_Blue_Sky,ADV_20,1Min_Vol_Hurdle,Execution_Archetype,Zacks_Rank,Earnings_Risk,Structural_Catalyst,Execution_Protocol,valid,category,trigger,stop,daily_atr
+FDXF,Alpha Flag,133.93,135.43,,126.65,6.48,,10.99,100.0,,,,,,,,6117,,,,,,True,7.0,135.43,126.65,5.82
+ESAB,Alpha Flag,83.25,90.51,,81.92,9.49,,10.91,92.4,,,,,,,,4404,,,,,,True,7.0,90.51,81.92,4.5
+GEN,Alpha Flag,30.4,31.2,,29.37,5.87,,10.9,91.1,,,,,,,,35913,,,,,,True,7.0,31.2,29.37,0.95
+MOS,Alpha Flag,21.92,23.73,,21.42,9.73,,10.87,88.3,,,,,,,,37730,,,,,,True,7.0,23.73,21.42,1.01
+DY,Alpha Flag,221.54,243.79,,210.5,13.66,,10.85,85.9,,,,,,,,2378,,,,,,True,7.0,243.79,210.5,11.08
+CVNA,Alpha Flag,72.37,78.48,,70.21,10.54,,10.83,83.7,,,,,,,,35258,,,,,,True,7.0,78.48,70.21,3.82
+MTZ,Alpha Flag,182.78,203.46,,175.37,13.81,,10.72,72.7,,,,,,,,6380,,,,,,True,7.0,203.46,175.37,12.5
+GKOS,Alpha Flag,245.72,255.185,,227.98,10.66,,10.72,73.3,,,,,,,,5131,,,,,,True,7.0,255.185,227.98,14.19
+TPR,Alpha Flag,132.41,144.23,,130.41,9.58,,10.69,69.7,,,,,,,,11048,,,,,,True,7.0,144.23,130.41,4.07
+GPK,Alpha Flag,10.87,12.14,,10.72,11.7,,10.6,61.3,,,,,,,,30059,,,,,,True,7.0,12.14,10.72,0.46
+KD,Alpha Flag,16.81,18.02,,16.01,11.15,,10.5,51.1,,,,,,,,16422,,,,,,True,7.0,18.02,16.01,0.93
+CMG,Alpha Flag,35.28,36.69,,34.75,5.29,,10.44,45.3,,,,,,,,73145,,,,,,True,7.0,36.69,34.75,1.07
+PNR,Alpha Flag,68.3,72.87,,67.79,6.97,,10.36,37.3,,,,,,,,11243,,,,,,True,7.0,72.87,67.79,2.24
+TPR,Base-Reset,132.41,137.43,164.8,130.41,5.11,4.79,14.94,69.7,3.79,24.5,2.6,-0.549,6.62x,False,2844826.0,9956,BREAKOUT,#2 (3d),SAFE (80d),ZACKS #2 BUY | OPEX PINNING RISK,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,,,,,
+TKO,Base-Reset,195.42,201.98,226.94,193.24,4.33,3.73,8.39,54.9,3.36,16.1,3.0,0.013,7.8x,False,1175593.0,4114,BREAKOUT,#1 (4d),SAFE (>14d),ZACKS #1 STRONG BUY | OPEX PINNING RISK,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,,,,,
+RRC,Base-Reset,51.83,52.62,56.9,51.04,3.0,3.26,7.94,74.8,1.52,9.8,25.7,1.213,5.37x,False,6300235.0,22050,BREAKOUT,#2 (New),SAFE (>14d),ZACKS #2 BUY | OPEX PINNING RISK,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,,,,,
+SOLS,Base-Reset,66.12,67.76,90.8,64.06,5.46,6.84,7.09,76.5,2.48,37.3,3.3,-0.28,8.15x,False,2568314.0,8989,BREAKOUT,#2 (2d),SAFE (>14d),ZACKS #2 BUY | OPEX PINNING RISK,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,,,,,
+OXY,Base-Reset,58.75,59.03,67.45,56.67,4.0,3.7,6.9,94.7,0.48,14.8,5.1,-0.076,6.3x,False,10653019.0,37285,BREAKOUT,#2 (28d),SAFE (>14d),ZACKS #2 BUY | OPEX PINNING RISK,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,,,,,
+GE,Base-Reset,331.81,343.59,388.84,328.1,4.51,3.81,6.26,46.2,3.55,17.2,3.4,-5.001,6.01x,False,5757327.0,20150,BREAKOUT,#2 (35d),SAFE (66d),ZACKS #2 BUY | OPEX PINNING RISK,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,,,,,
+APG,Base-Reset,43.47,44.51,49.99,42.68,4.11,3.65,5.64,77.0,2.39,15.0,6.4,0.221,6.87x,False,3493285.0,12226,BREAKOUT,#2 (20d),SAFE (>14d),ZACKS #2 BUY | OPEX PINNING RISK,MATURING DRIFT: Late Rank 2 drift. Trail tactical stop tightly along 10 EMA.,,,,,
+LMT,Base-Reset,596.04,619.5,692.0,588.74,4.97,3.24,4.85,42.0,3.94,16.1,8.4,6.099,6.63x,False,1678271.0,5873,BREAKOUT,#2 (13d),SAFE (71d),ZACKS #2 BUY | OPEX PINNING RISK,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,,,,,
+TTWO,Base-Reset,227.82,237.41,265.94,223.16,6.0,2.79,4.77,87.1,4.21,16.7,2.7,-2.492,7.21x,False,3288814.0,11510,BREAKOUT,#2 (2d),SAFE (85d),ZACKS #2 BUY | OPEX PINNING RISK,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,,,,,
+ENSG,Base-Reset,188.41,188.88,218.0,182.21,3.53,4.45,4.54,98.4,0.25,15.7,6.1,1.246,6.02x,False,401900.0,1406,BREAKOUT,#2 (31d),SAFE (>14d),ZACKS #2 BUY | OPEX PINNING RISK,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,,,,,
+XPO,Base-Reset,192.81,193.05,232.05,184.73,4.31,4.72,4.24,100.0,0.12,20.4,3.3,-2.208,6.01x,False,1242609.0,4349,BREAKOUT,#1 (New),SAFE (>14d),ZACKS #1 STRONG BUY | OPEX PINNING RISK,PEAK DIFFUSION: Fresh Rank 1 revision. Full swing leeway to 3.0R+ expansion.,,,,,
+RTX,Base-Reset,198.58,204.27,226.88,196.37,3.87,3.68,3.53,41.7,2.87,14.3,3.2,-1.737,5.98x,False,5807602.0,20326,BREAKOUT,#1 (New),SAFE (71d),ZACKS #1 STRONG BUY | OPEX PINNING RISK,PEAK DIFFUSION: Fresh Rank 1 revision. Full swing leeway to 3.0R+ expansion.,,,,,
+UNH,Base-Reset,407.46,408.51,461.62,396.91,2.84,4.68,3.5,99.3,0.26,13.3,8.1,-2.004,5.9x,False,4938833.0,17285,BREAKOUT,#2 (48d),SAFE (57d),ZACKS #2 BUY | OPEX PINNING RISK,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,,,,,
+CF,Base-Reset,125.09,126.29,141.96,121.33,3.93,3.43,3.01,86.5,0.96,13.5,9.0,-1.06,6.04x,False,2071935.0,7251,BREAKOUT,#2 (New),SAFE (>14d),ZACKS #2 BUY | OPEX PINNING RISK,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,,,,,
+ISRG,Base-Reset,443.59,463.0,603.88,438.44,5.3,6.81,2.93,45.3,4.38,36.1,2.9,11.926,7.12x,False,2741960.0,9596,BREAKOUT,#2 (19d),SAFE (66d),ZACKS #2 BUY | OPEX PINNING RISK,MATURING DRIFT: Late Rank 2 drift. Trail tactical stop tightly along 10 EMA.,,,,,
+TDY,Base-Reset,643.73,659.44,697.67,639.5,3.02,2.77,2.83,32.7,2.44,8.4,3.8,-1.267,7.59x,False,428746.0,1500,BREAKOUT,#2 (New),SAFE (65d),ZACKS #2 BUY | OPEX PINNING RISK,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,,,,,
+PH,Base-Reset,955.68,980.1,1099.94,944.8,3.6,4.19,1.38,33.4,2.56,15.1,2.5,-12.228,8.42x,False,790553.0,2766,BREAKOUT,#2 (New),SAFE (73d),ZACKS #2 BUY | OPEX PINNING RISK,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,,,,,
+AMD,EMA Reclaim,534.06,534.06,,520.01,2.63,,10.94,95.4,,,,,,,,103913,,,,,,True,6.0,534.06,520.01,35.9
+WTS,EMA Reclaim,360.39,360.39,,355.66,1.31,,10.78,79.3,,,,,,,,953,,,,,,True,6.0,360.39,355.66,13.88
+AM,EMA Reclaim,20.46,20.46,,19.6,4.2,,10.76,76.9,,,,,,,,10979,,,,,,True,6.0,20.46,19.6,0.69
+LYV,EMA Reclaim,178.45,178.45,,176.68,0.99,,10.47,48.2,,,,,,,,8766,,,,,,True,6.0,178.45,176.68,5.02
