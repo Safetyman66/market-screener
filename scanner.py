@@ -4,14 +4,10 @@
 Author: Corp Acuity Ltd
 
 Architecture:
-  - Stage 0: Instant in-memory metadata pruning (drops non-momentum sectors with 0 network calls).
-  - Stage 1: Ultra-lightweight 5-day liquidity scan (Price >= $10, 5D ADDV >= $12M).
-  - Stage 2: 15-month historical deep-dive (period='15mo') exclusively on liquid survivors.
-  - Pattern Engines: Base-Resets, Momentum Bull Flags (Blue-Sky friendly), Pocket Pivots, Liquidity Sweeps.
-  - Knowledge Base Integration: Synthesizes Zacks tenure, earnings proximity, OpEx gamma,
-    and TOM calendar cycles into operational Execution Protocols for each setup.
-  - Multi-Output: Produces standard watchlists, LinkedIn carousel PDF, X cards, terminal JSON,
-    and a unified 'master_screener_results.csv' spreadsheet.
+  - Stage 0: Instant in-memory metadata pruning.
+  - Stage 1: Ultra-lightweight 5-day liquidity scan & daily setup evaluation.
+  - Stage 2: Targeted 15m Intraday Box/LVN Evaluation exclusively on survivors.
+  - Knowledge Base Integration: Zacks tenure, earnings proximity, OpEx gamma.
 """
 
 # ====================================================================================================================
@@ -185,27 +181,23 @@ def is_acquisition_freeze(daily_df, lookback=5):
     return False
 
 # =========================================================================
-# EMBEDDED VOLUME PROFILE & LVN SCORE LOGIC (Air-gapped for ScanAPI)
+# OPTIMIZED VOLUME PROFILE & LVN SCORE LOGIC (Vectorized for Stage 2)
 # =========================================================================
 def compute_volume_profile_metrics(df, atr=0):
-    """Computes authentic Volume Profile (POC, VAH, VAL) using a 70% Volume Value Area."""
+    """Computes authentic Volume Profile using fast numpy histograms instead of loops."""
     if len(df) < 10:
         return {"poc": 0.0, "vah": 0.0, "val": 0.0, "lvn_score": 0.0}
 
-    min_p = df['Low'].min()
-    max_p = df['High'].max()
+    min_p = float(df['Low'].min())
+    max_p = float(df['High'].max())
     
     if min_p == max_p:
         return {"poc": min_p, "vah": min_p, "val": min_p, "lvn_score": 0.0}
         
     bins = np.linspace(min_p, max_p, 40)
-    vol_profile = np.zeros(len(bins)-1)
-
-    for _, row in df.iterrows():
-        for i in range(len(bins)-1):
-            if bins[i] <= row['Close'] < bins[i+1]:
-                vol_profile[i] += row['Volume']
-                break
+    
+    safe_volume = np.where(df['Volume'] <= 0, 1.0, df['Volume'])
+    vol_profile, _ = np.histogram(df['Close'], bins=bins, weights=safe_volume)
 
     poc_idx = np.argmax(vol_profile)
     poc_price = (bins[poc_idx] + bins[poc_idx+1]) / 2
@@ -216,10 +208,15 @@ def compute_volume_profile_metrics(df, atr=0):
     
     lower_idx, upper_idx = poc_idx, poc_idx
     
-    while current_vol < target_vol and (lower_idx > 0 or upper_idx < len(vol_profile) - 1):
+    iterations = 0
+    while current_vol < target_vol and (lower_idx > 0 or upper_idx < len(vol_profile) - 1) and iterations < 100:
+        iterations += 1
         lower_vol = vol_profile[lower_idx - 1] if lower_idx > 0 else 0
         upper_vol = vol_profile[upper_idx + 1] if upper_idx < len(vol_profile) - 1 else 0
         
+        if lower_vol == 0 and upper_vol == 0:
+            break
+            
         if lower_vol > upper_vol:
             lower_idx -= 1
             current_vol += lower_vol
@@ -231,11 +228,11 @@ def compute_volume_profile_metrics(df, atr=0):
     vah = bins[upper_idx + 1]
 
     lvn_score = 0.0
-    if atr > 0:
-        current_price = df['Close'].iloc[-1]
-        target_price = current_price + (2.0 * atr)
-        overhead_vol = sum(vol_profile[i] for i in range(len(bins)-1) if current_price <= bins[i] <= target_price)
-        lvn_score = round(100 - ((overhead_vol / max(total_vol, 1)) * 100), 1)
+    current_price = float(df['Close'].iloc[-1])
+    target_price = current_price + (2.0 * atr) if atr > 0 else current_price * 1.02
+    
+    overhead_vol = sum(vol_profile[i] for i in range(len(bins)-1) if current_price <= bins[i] <= target_price)
+    lvn_score = round(100 - ((overhead_vol / max(total_vol, 1)) * 100), 1)
 
     return {
         "poc": round(poc_price, 2),
@@ -282,14 +279,6 @@ def evaluate_all_setups(ticker, daily_df, spy_1m_perf, sector_map, regime_params
 
         high_52w = daily_df["High"].tail(252).max() if len(daily_df) >= 252 else daily_df["High"].max()
 
-        # =========================================================================
-        # LVN RUNWAY SCORING
-        # =========================================================================
-        atr_14 = calculate_atr(daily_df, 14)
-        vp_metrics = compute_volume_profile_metrics(daily_df, atr=atr_14)
-        lvn_score = vp_metrics.get("lvn_score", 0.0)
-        # =========================================================================
-
         results = {
             "ticker": ticker,
             "above_200": is_above_200,
@@ -299,32 +288,21 @@ def evaluate_all_setups(ticker, daily_df, spy_1m_perf, sector_map, regime_params
             "diagnostics": "Evaluated",
         }
 
+        # STAGE 1 CHECKS (LVN Math Disabled Here)
         if passed_legacy:
             res_br, r_br = check_base_reset(ticker, daily_df, w_df, c0, daily_ema200, pct_above_200, high_52w, adv_20_shares, regime_params["base_reset"])
-            if res_br:
-                res_br["LVN_Score"] = lvn_score
-                res_br["Conviction_Score"] = round(res_br.get("Conviction_Score", 0) + (lvn_score * 0.02), 2)
             results["base_reset"] = res_br
             results["br_reason"] = r_br
 
             res_htf, r_htf = check_htf(ticker, daily_df, c0, daily_ema200, high_52w, adv_20_shares, regime_params["momentum_flag"])
-            if res_htf:
-                res_htf["LVN_Score"] = lvn_score
-                res_htf["Conviction_Score"] = round(res_htf.get("Conviction_Score", 0) + (lvn_score * 0.02), 2)
             results["htf"] = res_htf
             results["htf_reason"] = r_htf
 
             res_pp, r_pp = check_pocket_pivot(ticker, daily_df, c0, daily_ema200, high_52w, adv_20_shares, regime_params["pocket_pivot"])
-            if res_pp:
-                res_pp["LVN_Score"] = lvn_score
-                res_pp["Conviction_Score"] = round(res_pp.get("Conviction_Score", 0) + (lvn_score * 0.02), 2)
             results["pocket_pivot"] = res_pp
             results["pp_reason"] = r_pp
 
             res_ls, r_ls = check_liquidity_sweep(ticker, daily_df, c0, daily_ema200, high_52w, adv_20_shares, regime_params["liquidity_sweep"])
-            if res_ls:
-                res_ls["LVN_Score"] = lvn_score
-                res_ls["Conviction_Score"] = round(res_ls.get("Conviction_Score", 0) + (lvn_score * 0.02), 2)
             results["liquidity_sweep"] = res_ls
             results["ls_reason"] = r_ls
 
@@ -336,8 +314,6 @@ def evaluate_all_setups(ticker, daily_df, spy_1m_perf, sector_map, regime_params
                 res_dict["Pivot_Trigger"] = res_dict.get("trigger", c0)
                 res_dict["Stop_Loss"] = res_dict.get("stop", c0)
                 res_dict["Risk_%"] = round(((res_dict["Pivot_Trigger"] - res_dict["Stop_Loss"]) / res_dict["Pivot_Trigger"]) * 100, 2) if res_dict["Pivot_Trigger"] > 0 else 0
-                res_dict["LVN_Score"] = lvn_score
-                res_dict["Conviction_Score"] = round(9.99 + (lvn_score * 0.01), 2) 
                 return res_dict
 
             res_ep = evaluate_episodic_pivot(daily_df, regime_params)
@@ -613,7 +589,6 @@ def run_master_screener():
     regime_code = get_preliminary_regime()
     print(f"[*] Detected Regime for Parameter Selection: {regime_code}")
     
-    # Load JSON Control Room Parameters
     with open("regime_parameters.json", "r") as f:
         master_params = json.load(f)
     regime_params = master_params.get(regime_code, master_params["ROTATION"])
@@ -625,18 +600,14 @@ def run_master_screener():
     stage0_candidates = stage_0_prune_by_sector(universe, sector_map)
     print(f"[*] Stage 0: Pruned {total_raw - len(stage0_candidates)} non-momentum tickers via sector metadata. {len(stage0_candidates)} remain.")
 
-    # Catch the dual-track output from universe.py
     legacy_survivors, alpha_survivors = stage_1_prune_by_liquidity(stage0_candidates, chunk_size=CHUNK_SIZE)
     
-    # Clean symbols for the Alpaca API exactly as the original code did
     legacy_survivors = [sym for sym in legacy_survivors if "-" not in sym and "." not in sym]
     alpha_survivors = [sym for sym in alpha_survivors if "-" not in sym and "." not in sym]
     
-    # Combine both tracks for the heavy Stage 2 Alpaca historical fetch
     stage1_survivors = list(set(legacy_survivors + alpha_survivors))
 
     print(f"[*] Stage 1 Complete: {len(legacy_survivors)} Legacy and {len(alpha_survivors)} Alpha candidates qualified for deep scan.")
-    
     print("[*] Stage 2: Ingesting 15-month historical data (period='15mo') only for survivors...\n")
 
     spy_data = yf.download(
@@ -701,14 +672,9 @@ def run_master_screener():
                     
                     batch_data = df_pivoted
 
-                    # =========================================================================
-                    # NEW FIX: DROP PARTIAL INTRADAY BAR
-                    # Prevents 30-minute volume bars from collapsing the daily volume indicators
-                    # =========================================================================
                     current_et_date = pd.Timestamp.now(tz='US/Eastern').date()
                     if batch_data.index[-1].date() == current_et_date:
                         batch_data = batch_data.iloc[:-1]
-                    # =========================================================================
 
                     break
             except Exception as e:
@@ -801,7 +767,6 @@ def run_master_screener():
         "sweep": len(liquidity_sweeps),
     }
 
-    # Final Dashboard Printout using actual measured breadth
     print("\n" + "=" * 112)
     print("                      ENGINE DIAGNOSTICS & REJECTION REASONS")
     print("=" * 112)
@@ -826,8 +791,35 @@ def run_master_screener():
             + [r["Ticker"] for r in htfs]
             + [r["Ticker"] for r in pocket_pivots]
             + [r["Ticker"] for r in liquidity_sweeps]
+            + [r["Ticker"] for r in episodic_pivots]
+            + [r["Ticker"] for r in ema_reclaims]
+            + [r["Ticker"] for r in alpha_flags]
         )
     )
+
+    # ====================================================================================================================
+    # STAGE 2: INTRADAY BOX & LVN EVALUATION
+    # Only executes on the handful of survivors to prevent GitHub Actions timeout.
+    # ====================================================================================================================
+    print(f"\n[*] Stage 2: Pulling intraday 15m data and calculating Box/LVN scores for {len(unique_passed_tickers)} survivors...", end="", flush=True)
+    lvn_scores = {}
+    if unique_passed_tickers:
+        with ThreadPoolExecutor(max_workers=8) as executor:
+            future_to_tk = {executor.submit(yf.download, tk, period="5d", interval="15m", progress=False): tk for tk in unique_passed_tickers}
+            for future in as_completed(future_to_tk):
+                tk = future_to_tk[future]
+                try:
+                    df_15m = future.result()
+                    if df_15m is not None and not df_15m.empty:
+                        if isinstance(df_15m.columns, pd.MultiIndex):
+                            df_15m.columns = df_15m.columns.get_level_values(0)
+                        vp_metrics = compute_volume_profile_metrics(df_15m)
+                        lvn_scores[tk] = vp_metrics.get("lvn_score", 0.0)
+                    else:
+                        lvn_scores[tk] = 0.0
+                except Exception:
+                    lvn_scores[tk] = 0.0
+    print(" done.")
 
     print(f"\nProfiling Earnings Dates & Zacks Ranks for {len(unique_passed_tickers)} candidates...", end="", flush=True)
     earnings_map = {}
@@ -842,31 +834,65 @@ def run_master_screener():
 
     for r in base_resets:
         r["Category"] = "Base-Reset"
-        r["Zacks_Rank"] = zacks_map.get(r["Ticker"], "N/A")
-        r["Earnings_Risk"] = earnings_map.get(r["Ticker"], "Unknown")
+        tk = r["Ticker"]
+        lvn = lvn_scores.get(tk, 0.0)
+        r["LVN_Score"] = lvn
+        r["Conviction_Score"] = round(r.get("Conviction_Score", 0) + (lvn * 0.02), 2)
+        r["Zacks_Rank"] = zacks_map.get(tk, "N/A")
+        r["Earnings_Risk"] = earnings_map.get(tk, "Unknown")
         r["Structural_Catalyst"] = determine_structural_catalyst(r, days_to_opx)
         r["Execution_Protocol"] = generate_kb_execution_protocol(r, days_to_opx)
 
     for r in htfs:
         r["Category"] = "Momentum Flag"
-        r["Zacks_Rank"] = zacks_map.get(r["Ticker"], "N/A")
-        r["Earnings_Risk"] = earnings_map.get(r["Ticker"], "Unknown")
+        tk = r["Ticker"]
+        lvn = lvn_scores.get(tk, 0.0)
+        r["LVN_Score"] = lvn
+        r["Conviction_Score"] = round(r.get("Conviction_Score", 0) + (lvn * 0.02), 2)
+        r["Zacks_Rank"] = zacks_map.get(tk, "N/A")
+        r["Earnings_Risk"] = earnings_map.get(tk, "Unknown")
         r["Structural_Catalyst"] = determine_structural_catalyst(r, days_to_opx)
         r["Execution_Protocol"] = generate_kb_execution_protocol(r, days_to_opx)
 
     for r in pocket_pivots:
         r["Category"] = "Pocket Pivot"
-        r["Zacks_Rank"] = zacks_map.get(r["Ticker"], "N/A")
-        r["Earnings_Risk"] = earnings_map.get(r["Ticker"], "Unknown")
+        tk = r["Ticker"]
+        lvn = lvn_scores.get(tk, 0.0)
+        r["LVN_Score"] = lvn
+        r["Conviction_Score"] = round(r.get("Conviction_Score", 0) + (lvn * 0.02), 2)
+        r["Zacks_Rank"] = zacks_map.get(tk, "N/A")
+        r["Earnings_Risk"] = earnings_map.get(tk, "Unknown")
         r["Structural_Catalyst"] = determine_structural_catalyst(r, days_to_opx)
         r["Execution_Protocol"] = generate_kb_execution_protocol(r, days_to_opx)
 
     for r in liquidity_sweeps:
         r["Category"] = "Liquidity Sweep"
-        r["Zacks_Rank"] = zacks_map.get(r["Ticker"], "N/A")
-        r["Earnings_Risk"] = earnings_map.get(r["Ticker"], "Unknown")
+        tk = r["Ticker"]
+        lvn = lvn_scores.get(tk, 0.0)
+        r["LVN_Score"] = lvn
+        r["Conviction_Score"] = round(r.get("Conviction_Score", 0) + (lvn * 0.02), 2)
+        r["Zacks_Rank"] = zacks_map.get(tk, "N/A")
+        r["Earnings_Risk"] = earnings_map.get(tk, "Unknown")
         r["Structural_Catalyst"] = determine_structural_catalyst(r, days_to_opx)
         r["Execution_Protocol"] = generate_kb_execution_protocol(r, days_to_opx)
+
+    for r in episodic_pivots:
+        r["Category"] = "Episodic Pivot"
+        lvn = lvn_scores.get(r["Ticker"], 0.0)
+        r["LVN_Score"] = lvn
+        r["Conviction_Score"] = round(9.99 + (lvn * 0.01), 2) 
+
+    for r in ema_reclaims:
+        r["Category"] = "EMA Reclaim"
+        lvn = lvn_scores.get(r["Ticker"], 0.0)
+        r["LVN_Score"] = lvn
+        r["Conviction_Score"] = round(9.99 + (lvn * 0.01), 2) 
+
+    for r in alpha_flags:
+        r["Category"] = "Alpha Flag"
+        lvn = lvn_scores.get(r["Ticker"], 0.0)
+        r["LVN_Score"] = lvn
+        r["Conviction_Score"] = round(9.99 + (lvn * 0.01), 2) 
 
     def universal_quality_filter(pool):
         return [
@@ -913,18 +939,13 @@ def run_master_screener():
     # ====================================================================================================================
     # PAYLOAD ROUTING & DOWNSTREAM ISOLATION
     # ====================================================================================================================
-    
-    # 1. CORE PIPELINE: Strictly isolated to Categories 1-4 for downstream JSON, PDF, and Social assets.
     all_current_setups = filtered_base_resets + filtered_htfs + filtered_pockets + filtered_sweeps
     
-    # Connect the populated lists to the payload router
     filtered_episodic = episodic_pivots
     filtered_ema_reclaim = ema_reclaims
     filtered_alpha_flags = alpha_flags
     
     alpha_results = filtered_episodic + filtered_ema_reclaim + filtered_alpha_flags
-    
-    # 2. MASTER SPREADSHEET EXPORT: Includes ALL Categories 1-7
     all_consolidated_results = all_current_setups + alpha_results
     
     if all_consolidated_results:
@@ -943,7 +964,6 @@ def run_master_screener():
     # ====================================================================================================================
     # TERMINAL DISPLAY (GITHUB ACTIONS CONSOLE SUMMARY)
     # ====================================================================================================================
-    
     def print_terminal_block(title_header, categories_list):
         print("\n" + "=" * 148)
         print(f"                    {title_header}")
