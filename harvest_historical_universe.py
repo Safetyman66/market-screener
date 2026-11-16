@@ -152,40 +152,50 @@ def find_historical_setup_events(daily_map, legacy_set, alpha_set, years=2):
     return events_df
 
 
-def harvest_1m_windows(events_df, hold_days=4):
-    """Downloads 1-minute bars (including VWAP/trade_count) for each event window."""
-    for idx, row in events_df.iterrows():
-        tk = row["Ticker"]
-        sig_dt = pd.to_datetime(row["Signal_Date"])
-        out_file = os.path.join(OUTPUT_DIR, f"{tk}_{row['Signal_Date']}.csv")
-        if os.path.exists(out_file):
+def harvest_1m_windows(events_df, hold_days=4, batch_size=50):
+    """Downloads 1-minute bars in multi-ticker batches grouped by Signal_Date."""
+    grouped = list(events_df.groupby("Signal_Date"))
+    total_dates = len(grouped)
+
+    for d_idx, (sig_date_str, grp) in enumerate(grouped, 1):
+        # Skip tickers already harvested for this signal date
+        pending_tickers = [
+            tk for tk in grp["Ticker"].unique()
+            if not os.path.exists(os.path.join(OUTPUT_DIR, f"{tk}_{sig_date_str}.csv"))
+        ]
+        if not pending_tickers:
             continue
 
-        # Fetch from signal date + 1 day through +5 calendar days (covers 3-4 trading sessions)
+        sig_dt = pd.to_datetime(sig_date_str)
         start_ts = (sig_dt + pd.Timedelta(days=1)).tz_localize("US/Eastern")
         end_ts = (sig_dt + pd.Timedelta(days=hold_days + 2)).tz_localize("US/Eastern")
 
-        try:
-            req = StockBarsRequest(
-                symbol_or_symbols=tk,
-                timeframe=TimeFrame.Minute,
-                start=start_ts,
-                end=end_ts,
-                feed=DataFeed.IEX,  # Change from DataFeed.SIP
-            )
-            bars = ALPACA_CLIENT.get_stock_bars(req)
-            if bars and not bars.df.empty:
-                df_1m = bars.df.reset_index().rename(columns={
-                    "timestamp": "date",
-                    "vwap": "average",  # Matches your backtester's `day_df['average']` column
-                })
-                df_1m.to_csv(out_file, index=False)
-        except Exception as e:
-            print(f"[!] Failed {tk} on {row['Signal_Date']}: {e}")
+        for i in range(0, len(pending_tickers), batch_size):
+            chunk = pending_tickers[i:i + batch_size]
+            try:
+                req = StockBarsRequest(
+                    symbol_or_symbols=chunk,
+                    timeframe=TimeFrame.Minute,
+                    start=start_ts,
+                    end=end_ts,
+                    feed=DataFeed.IEX,
+                )
+                bars = ALPACA_CLIENT.get_stock_bars(req)
+                if bars and not bars.df.empty:
+                    df_all = bars.df.reset_index().rename(columns={
+                        "timestamp": "date",
+                        "vwap": "average",
+                    })
+                    for tk, tk_df in df_all.groupby("symbol"):
+                        out_file = os.path.join(OUTPUT_DIR, f"{tk}_{sig_date_str}.csv")
+                        tk_df.drop(columns=["symbol"]).to_csv(out_file, index=False)
+            except Exception as e:
+                print(f"[!] Batch failed on {sig_date_str} ({len(chunk)} tickers): {e}", flush=True)
 
-        if idx % 50 == 0:
-            print(f"[1m Harvest] Processed {idx}/{len(events_df)} setup windows...")
-        time.sleep(0.32)  # ~185 calls/min, safely below Alpaca's 200/min limit
+            time.sleep(0.35)
+
+        if d_idx % 25 == 0 or d_idx == total_dates:
+            print(f"[1m Harvest] Completed {d_idx}/{total_dates} signal dates...", flush=True)
 
 
 if __name__ == "__main__":
