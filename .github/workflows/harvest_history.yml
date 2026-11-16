@@ -1,0 +1,26 @@
+name: Harvest Historical 1m Universe
+on:
+  workflow_dispatch:
+
+jobs:
+  harvest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install -r requirements.txt
+      - name: Run Historical Harvester
+        env:
+          ALPACA_API_KEY: ${{ secrets.ALPACA_API_KEY }}
+          ALPACA_SECRET_KEY: ${{ secrets.ALPACA_SECRET_KEY }}
+        run: python harvest_historical_universe.py
+      - name: Upload Harvested Cache Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: full-universe-1m-cache
+          path: |
+            historical_setup_manifest.csv
+            cache_1m_full_universe/
