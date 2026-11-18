@@ -6160,5 +6160,9 @@
   "JHX": {
     "sector": "Materials",
     "industry": "Construction Materials"
+  },
+  "HZN": {
+    "sector": "Utilities",
+    "industry": "Multi-Utilities"
   }
 }
