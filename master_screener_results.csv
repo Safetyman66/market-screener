@@ -1,19 +1,21 @@
-Ticker,Category,Close,Pivot_Trigger,Target_Price,Stop_Loss,Risk_%,R_Ratio,Conviction_Score,LVN_Score,Entry_Pivot_Gap_%,Macro_Headroom_%,Above_200_%,Hist_Now,Vol_Ratio,Is_Blue_Sky,ADV_20,1Min_Vol_Hurdle,Execution_Archetype,Zacks_Rank,Earnings_Risk,Structural_Catalyst,Execution_Protocol,valid,category,trigger,stop,daily_atr
-KD,Alpha Flag,16.0,18.02,,15.68,12.99,,10.85,85.7,,,,,,,,16346,,,,,,True,7.0,18.02,15.68,0.94
-DY,Alpha Flag,220.76,243.79,,213.52,12.42,,10.84,85.5,,,,,,,,2336,,,,,,True,7.0,243.79,213.52,11.35
-CVNA,Alpha Flag,71.1,78.48,,69.17,11.86,,10.67,68.1,,,,,,,,35607,,,,,,True,7.0,78.48,69.17,3.8
-FDXF,Alpha Flag,131.95,135.43,,128.43,5.17,,10.61,62.0,,,,,,,,6108,,,,,,True,7.0,135.43,128.43,5.56
-CMG,Alpha Flag,35.83,36.69,,34.83,5.07,,10.59,59.6,,,,,,,,73726,,,,,,True,7.0,36.69,34.83,1.08
-GEN,Alpha Flag,29.52,31.2,,29.43,5.67,,10.48,48.7,,,,,,,,36335,,,,,,True,7.0,31.2,29.43,0.99
-GKOS,Alpha Flag,243.25,255.185,,237.54,6.91,,10.19,20.0,,,,,,,,5119,,,,,,True,7.0,255.185,237.54,13.74
-VNT,Base-Reset,43.15,44.04,48.2,43.0,2.36,4.96,6.06,10.6,2.06,11.7,24.4,1.388,2.46x,False,1769028.0,6191,BREAKOUT,#2 (33d),SAFE (>14d),ZACKS #2 BUY | OPEX PINNING RISK,OPEX PINNING: Gamma suppression active. Expect range pinning at strike.,,,,,
-IDXX,Base-Reset,690.24,713.1,769.98,687.72,3.56,3.25,2.99,46.4,3.31,11.6,18.1,19.415,1.42x,False,682939.0,2390,BREAKOUT,#2 (19d),SAFE (75d),ZACKS #2 BUY | OPEX PINNING RISK,OPEX PINNING: Gamma suppression active. Expect range pinning at strike.,,,,,
-GE,Base-Reset,326.4,343.59,388.84,323.28,5.91,3.24,2.69,57.3,5.27,19.1,1.7,-2.868,1.3x,False,5407894.0,18927,BREAKOUT,#2 (37d),SAFE (64d),ZACKS #2 BUY | OPEX PINNING RISK,OPEX PINNING: Gamma suppression active. Expect range pinning at strike.,,,,,
-GEHC,Base-Reset,81.84,84.11,89.77,81.79,2.76,3.51,2.1,14.2,2.77,9.7,15.0,2.001,1.35x,False,4344274.0,15204,BREAKOUT,#2 (19d),SAFE (>14d),ZACKS #2 BUY | OPEX PINNING RISK,OPEX PINNING: Gamma suppression active. Expect range pinning at strike.,,,,,
-GATX,Base-Reset,187.15,192.46,205.56,186.15,3.28,3.0,2.01,44.9,2.84,9.8,6.0,1.138,1.14x,False,213165.0,746,BREAKOUT,N/A,SAFE (63d),OPEX PINNING RISK,OPEX PINNING: Gamma suppression active. Expect range pinning at strike.,,,,,
-ENSG,Base-Reset,186.02,190.33,218.0,185.3,2.64,6.51,1.8,29.8,2.32,17.2,4.6,1.776,1.2x,False,397205.0,1390,BREAKOUT,#2 (33d),SAFE (>14d),ZACKS #2 BUY | OPEX PINNING RISK,OPEX PINNING: Gamma suppression active. Expect range pinning at strike.,,,,,
-VFC,Base-Reset,20.34,21.0,22.27,20.04,4.57,2.08,1.75,36.9,3.24,9.5,23.2,0.802,1.26x,False,10398752.0,36395,BREAKOUT,#2 (1d),SAFE (70d),ZACKS #2 BUY | OPEX PINNING RISK,OPEX PINNING: Gamma suppression active. Expect range pinning at strike.,,,,,
-CHRW,EMA Reclaim,137.95,137.95,,133.01,3.58,,10.97,98.4,,,,,,,,7444,,,,,,True,6.0,137.95,133.01,4.79
-ARMK,EMA Reclaim,56.58,56.58,,53.99,4.58,,10.94,94.5,,,,,,,,11251,,,,,,True,6.0,56.58,53.99,2.07
-SYK,EMA Reclaim,317.54,317.54,,306.54,3.46,,10.76,76.5,,,,,,,,11671,,,,,,True,6.0,317.54,306.54,10.55
-ACM,Episodic Pivot,80.53,80.53,,78.25,2.83,,10.79,80.2,,,,,,,,5740,,,,,,True,5.0,80.53,78.25,2.46
+Ticker,Category,Close,Pivot_Trigger,Target_Price,Stop_Loss,Risk_%,R_Ratio,Conviction_Score,LVN_Score,Entry_Pivot_Gap_%,Macro_Headroom_%,Above_200_%,Hist_Now,Vol_Ratio,Is_Blue_Sky,ADV_20,1Min_Vol_Hurdle,Execution_Archetype,Zacks_Rank,Earnings_Risk,Structural_Catalyst,Execution_Protocol,Shelf_Level,Flush_Low,Sweep_Depth_%,Headroom_%,valid,category,trigger,stop,daily_atr
+DY,Alpha Flag,225.78,243.79,,213.52,12.42,,10.74,75.5,,,,,,,,2327,,,,,,,,,,True,7.0,243.79,213.52,11.46
+VNT,Base-Reset,43.96,44.48,48.2,42.89,3.57,2.7,4.1,88.6,1.18,9.6,26.4,1.388,1.84x,False,1793708.0,6277,BREAKOUT,#2 (34d),SAFE (>14d),ZACKS #2 BUY | OPEX PINNING RISK,OPEX PINNING: Gamma suppression active. Expect range pinning at strike.,,,,,,,,,
+SOLS,Base-Reset,65.59,67.0,90.8,62.7,6.42,5.99,2.92,78.8,2.15,38.4,2.4,0.305,1.17x,False,2477843.0,8672,BREAKOUT,#2 (5d),SAFE (>14d),ZACKS #2 BUY | OPEX PINNING RISK,OPEX PINNING: Gamma suppression active. Expect range pinning at strike.,,,,,,,,,
+GEHC,Base-Reset,83.66,84.11,89.77,81.13,3.54,2.06,2.64,93.4,0.54,7.3,17.3,2.001,1.01x,False,4417783.0,15462,BREAKOUT,#2 (20d),SAFE (>14d),ZACKS #2 BUY | OPEX PINNING RISK,OPEX PINNING: Gamma suppression active. Expect range pinning at strike.,,,,,,,,,
+GE,Base-Reset,328.1,343.59,388.84,323.28,5.91,3.13,2.28,55.5,4.72,18.5,2.2,-2.868,0.97x,False,5212484.0,18243,BREAKOUT,#2 (38d),SAFE (63d),ZACKS #2 BUY | OPEX PINNING RISK,OPEX PINNING: Gamma suppression active. Expect range pinning at strike.,,,,,,,,,
+GATX,Base-Reset,190.21,192.46,205.56,185.34,3.7,2.18,2.14,72.3,1.18,8.1,7.6,1.138,0.85x,False,211675.0,740,BREAKOUT,N/A,SAFE (62d),OPEX PINNING RISK,OPEX PINNING: Gamma suppression active. Expect range pinning at strike.,,,,,,,,,
+IDXX,Base-Reset,698.47,713.1,769.98,683.72,4.12,2.48,1.73,28.3,2.09,10.2,19.3,19.415,1.07x,False,681299.0,2384,BREAKOUT,#2 (20d),SAFE (74d),ZACKS #2 BUY | OPEX PINNING RISK,OPEX PINNING: Gamma suppression active. Expect range pinning at strike.,,,,,,,,,
+XPO,Base-Reset,188.13,193.05,232.05,184.18,4.59,5.08,1.65,48.5,2.62,23.3,0.8,-1.165,0.96x,False,1263908.0,4423,BREAKOUT,#2 (2d),SAFE (>14d),ZACKS #2 BUY | OPEX PINNING RISK,OPEX PINNING: Gamma suppression active. Expect range pinning at strike.,,,,,,,,,
+QLYS,EMA Reclaim,197.24,197.24,,179.59,8.95,,10.99,100.0,,,,,,,,3221,,,,,,,,,,True,6.0,197.24,179.59,14.12
+WSM,EMA Reclaim,260.09,260.09,,248.34,4.52,,10.91,92.3,,,,,,,,4212,,,,,,,,,,True,6.0,260.09,248.34,9.4
+RPM,EMA Reclaim,104.54,104.54,,101.32,3.08,,10.9,91.1,,,,,,,,4707,,,,,,,,,,True,6.0,104.54,101.32,3.04
+TJX,EMA Reclaim,140.3,140.3,,134.9,3.85,,10.88,88.7,,,,,,,,30432,,,,,,,,,,True,6.0,140.3,134.9,4.32
+ALV,EMA Reclaim,121.76,121.76,,117.74,3.3,,10.87,87.6,,,,,,,,3179,,,,,,,,,,True,6.0,121.76,117.74,3.21
+LYV,EMA Reclaim,181.56,181.56,,175.44,3.37,,10.86,87.5,,,,,,,,8773,,,,,,,,,,True,6.0,181.56,175.44,5.18
+MSA,EMA Reclaim,177.45,177.45,,170.38,3.98,,10.78,79.0,,,,,,,,1077,,,,,,,,,,True,6.0,177.45,170.38,5.65
+HWM,EMA Reclaim,221.15,221.15,,211.75,4.25,,10.74,75.1,,,,,,,,13755,,,,,,,,,,True,6.0,221.15,211.75,8.69
+CNX,EMA Reclaim,36.64,36.64,,35.59,2.87,,10.61,61.7,,,,,,,,7347,,,,,,,,,,True,6.0,36.64,35.59,1.1
+TTWO,EMA Reclaim,216.61,216.61,,201.95,6.77,,10.55,55.9,,,,,,,,12255,,,,,,,,,,True,6.0,216.61,201.95,11.73
+GPC,Liquidity Sweep,123.64,124.49,,118.56,4.76,4.75,6.38,81.3,,,,,0.92x,,911663.0,3190,MEAN_REVERSION,#3 (New),SAFE (>14d),OPEX PINNING RISK,OPEX PINNING: Gamma suppression active. Expect range pinning at strike.,120.18,119.16,0.85,22.6,,,,,
+CLH,Liquidity Sweep,284.78,287.28,,273.62,4.75,3.78,5.35,78.5,,,,,1.82x,,688912.0,2411,MEAN_REVERSION,#3 (New),SAFE (>14d),OPEX PINNING RISK,OPEX PINNING: Gamma suppression active. Expect range pinning at strike.,276.0,275.0,0.36,18.0,,,,,

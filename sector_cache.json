@@ -6164,5 +6164,9 @@
   "HZN": {
     "sector": "Utilities",
     "industry": "Multi-Utilities"
+  },
+  "CHYM": {
+    "sector": "Financials",
+    "industry": "Consumer Finance"
   }
 }
