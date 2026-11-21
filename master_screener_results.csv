@@ -1,11 +1,6 @@
-Ticker,Category,Close,Pivot_Trigger,Target_Price,Stop_Loss,Risk_%,R_Ratio,Conviction_Score,LVN_Score,Entry_Pivot_Gap_%,Macro_Headroom_%,Above_200_%,Hist_Now,Vol_Ratio,Is_Blue_Sky,ADV_20,1Min_Vol_Hurdle,Execution_Archetype,Zacks_Rank,Earnings_Risk,Structural_Catalyst,Execution_Protocol,Shelf_Level,Flush_Low,Sweep_Depth_%,Headroom_%,valid,category,trigger,stop,daily_atr
-APP,Alpha Flag,379.02,418.7665,,377.33,9.89,,10.91,91.6,,,,,,,,20368,,,,,,,,,,True,7.0,418.7665,377.33,23.06
-IDXX,Alpha Flag,689.65,713.74,,683.72,4.21,,10.5,51.0,,,,,,,,2231,,,,,,,,,,True,7.0,713.74,683.72,24.45
-SARO,Base-Reset,26.96,28.08,34.48,26.59,5.31,5.26,2.13,39.3,4.15,27.9,4.5,0.505,0.75x,False,4255457.0,14894,BREAKOUT,#2 (New),SAFE (>14d),ZACKS #2 BUY | OPEX PINNING RISK,OPEX PINNING: Gamma suppression active. Expect range pinning at strike.,,,,,,,,,
-CHE,EMA Reclaim,551.33,551.33,,536.51,2.69,,10.94,95.2,,,,,,,,609,,,,,,,,,,True,6.0,551.33,536.51,13.81
-OKTA,EMA Reclaim,206.85,206.85,,190.19,8.05,,10.89,89.6,,,,,,,,16428,,,,,,,,,,True,6.0,206.85,190.19,13.33
-PANW,EMA Reclaim,361.73,361.73,,339.73,6.08,,10.89,89.8,,,,,,,,25202,,,,,,,,,,True,6.0,361.73,339.73,17.6
-WWD,EMA Reclaim,335.72,335.72,,316.71,5.66,,10.85,86.1,,,,,,,,2994,,,,,,,,,,True,6.0,335.72,316.71,15.21
-VVV,EMA Reclaim,36.84,36.84,,34.89,5.29,,10.84,85.1,,,,,,,,11682,,,,,,,,,,True,6.0,36.84,34.89,1.56
-GME,EMA Reclaim,26.93,26.93,,25.69,4.6,,10.84,85.0,,,,,,,,35128,,,,,,,,,,True,6.0,26.93,25.69,0.99
-CLH,Liquidity Sweep,285.82,286.29,,273.62,4.43,3.96,5.65,84.6,,,,,1.81x,,688077.0,2408,MEAN_REVERSION,#3 (1d),SAFE (>14d),OPEX PINNING RISK,OPEX PINNING: Gamma suppression active. Expect range pinning at strike.,276.0,275.0,0.36,17.5,,,,,
+Ticker,Category,Close,Pivot_Trigger,Target_Price,Stop_Loss,Risk_%,R_Ratio,Conviction_Score,LVN_Score,Entry_Pivot_Gap_%,Macro_Headroom_%,Above_200_%,Hist_Now,Vol_Ratio,Is_Blue_Sky,ADV_20,1Min_Vol_Hurdle,Execution_Archetype,Zacks_Rank,Earnings_Risk,Structural_Catalyst,Execution_Protocol,valid,category,trigger,stop,daily_atr
+SARO,Base-Reset,26.57,28.08,34.48,26.42,5.91,5.04,3.08,76.9,5.68,29.8,2.9,0.48,0.9x,False,4246163.0,14861,BREAKOUT,#2 (1d),SAFE (>14d),ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,,,,,
+IDXX,Base-Reset,676.21,713.1,769.98,672.72,5.66,2.45,1.96,67.7,5.46,13.9,15.0,20.725,0.78x,False,690507.0,2416,BREAKOUT,#2 (22d),SAFE (72d),ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,,,,,
+VNT,Base-Reset,42.85,44.76,48.2,42.62,4.78,2.61,1.4,37.7,4.46,12.5,22.4,1.473,1.04x,False,1842880.0,6450,BREAKOUT,#2 (36d),SAFE (>14d),ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,,,,,
+WWD,EMA Reclaim,326.56,326.56,,307.61,5.8,,10.78,79.1,,,,,,,,3089,,,,,,True,6.0,326.56,307.61,15.16
+VVV,EMA Reclaim,36.25,36.25,,34.27,5.46,,10.67,68.3,,,,,,,,11917,,,,,,True,6.0,36.25,34.27,1.58
