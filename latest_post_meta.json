@@ -1,6 +1,6 @@
 {
     "pdf_path": "daily_market_intelligence.pdf",
-    "date": "2026-11-26",
+    "date": "2026-11-27",
     "regime_code": "CONTRACTION",
     "regime_status": "RED: STRUCTURAL CONTRACTION",
     "posture_box": "[!] DEFENSIVE POSTURE: CASH PRESERVATION / RISK-OFF",
@@ -45,8 +45,8 @@
         "Execution_Archetype": "MEAN_REVERSION",
         "Category": "Liquidity Sweep",
         "LVN_Score": 72.5,
-        "Zacks_Rank": "#2 (38d)",
-        "Earnings_Risk": "SAFE (83d)",
+        "Zacks_Rank": "#2 (39d)",
+        "Earnings_Risk": "SAFE (82d)",
         "Structural_Catalyst": "ZACKS #2 BUY",
         "Execution_Protocol": "STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.",
         "Tactical_Target": 61.13,
@@ -68,29 +68,29 @@
         "qqq_above_200": false,
         "tnx": 4.85,
         "tnx_5d_chg": -4.0,
-        "oil": 83.99,
-        "oil_5d_chg": 0.0,
+        "oil": 85.72,
+        "oil_5d_chg": 2.1,
         "pct_above_200": 47.0,
         "pct_below_200": 53.0,
-        "momentum_count": 7,
+        "momentum_count": 2,
         "sweep_count": 9,
         "warnings": [
             "\u26a1 YIELD SURGE: 10-Yr Yield at 4.85% (-4.0% 5d). Multiple drag active."
         ],
         "calendar": [
-            "IN 1 DAY(S): CORE PCE PRICE INDEX",
-            "IN 8 DAYS: JOBS REPORT / NFP",
-            "IN 13 DAYS: CPI INFLATION PRINT",
-            "IN 13 DAYS: FOMC RATE DECISION"
+            "TODAY: CORE PCE PRICE INDEX",
+            "IN 7 DAYS: JOBS REPORT / NFP",
+            "IN 12 DAYS: CPI INFLATION PRINT",
+            "IN 12 DAYS: FOMC RATE DECISION"
         ],
         "seasonality": "NOVEMBER CHASE: Benchmark underperformance forces institutional buying.",
-        "days_to_opx": 22,
+        "days_to_opx": 21,
         "opx_label": "Triple/Quad Witching"
     },
     "macro_events": [
-        "IN 1 DAY(S): CORE PCE PRICE INDEX",
-        "IN 8 DAYS: JOBS REPORT / NFP",
-        "IN 13 DAYS: CPI INFLATION PRINT",
-        "IN 13 DAYS: FOMC RATE DECISION"
+        "TODAY: CORE PCE PRICE INDEX",
+        "IN 7 DAYS: JOBS REPORT / NFP",
+        "IN 12 DAYS: CPI INFLATION PRINT",
+        "IN 12 DAYS: FOMC RATE DECISION"
     ]
 }
