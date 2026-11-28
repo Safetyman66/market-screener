@@ -1,17 +1,17 @@
 {
     "pdf_path": "daily_market_intelligence.pdf",
-    "date": "2026-11-27",
+    "date": "2026-11-28",
     "regime_code": "CONTRACTION",
     "regime_status": "RED: STRUCTURAL CONTRACTION",
     "posture_box": "[!] DEFENSIVE POSTURE: CASH PRESERVATION / RISK-OFF",
     "max_exposure": "0% - 20%",
-    "pct_above_200": 47.0,
-    "primary_ticker": "OXY",
+    "pct_above_200": 51.3,
+    "primary_ticker": "MSM",
     "slot_tickers": [
-        "OXY"
+        "MSM"
     ],
     "focus_tickers": [
-        "OXY"
+        "MSM"
     ],
     "top_runner": {
         "ticker": "IFF",
@@ -20,7 +20,7 @@
         "entry_pivot": 83.04,
         "stop_loss": 77.91,
         "peak_high": 87.13,
-        "latest_close": 86.11,
+        "latest_close": 85.22,
         "max_gain_pct": 4.9,
         "r_multiple": 0.8
     },
@@ -28,28 +28,28 @@
     "top_htf": null,
     "top_pp": null,
     "top_ls": {
-        "Ticker": "OXY",
-        "Close": 53.95,
-        "Shelf_Level": 53.67,
-        "Flush_Low": 52.55,
-        "Sweep_Depth_%": 2.09,
-        "Headroom_%": 25.0,
-        "Vol_Ratio": "1.28x",
-        "Conviction_Score": 7.61,
-        "Pivot_Trigger": 54.5,
-        "Stop_Loss": 52.29,
-        "Risk_%": 4.06,
-        "R_Ratio": 6.16,
-        "ADV_20": 11388240,
-        "1Min_Vol_Hurdle": 39858,
+        "Ticker": "MSM",
+        "Close": 109.79,
+        "Shelf_Level": 107.02,
+        "Flush_Low": 103.94,
+        "Sweep_Depth_%": 2.88,
+        "Headroom_%": 22.0,
+        "Vol_Ratio": "0.98x",
+        "Conviction_Score": 5.75,
+        "Pivot_Trigger": 109.84,
+        "Stop_Loss": 103.43,
+        "Risk_%": 5.84,
+        "R_Ratio": 3.77,
+        "ADV_20": 818145,
+        "1Min_Vol_Hurdle": 2863,
         "Execution_Archetype": "MEAN_REVERSION",
         "Category": "Liquidity Sweep",
-        "LVN_Score": 72.5,
-        "Zacks_Rank": "#2 (39d)",
-        "Earnings_Risk": "SAFE (82d)",
-        "Structural_Catalyst": "ZACKS #2 BUY",
+        "LVN_Score": 99.0,
+        "Zacks_Rank": "#3 (New)",
+        "Earnings_Risk": "SAFE (39d)",
+        "Structural_Catalyst": "TECHNICAL MOMENTUM",
         "Execution_Protocol": "STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.",
-        "Tactical_Target": 61.13,
+        "Tactical_Target": 129.07,
         "Tactical_R_Ratio": 3.0
     },
     "dashboard": {
@@ -58,39 +58,37 @@
         "posture_box": "[!] DEFENSIVE POSTURE: CASH PRESERVATION / RISK-OFF",
         "max_exposure": "0% - 20%",
         "action_plan": "CAPITAL PRESERVATION POSTURE. Benchmarks trapped below 50 SMA / breadth compressed. Breakout failure rates peak here. Stand aside or trade small-sized liquidity sweeps only.",
-        "spy_c": 716.7,
+        "spy_c": 728.32,
         "spy_above_21": false,
         "spy_above_50": false,
         "spy_above_200": false,
-        "qqq_c": 633.93,
+        "qqq_c": 650.99,
         "qqq_above_21": false,
         "qqq_above_50": false,
         "qqq_above_200": false,
-        "tnx": 4.85,
-        "tnx_5d_chg": -4.0,
-        "oil": 85.72,
-        "oil_5d_chg": 2.1,
-        "pct_above_200": 47.0,
-        "pct_below_200": 53.0,
-        "momentum_count": 2,
-        "sweep_count": 9,
+        "tnx": 4.94,
+        "tnx_5d_chg": 0.5,
+        "oil": 83.08,
+        "oil_5d_chg": -1.1,
+        "pct_above_200": 51.3,
+        "pct_below_200": 48.7,
+        "momentum_count": 7,
+        "sweep_count": 6,
         "warnings": [
-            "\u26a1 YIELD SURGE: 10-Yr Yield at 4.85% (-4.0% 5d). Multiple drag active."
+            "\u26a1 YIELD SURGE: 10-Yr Yield at 4.94% (+0.5% 5d). Multiple drag active."
         ],
         "calendar": [
-            "TODAY: CORE PCE PRICE INDEX",
-            "IN 7 DAYS: JOBS REPORT / NFP",
-            "IN 12 DAYS: CPI INFLATION PRINT",
-            "IN 12 DAYS: FOMC RATE DECISION"
+            "IN 6 DAYS: JOBS REPORT / NFP",
+            "IN 11 DAYS: CPI INFLATION PRINT",
+            "IN 11 DAYS: FOMC RATE DECISION"
         ],
         "seasonality": "NOVEMBER CHASE: Benchmark underperformance forces institutional buying.",
-        "days_to_opx": 21,
+        "days_to_opx": 20,
         "opx_label": "Triple/Quad Witching"
     },
     "macro_events": [
-        "TODAY: CORE PCE PRICE INDEX",
-        "IN 7 DAYS: JOBS REPORT / NFP",
-        "IN 12 DAYS: CPI INFLATION PRINT",
-        "IN 12 DAYS: FOMC RATE DECISION"
+        "IN 6 DAYS: JOBS REPORT / NFP",
+        "IN 11 DAYS: CPI INFLATION PRINT",
+        "IN 11 DAYS: FOMC RATE DECISION"
     ]
 }

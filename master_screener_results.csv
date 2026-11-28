@@ -1,21 +1,8 @@
 Ticker,Category,Close,Pivot_Trigger,Stop_Loss,Risk_%,R_Ratio,Conviction_Score,LVN_Score,Headroom_%,Ext_10EMA_%,Above_200EMA_%,Vol_Pocket_Ratio,ADV_20,1Min_Vol_Hurdle,Execution_Archetype,Zacks_Rank,Earnings_Risk,Structural_Catalyst,Execution_Protocol,Shelf_Level,Flush_Low,Sweep_Depth_%,Vol_Ratio,valid,category,trigger,stop,daily_atr
-AXTA,EMA Reclaim,36.06,36.06,35.02,2.88,,10.99,100.0,,,,,,6881,,,,,,,,,,True,6.0,36.06,35.02,0.83
-PINS,EMA Reclaim,19.71,19.71,18.6,5.63,,10.99,100.0,,,,,,53963,,,,,,,,,,True,6.0,19.71,18.6,0.89
-CNH,EMA Reclaim,11.88,11.88,11.15,6.14,,10.99,100.0,,,,,,60954,,,,,,,,,,True,6.0,11.88,11.15,0.58
-ANF,EMA Reclaim,176.96,176.96,166.14,6.11,,10.99,100.0,,,,,,4777,,,,,,,,,,True,6.0,176.96,166.14,8.65
-FND,EMA Reclaim,51.62,51.62,48.9,5.27,,10.98,98.9,,,,,,11125,,,,,,,,,,True,6.0,51.62,48.9,2.17
-HPQ,EMA Reclaim,31.15,31.15,29.82,4.27,,10.97,97.7,,,,,,54592,,,,,,,,,,True,6.0,31.15,29.82,1.06
-AXON,EMA Reclaim,343.05,343.05,316.23,7.82,,10.97,98.2,,,,,,5158,,,,,,,,,,True,6.0,343.05,316.23,21.45
-ATR,EMA Reclaim,145.48,145.48,141.65,2.63,,10.96,96.5,,,,,,2002,,,,,,,,,,True,6.0,145.48,141.65,3.07
-TEX,EMA Reclaim,59.01,59.01,55.67,5.66,,10.86,87.0,,,,,,6419,,,,,,,,,,True,6.0,59.01,55.67,2.67
-BAX,EMA Reclaim,27.26,27.26,26.13,4.15,,10.86,87.5,,,,,,26249,,,,,,,,,,True,6.0,27.26,26.13,0.91
-M,EMA Reclaim,24.12,24.12,22.75,5.68,,10.65,66.0,,,,,,23688,,,,,,,,,,True,6.0,24.12,22.75,1.1
-OXY,Liquidity Sweep,53.95,54.5,52.29,4.06,6.16,7.61,72.5,25.0,,,,11388240.0,39858,MEAN_REVERSION,#2 (39d),SAFE (82d),ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,53.67,52.55,2.09,1.28x,,,,,
-VNOM,Liquidity Sweep,41.01,41.13,38.99,5.2,4.75,6.74,99.3,24.7,,,,2327946.0,8147,MEAN_REVERSION,#3 (15d),SAFE (87d),TECHNICAL MOMENTUM,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,39.46,39.18,0.7,1.09x,,,,,
-PH,Liquidity Sweep,897.9,899.13,861.51,4.18,5.38,6.53,57.3,22.5,,,,777156.0,2720,MEAN_REVERSION,#2 (11d),SAFE (62d),ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,868.49,865.84,0.3,1.01x,,,,,
-PR,Liquidity Sweep,21.32,21.53,20.56,4.51,4.93,6.42,74.4,22.3,,,,10165913.0,35580,MEAN_REVERSION,#1 (46d),SAFE (>14d),ZACKS #1 STRONG BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,20.84,20.66,0.86,1.02x,,,,,
-GPC,Liquidity Sweep,123.88,124.64,116.72,6.35,3.52,5.45,96.3,22.4,,,,920983.0,3223,MEAN_REVERSION,#3 (8d),Unknown/TBD,TECHNICAL MOMENTUM,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,119.16,117.31,1.55,1.14x,,,,,
-AME,Liquidity Sweep,227.49,228.0,218.88,4.0,3.7,5.01,65.4,14.8,,,,1789560.0,6263,MEAN_REVERSION,#2 (New),SAFE (67d),ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,222.22,219.98,1.01,1.29x,,,,,
-MSFT,Liquidity Sweep,489.93,493.44,475.0,3.74,3.78,4.99,60.3,14.1,,,,30891382.0,108119,MEAN_REVERSION,#3 (46d),SAFE (61d),TECHNICAL MOMENTUM,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,486.0,477.39,1.77,1.2x,,,,,
-OKE,Liquidity Sweep,86.45,86.84,82.12,5.44,2.85,4.61,87.9,15.5,,,,3191157.0,11169,MEAN_REVERSION,#3 (37d),Unknown/TBD,TECHNICAL MOMENTUM,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,84.15,82.53,1.93,0.93x,,,,,
-CTAS,Pocket Pivot,227.65,228.93,222.12,2.97,2.83,4.79,98.1,2.6,1.6,13.8,1.09x,1884937.0,6597,BREAKOUT,#2 (1d),Unknown/TBD,ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,,,,,,,,,
+OKTA,Alpha Flag,207.46,214.89,191.79,10.75,,10.91,92.4,,,,,,15898,,,,,,,,,,True,7.0,214.89,191.79,12.53
+VRSN,EMA Reclaim,320.2,320.2,311.04,2.86,,10.9,91.3,,,,,,3838,,,,,,,,,,True,6.0,320.2,311.04,7.32
+MSM,Liquidity Sweep,109.79,109.84,103.43,5.84,3.77,5.75,99.0,22.0,,,,818145.0,2863,MEAN_REVERSION,#3 (New),SAFE (39d),TECHNICAL MOMENTUM,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,107.02,103.94,2.88,0.98x,,,,,
+PH,Liquidity Sweep,912.36,914.76,861.51,5.82,3.53,5.02,74.4,20.6,,,,761057.0,2663,MEAN_REVERSION,#2 (12d),SAFE (61d),ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,868.49,865.84,0.3,0.86x,,,,,
+ROST,Liquidity Sweep,224.21,225.2,210.93,6.34,2.31,4.0,84.6,14.6,,,,2568142.0,8988,MEAN_REVERSION,#3 (26d),SAFE (>14d),TECHNICAL MOMENTUM,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,218.43,211.99,2.95,1.39x,,,,,
+AME,Liquidity Sweep,230.35,232.7,218.88,5.94,2.25,3.57,65.8,13.4,,,,1728965.0,6051,MEAN_REVERSION,#2 (1d),SAFE (66d),ZACKS #2 BUY,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,222.22,219.98,1.01,1.31x,,,,,
+VRSN,Pocket Pivot,320.2,322.06,310.91,3.46,2.69,4.52,91.3,1.4,2.0,12.4,1.13x,1086367.0,3802,BREAKOUT,#3 (26d),SAFE (68d),TECHNICAL MOMENTUM,STANDARD RUNWAY: Full swing leeway. Void entry if opened >2.5% past pivot.,,,,,,,,,

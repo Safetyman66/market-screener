@@ -1,101 +1,5 @@
 [
   {
-    "date": "2026-10-23",
-    "ticker": "AR",
-    "category": "Base-Reset",
-    "pivot": 39.25,
-    "stop": 37.37,
-    "r_ratio": 3.59
-  },
-  {
-    "date": "2026-10-23",
-    "ticker": "COP",
-    "category": "Base-Reset",
-    "pivot": 147.55,
-    "stop": 142.8,
-    "r_ratio": 2.92
-  },
-  {
-    "date": "2026-10-23",
-    "ticker": "EBAY",
-    "category": "Base-Reset",
-    "pivot": 124.09,
-    "stop": 119.22,
-    "r_ratio": 2.93
-  },
-  {
-    "date": "2026-10-23",
-    "ticker": "OVV",
-    "category": "Base-Reset",
-    "pivot": 70.98,
-    "stop": 67.98,
-    "r_ratio": 2.6
-  },
-  {
-    "date": "2026-10-23",
-    "ticker": "RTX",
-    "category": "Base-Reset",
-    "pivot": 197.0,
-    "stop": 188.08,
-    "r_ratio": 3.59
-  },
-  {
-    "date": "2026-10-23",
-    "ticker": "TJX",
-    "category": "Base-Reset",
-    "pivot": 148.57,
-    "stop": 145.36,
-    "r_ratio": 6.94
-  },
-  {
-    "date": "2026-10-23",
-    "ticker": "VNOM",
-    "category": "Base-Reset",
-    "pivot": 46.13,
-    "stop": 44.42,
-    "r_ratio": 2.53
-  },
-  {
-    "date": "2026-10-23",
-    "ticker": "YETI",
-    "category": "Base-Reset",
-    "pivot": 44.18,
-    "stop": 41.83,
-    "r_ratio": 4.25
-  },
-  {
-    "date": "2026-10-23",
-    "ticker": "XPO",
-    "category": "Base-Reset",
-    "pivot": 191.63,
-    "stop": 183.8,
-    "r_ratio": 5.61
-  },
-  {
-    "date": "2026-10-23",
-    "ticker": "APPF",
-    "category": "Pocket Pivot",
-    "pivot": 222.59,
-    "stop": 208.66,
-    "r_ratio": 3.51
-  },
-  {
-    "date": "2026-10-23",
-    "ticker": "DD",
-    "category": "Pocket Pivot",
-    "pivot": 135.16,
-    "stop": 131.23,
-    "r_ratio": 5.33
-  },
-  {
-    "date": "2026-10-23",
-    "ticker": "SNX",
-    "category": "Liquidity Sweep",
-    "pivot": 248.16,
-    "stop": 235.82,
-    "r_ratio": 4.16
-  },
-  {
     "date": "2026-10-27",
     "ticker": "BDX",
     "category": "Base-Reset",
@@ -6166,5 +6070,45 @@
     "pivot": 21.53,
     "stop": 20.56,
     "r_ratio": 4.93
+  },
+  {
+    "date": "2026-11-28",
+    "ticker": "VRSN",
+    "category": "Pocket Pivot",
+    "pivot": 322.06,
+    "stop": 310.91,
+    "r_ratio": 2.69
+  },
+  {
+    "date": "2026-11-28",
+    "ticker": "ROST",
+    "category": "Liquidity Sweep",
+    "pivot": 225.2,
+    "stop": 210.93,
+    "r_ratio": 2.31
+  },
+  {
+    "date": "2026-11-28",
+    "ticker": "PH",
+    "category": "Liquidity Sweep",
+    "pivot": 914.76,
+    "stop": 861.51,
+    "r_ratio": 3.53
+  },
+  {
+    "date": "2026-11-28",
+    "ticker": "AME",
+    "category": "Liquidity Sweep",
+    "pivot": 232.7,
+    "stop": 218.88,
+    "r_ratio": 2.25
+  },
+  {
+    "date": "2026-11-28",
+    "ticker": "MSM",
+    "category": "Liquidity Sweep",
+    "pivot": 109.84,
+    "stop": 103.43,
+    "r_ratio": 3.77
   }
 ]
